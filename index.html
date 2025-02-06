@@ -6,7 +6,7 @@
     <title>Nota Pembayaran - KANVAS MERCHANDISE</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
-    body {
+body {
         font-family: 'Roboto', sans-serif;
         margin: 20px;
     }
@@ -366,6 +366,10 @@
     .itemQty, .itemPrice {
         min-width: 80px;
     }
+        /* Tambahkan style untuk uppercase */
+        input[type="text"], #customerName, #orderName, .itemName, .itemSize {
+            text-transform: uppercase;
+        }
     </style>
     <!-- Add Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -433,7 +437,8 @@
         </div>
         
         <div class="payment-info">
-            <p><strong>Dibayar:</strong> Rp <input type="number" id="amountPaid"></p>
+            <p><strong>Dibayar:</strong> Rp <input type="number" id="amountPaid" value="0"></p>
+            <p><strong>Diskon:</strong> Rp <input type="number" id="discount" value="0"></p>
             <p><strong>Kekurangan:</strong> Rp <span id="amountDue">0</span></p>
             <p id="lunasText">LUNAS</p>
         </div>
@@ -452,6 +457,10 @@
         </div>
     </div>
 
+        <!-- Bagian tabel dan tombol aksi lainnya -->
+        <!-- ... -->
+    </div>
+
     <!-- Modal untuk menampilkan nota tersimpan -->
     <div id="invoiceModal" class="modal">
         <div class="modal-content">
@@ -462,7 +471,7 @@
     </div>
 
     <script>
-        // Your web app's Firebase configuration
+        // Firebase configuration and initialization
         const firebaseConfig = {
             apiKey: "AIzaSyDkUgsmEytdSix4d5lvT7bUrhr9sVQlqyY",
             authDomain: "invoices-kanvasmerch.firebaseapp.com",
@@ -473,7 +482,6 @@
             appId: "1:439292206643:web:8458a829217583c546cd46"
         };
 
-        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
@@ -510,7 +518,8 @@
             document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
 
             const paid = parseFloat(document.getElementById('amountPaid').value) || 0;
-            const due = totalPrice - paid;
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            const due = totalPrice - paid - discount;
             document.getElementById('amountDue').textContent = formatRupiah(Math.max(due, 0));
 
             document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
@@ -558,6 +567,7 @@
                     <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
                 </tr>`;
             document.getElementById('amountPaid').value = '';
+            document.getElementById('discount').value = '0';
             calculateTotal();
         }
 
@@ -576,6 +586,7 @@
                 totalQty: document.getElementById('totalQty').textContent,
                 totalPrice: document.getElementById('totalPrice').textContent,
                 amountPaid: document.getElementById('amountPaid').value,
+                discount: document.getElementById('discount').value,
                 amountDue: document.getElementById('amountDue').textContent,
                 lunas: document.getElementById('lunasText').style.display === 'block',
                 date: document.getElementById('invoiceDateDisplay').textContent
@@ -647,6 +658,7 @@
                 document.getElementById('invoiceNumberDisplay').textContent = invoiceData.invoiceNumber;
                 document.getElementById('orderName').value = invoiceData.orderName || '';
                 document.getElementById('amountPaid').value = invoiceData.amountPaid || '';
+                document.getElementById('discount').value = invoiceData.discount || '0';
                 document.getElementById('invoiceDateDisplay').textContent = invoiceData.date || '';
                 
                 const tbody = document.querySelector('#itemsTable tbody');
@@ -746,6 +758,7 @@
         document.getElementById('invoiceNumberDisplay').textContent = generateInvoiceNumber();
         displayDate();
         document.getElementById('amountPaid').addEventListener('input', calculateTotal);
+        document.getElementById('discount').addEventListener('input', calculateTotal);
         document.querySelectorAll('#itemsTable tbody tr').forEach(row => addEventListenersToRow(row));
 
         window.onclick = function(event) {
