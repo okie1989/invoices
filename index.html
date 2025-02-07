@@ -229,6 +229,11 @@ body {
         margin-left: 10px;
         padding: 5px 10px;
     }
+    .payment-info {
+    column-count: 5;
+    text-align-last: center;
+}
+
     @media print {
         @page {
             size: A4;
@@ -450,8 +455,8 @@ body {
         </div>
         
         <div class="payment-info">
-        <p><strong>Dibayar:</strong> Rp <input type="number" id="amountPaid" value="0"></p>
-        <p><strong>Diskon:</strong> Rp <input type="number" id="discount" value="0"></p>
+        <p><strong>Dibayar:</strong> Rp <input type="number" id="amountPaid" value=""></p>
+        <p><strong>Diskon:</strong> Rp <input type="number" id="discount" value=""></p>
         <p><strong>Kekurangan:</strong> Rp <span id="amountDue">0</span></p>
         <p><strong>Kembalian:</strong> Rp <span id="changeAmount">0</span></p>
         <p id="lunasText">LUNAS</p>
