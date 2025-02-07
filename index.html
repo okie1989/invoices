@@ -437,7 +437,7 @@ body {
                     <td><input type="text" class="itemName"></td>
                     <td><input type="text" class="itemSize" placeholder="..."></td>
                     <td><input type="number" class="itemQty"></td>
-                    <td><input type="number" class="itemPrice"></td>
+                    <td><input type="text" class="itemPrice"></td>
                     <td><input type="text" class="itemTotal" readonly></td>
                     <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
                 </tr>
@@ -515,17 +515,28 @@ body {
         }
 
         function calculateTotal() {
-            let totalQty = 0, totalPrice = 0;
-            
-            document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
-                const qty = Math.abs(parseInt(row.querySelector('.itemQty').value) || 0);
-                const price = Math.abs(parseFloat(row.querySelector('.itemPrice').value) || 0);
-                const total = qty * price;
-                row.querySelector('.itemTotal').value = formatRupiah(total);
-                
-                totalQty += qty;
-                totalPrice += total;
-            });
+    let totalQty = 0, totalPrice = 0;
+
+    document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+        const qty = Math.abs(parseInt(row.querySelector('.itemQty').value) || 0);
+        const price = parseFloat(row.querySelector('.itemPrice').value.replace(/\./g, '')) || 0;
+        const total = qty * price;
+        row.querySelector('.itemTotal').value = formatRupiah(total);
+
+        totalQty += qty;
+        totalPrice += total;
+    });
+
+    document.getElementById('totalQty').textContent = totalQty;
+    document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
+
+    const paid = parseFloat(document.getElementById('amountPaid').value.replace(/\./g, '')) || 0;
+    const discount = parseFloat(document.getElementById('discount').value.replace(/\./g, '')) || 0;
+    const due = totalPrice - paid - discount;
+    document.getElementById('amountDue').textContent = formatRupiah(Math.max(due, 0));
+
+    document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
+}
 
             document.getElementById('totalQty').textContent = totalQty;
             document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
@@ -536,22 +547,22 @@ body {
             document.getElementById('amountDue').textContent = formatRupiah(Math.max(due, 0));
 
             document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
-        }
+        
 
         function addItem() {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = ` 
-                <td><input type="text" class="itemName"></td>
-                <td><input type="text" class="itemSize" placeholder="..."></td>
-                <td><input type="number" class="itemQty"></td>
-                <td><input type="number" class="itemPrice"></td>
-                <td><input type="text" class="itemTotal" readonly></td>
-                <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
-            `;
-            document.querySelector('#itemsTable tbody').appendChild(newRow);
-            addEventListenersToRow(newRow);
-            newRow.querySelector('.itemName').focus();
-        }
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = ` 
+        <td><input type="text" class="itemName"></td>
+        <td><input type="text" class="itemSize" placeholder="..."></td>
+        <td><input type="number" class="itemQty"></td>
+        <td><input type="text" class="itemPrice"></td>
+        <td><input type="text" class="itemTotal" readonly></td>
+        <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
+    `;
+    document.querySelector('#itemsTable tbody').appendChild(newRow);
+    addEventListenersToRow(newRow);
+    newRow.querySelector('.itemName').focus();
+}
 
         function deleteRow(button) {
             button.closest('tr').remove();
@@ -568,21 +579,21 @@ body {
         }
 
         function resetNota() {
-            document.getElementById('customerName').value = '';
-            document.getElementById('orderName').value = '';
-            document.querySelector('#itemsTable tbody').innerHTML = `
-                <tr>
-                    <td><input type="text" class="itemName"></td>
-                    <td><input type="text" class="itemSize" placeholder="..."></td>
-                    <td><input type="number" class="itemQty"></td>
-                    <td><input type="number" class="itemPrice"></td>
-                    <td><input type="text" class="itemTotal" readonly></td>
-                    <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
-                </tr>`;
-            document.getElementById('amountPaid').value = '';
-            document.getElementById('discount').value = '0';
-            calculateTotal();
-        }
+    document.getElementById('customerName').value = '';
+    document.getElementById('orderName').value = '';
+    document.querySelector('#itemsTable tbody').innerHTML = `
+        <tr>
+            <td><input type="text" class="itemName"></td>
+            <td><input type="text" class="itemSize" placeholder="..."></td>
+            <td><input type="number" class="itemQty"></td>
+            <td><input type="text" class="itemPrice"></td>
+            <td><input type="text" class="itemTotal" readonly></td>
+            <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
+        </tr>`;
+    document.getElementById('amountPaid').value = '';
+    document.getElementById('discount').value = '0';
+    calculateTotal();
+}
 
         function saveInvoice() {
             const customerName = document.getElementById('customerName').value;
@@ -610,7 +621,7 @@ body {
                     name: row.querySelector('.itemName').value,
                     size: row.querySelector('.itemSize').value,
                     qty: row.querySelector('.itemQty').value,
-                    price: row.querySelector('.itemPrice').value,
+                    price: row.querySelector('.itemPrice').value.replace(/\./g, ''),
                     total: row.querySelector('.itemTotal').value
                 });
             });
@@ -664,36 +675,36 @@ body {
         }
 
         function loadInvoice(invoiceNumber) {
-            database.ref('invoices/' + invoiceNumber).once('value', (snapshot) => {
-                const invoiceData = snapshot.val();
-                
-                document.getElementById('customerName').value = invoiceData.customerName || '';
-                document.getElementById('invoiceNumberDisplay').textContent = invoiceData.invoiceNumber;
-                document.getElementById('orderName').value = invoiceData.orderName || '';
-                document.getElementById('amountPaid').value = invoiceData.amountPaid || '';
-                document.getElementById('discount').value = invoiceData.discount || '0';
-                document.getElementById('invoiceDateDisplay').textContent = invoiceData.date || '';
-                
-                const tbody = document.querySelector('#itemsTable tbody');
-                tbody.innerHTML = '';
-                invoiceData.items.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><input type="text" class="itemName" value="${item.name}"></td>
-                        <td><input type="text" class="itemSize" value="${item.size}"></td>
-                        <td><input type="number" class="itemQty" value="${item.qty}"></td>
-                        <td><input type="number" class="itemPrice" value="${item.price}"></td>
-                        <td><input type="text" class="itemTotal" readonly value="${item.total}"></td>
-                        <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
-                    `;
-                    tbody.appendChild(row);
-                    addEventListenersToRow(row);
-                });
+    database.ref('invoices/' + invoiceNumber).once('value', (snapshot) => {
+        const invoiceData = snapshot.val();
+        
+        document.getElementById('customerName').value = invoiceData.customerName || '';
+        document.getElementById('invoiceNumberDisplay').textContent = invoiceData.invoiceNumber;
+        document.getElementById('orderName').value = invoiceData.orderName || '';
+        document.getElementById('amountPaid').value = invoiceData.amountPaid || '';
+        document.getElementById('discount').value = invoiceData.discount || '0';
+        document.getElementById('invoiceDateDisplay').textContent = invoiceData.date || '';
+        
+        const tbody = document.querySelector('#itemsTable tbody');
+        tbody.innerHTML = '';
+        invoiceData.items.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" class="itemName" value="${item.name}"></td>
+                <td><input type="text" class="itemSize" value="${item.size}"></td>
+                <td><input type="number" class="itemQty" value="${item.qty}"></td>
+                <td><input type="text" class="itemPrice" value="${formatRupiahInput(item.price)}"></td>
+                <td><input type="text" class="itemTotal" readonly value="${item.total}"></td>
+                <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
+            `;
+            tbody.appendChild(row);
+            addEventListenersToRow(row);
+        });
 
-                calculateTotal();
-                closeModal();
-            });
-        }
+        calculateTotal();
+        closeModal();
+    });
+}
 
         function deleteSavedInvoice(invoiceNumber) {
             if (confirm(`Apakah Anda yakin ingin menghapus ${invoiceNumber}?`)) {
@@ -711,63 +722,71 @@ body {
             document.getElementById('invoiceModal').style.display = 'none';
         }
 
-        function formatRupiah(amount) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0
-            }).format(amount).replace('Rp', '').trim();
+        function formatRupiah(angka) {
+    return angka.toLocaleString('id-ID');
+}
+
+function formatRupiahInput(value) {
+    const num = value.replace(/\D/g, '');
+    return num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function addEventListenersToRow(row) {
+    row.querySelector('.itemQty').addEventListener('input', calculateTotal);
+    const priceInput = row.querySelector('.itemPrice');
+    priceInput.addEventListener('input', function(e) {
+        this.value = formatRupiahInput(this.value);
+        calculateTotal();
+    });
+}
+
+document.querySelectorAll('#itemsTable tbody tr').forEach(row => addEventListenersToRow(row));
+document.getElementById('amountPaid').addEventListener('input', calculateTotal);
+document.getElementById('discount').addEventListener('input', calculateTotal);
+
+function printInvoice() {
+    const invoiceElement = document.querySelector('.invoice');
+    const printClone = invoiceElement.cloneNode(true);
+
+    printClone.querySelectorAll('input, select').forEach(element => {
+        const span = document.createElement('span');
+        span.textContent = element.value;
+        
+        if(element.classList.contains('itemTotal') || element.classList.contains('itemPrice')) {
+            span.style.fontWeight = 'bold';
         }
+        
+        element.parentNode.replaceChild(span, element);
+    });
 
-        function addEventListenersToRow(row) {
-            row.querySelector('.itemQty').addEventListener('input', calculateTotal);
-            row.querySelector('.itemPrice').addEventListener('input', calculateTotal);
-        }
+    printClone.querySelectorAll('.action-buttons, button, .delete-btn-cell').forEach(el => el.remove());
 
-        function printInvoice() {
-            const invoiceElement = document.querySelector('.invoice');
-            const printClone = invoiceElement.cloneNode(true);
-
-            printClone.querySelectorAll('input, select').forEach(element => {
-                const span = document.createElement('span');
-                span.textContent = element.value;
-                
-                if(element.classList.contains('itemTotal') || element.classList.contains('itemPrice')) {
-                    span.style.fontWeight = 'bold';
-                }
-                
-                element.parentNode.replaceChild(span, element);
-            });
-
-            printClone.querySelectorAll('.action-buttons, button, .delete-btn-cell').forEach(el => el.remove());
-
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Print Nota - ${document.getElementById('invoiceNumberDisplay').textContent}</title>
-                        <style>
-                            ${document.querySelector('style').innerHTML}
-                            
-                            @media print {
-                                body { 
-                                    font-size: 12pt;
-                                    margin: 0;
-                                }
-                                .invoice {
-                                    border: none;
-                                    box-shadow: none;
-                                }
-                            }
-                        </style>
-                    </head>
-                    <body>${printClone.outerHTML}</body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.print();
-        }
-
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Print Nota - ${document.getElementById('invoiceNumberDisplay').textContent}</title>
+                <style>
+                    ${document.querySelector('style').innerHTML}
+                    
+                    @media print {
+                        body { 
+                            font-size: 12pt;
+                            margin: 0;
+                        }
+                        .invoice {
+                            border: none;
+                            box-shadow: none;
+                        }
+                    }
+                </style>
+            </head>
+            <body>${printClone.outerHTML}</body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
         document.getElementById('invoiceNumberDisplay').textContent = generateInvoiceNumber();
         displayDate();
         document.getElementById('amountPaid').addEventListener('input', calculateTotal);
