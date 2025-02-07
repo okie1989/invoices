@@ -450,11 +450,12 @@ body {
         </div>
         
         <div class="payment-info">
-            <p><strong>Dibayar:</strong> Rp <input type="number" id="amountPaid" value="0"></p>
-            <p><strong>Diskon:</strong> Rp <input type="number" id="discount" value="0"></p>
-            <p><strong>Kekurangan:</strong> Rp <span id="amountDue">0</span></p>
-            <p id="lunasText">LUNAS</p>
-        </div>
+        <p><strong>Dibayar:</strong> Rp <input type="number" id="amountPaid" value="0"></p>
+        <p><strong>Diskon:</strong> Rp <input type="number" id="discount" value="0"></p>
+        <p><strong>Kekurangan:</strong> Rp <span id="amountDue">0</span></p>
+        <p><strong>Kembalian:</strong> Rp <span id="changeAmount">0</span></p>
+        <p id="lunasText">LUNAS</p>
+    </div>
 
         <div class="bank-info">
             <p><strong>Transfer Bank:</strong></p>
@@ -515,39 +516,31 @@ body {
         }
 
         function calculateTotal() {
-    let totalQty = 0, totalPrice = 0;
+            let totalQty = 0, totalPrice = 0;
 
-    document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
-        const qty = Math.abs(parseInt(row.querySelector('.itemQty').value) || 0);
-        const price = parseFloat(row.querySelector('.itemPrice').value.replace(/\./g, '')) || 0;
-        const total = qty * price;
-        row.querySelector('.itemTotal').value = formatRupiah(total);
-
-        totalQty += qty;
-        totalPrice += total;
-    });
-
-    document.getElementById('totalQty').textContent = totalQty;
-    document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
-
-    const paid = parseFloat(document.getElementById('amountPaid').value.replace(/\./g, '')) || 0;
-    const discount = parseFloat(document.getElementById('discount').value.replace(/\./g, '')) || 0;
-    const due = totalPrice - paid - discount;
-    document.getElementById('amountDue').textContent = formatRupiah(Math.max(due, 0));
-
-    document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
-}
-
+            document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+                const qty = Math.abs(parseInt(row.querySelector('.itemQty').value) || 0);
+                const price = parseFloat(row.querySelector('.itemPrice').value.replace(/\./g, '')) || 0;
+                const total = qty * price;
+                row.querySelector('.itemTotal').value = formatRupiah(total);
+        
+                totalQty += qty;
+                totalPrice += total;
+            });
+        
             document.getElementById('totalQty').textContent = totalQty;
             document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
-
-            const paid = parseFloat(document.getElementById('amountPaid').value) || 0;
-            const discount = parseFloat(document.getElementById('discount').value) || 0;
-            const due = totalPrice - paid - discount;
-            document.getElementById('amountDue').textContent = formatRupiah(Math.max(due, 0));
-
-            document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
         
+            const paid = parseFloat(document.getElementById('amountPaid').value.replace(/\./g, '')) || 0;
+            const discount = parseFloat(document.getElementById('discount').value.replace(/\./g, '')) || 0;
+            const due = totalPrice - paid - discount;
+            const change = Math.max(paid - (totalPrice - discount), 0);
+        
+            document.getElementById('amountDue').textContent = formatRupiah(Math.max(due, 0));
+            document.getElementById('changeAmount').textContent = formatRupiah(change);
+        
+            document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
+        }
 
         function addItem() {
     const newRow = document.createElement('tr');
