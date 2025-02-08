@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -400,6 +401,14 @@ p {
             text-transform: uppercase;
         }
     </style>
+    <style>
+        .disabled-form input:disabled,
+        .disabled-form button:disabled {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+    </style>
     <!-- Add Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
@@ -520,14 +529,32 @@ p {
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        let invoiceCounter = 1;
 
         function generateInvoiceNumber() {
-            const now = new Date();
-            const number = `INV-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(invoiceCounter).padStart(3,'0')}`;
-            invoiceCounter++;
-            return number;
+    const now = new Date();
+    const datePart = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+    
+    // Cari nomor terakhir dari database
+    database.ref('invoices').orderByKey().limitToLast(1).once('value', (snapshot) => {
+        let lastNumber = 0;
+        
+        snapshot.forEach((childSnapshot) => {
+            const lastInvoiceNumber = childSnapshot.key;
+            const lastNumberPart = lastInvoiceNumber.split('-')[2];
+            lastNumber = parseInt(lastNumberPart);
+        });
+
+        // Jika tidak ada invoice sebelumnya, mulai dari 1
+        if (lastNumber === 0) {
+            lastNumber = 1;
+        } else {
+            lastNumber += 1;
         }
+
+        const newNumber = `INV-${datePart}-${String(lastNumber).padStart(3,'0')}`;
+        document.getElementById('invoiceNumberDisplay').textContent = newNumber;
+    });
+}
 
         function displayDate() {
             const now = new Date();
@@ -584,13 +611,14 @@ function addItem() {
         }
 
         function newInvoice() {
-            if (confirm('Apakah Anda ingin membuat nota baru? Perubahan yang belum disimpan akan hilang.')) {
-                const invoiceNumber = generateInvoiceNumber();
-                document.getElementById('invoiceNumberDisplay').textContent = invoiceNumber;
-                displayDate();
-                resetNota();
-            }
-        }
+    if (confirm('Apakah Anda ingin membuat nota baru? Perubahan yang belum disimpan akan hilang.')) {
+        generateInvoiceNumber(); // Ini akan otomatis update nomor
+        displayDate();
+        resetNota();
+        toggleForm(true);
+    }
+}
+
 
         function resetNota() {
     document.getElementById('customerName').value = '';
@@ -607,7 +635,10 @@ function addItem() {
     document.getElementById('amountPaid').value = '';
     document.getElementById('discount').value = '0';
     calculateTotal();
+
+    toggleForm(false); // Nonaktifkan form setelah reset
 }
+
 
         function saveInvoice() {
             const customerName = document.getElementById('customerName').value;
@@ -717,6 +748,7 @@ function addItem() {
 
         calculateTotal();
         closeModal();
+        toggleForm(true); // Aktifkan form setelah load
     });
 }
 
@@ -813,7 +845,11 @@ function printInvoice() {
                 closeModal();
             }
         }
-
+        window.onload = function() {
+    toggleForm(false);
+    document.getElementById('invoiceNumberDisplay').textContent = generateInvoiceNumber();
+    displayDate();
+};
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
                 const activeElement = document.activeElement;
