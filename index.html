@@ -405,6 +405,11 @@ p {
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 </head>
 <body>
+
+    <datalist id="itemNamesList"></datalist>
+<datalist id="sizesList"></datalist>
+<datalist id="pricesList"></datalist>
+
     <div class="invoice">
         <div class="header">
             <div class="logo">
@@ -558,13 +563,13 @@ p {
             document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
         }
 
-        function addItem() {
+function addItem() {
     const newRow = document.createElement('tr');
     newRow.innerHTML = ` 
-        <td><input type="text" class="itemName"></td>
-        <td><input type="text" class="itemSize" placeholder="..."></td>
+        <td><input type="text" class="itemName" list="itemNamesList"></td>
+        <td><input type="text" class="itemSize" list="sizesList" placeholder="..."></td>
         <td><input type="number" class="itemQty"></td>
-        <td><input type="text" class="itemPrice"></td>
+        <td><input type="text" class="itemPrice" list="pricesList"></td>
         <td><input type="text" class="itemTotal" readonly></td>
         <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
     `;
@@ -820,6 +825,25 @@ function printInvoice() {
                 }
             }
         });
+        document.addEventListener('focusin', function(event) {
+    const target = event.target;
+    if (target.classList.contains('itemName')) {
+        updateDatalistForColumn('.itemName', 'itemNamesList', target);
+    } else if (target.classList.contains('itemSize')) {
+        updateDatalistForColumn('.itemSize', 'sizesList', target);
+    } else if (target.classList.contains('itemPrice')) {
+        updateDatalistForColumn('.itemPrice', 'pricesList', target);
+    }
+});
+
+function updateDatalistForColumn(selector, datalistId, currentInput) {
+    const inputs = Array.from(document.querySelectorAll(selector))
+        .filter(input => input !== currentInput);
+    const values = inputs.map(input => input.value.trim()).filter(v => v);
+    const uniqueValues = [...new Set(values)];
+    const datalist = document.getElementById(datalistId);
+    datalist.innerHTML = uniqueValues.map(value => `<option value="${value}">`).join('');
+}
     </script>
 </body>
 </html>
