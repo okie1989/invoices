@@ -24,7 +24,7 @@ body {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 20px;
+        margin-bottom: 0px;
     }
     .logo {
         width: 100px;
@@ -280,7 +280,7 @@ p {
             text-transform: uppercase;
         }
         .header {
-            margin-bottom: 30px;
+            margin-bottom: 0px;
         }
         .company-info h2 {
             font-size: 28px;
@@ -911,6 +911,7 @@ function updateDatalistForColumn(selector, datalistId, currentInput) {
     datalist.innerHTML = uniqueValues.map(value => `<option value="${value}">`).join('');
 }
 
+
 function printThermalInvoice() {
     const invoiceElement = document.querySelector('.invoice');
     const printClone = invoiceElement.cloneNode(true);
@@ -935,10 +936,14 @@ function printThermalInvoice() {
     `;
     thermalContent.appendChild(companyInfo);
 
+    // Format tanggal menjadi 10/2/2025
+    const now = new Date();
+    const formattedDate = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+
     // Add invoice details
     const invoiceDetails = document.createElement('div');
     invoiceDetails.innerHTML = `
-        ${document.getElementById('invoiceDateDisplay').textContent}  ${document.getElementById('invoiceNumberDisplay').textContent}<br>
+        ${formattedDate}  ${document.getElementById('invoiceNumberDisplay').textContent}<br>
         ---------------------------<br>
         ${document.getElementById('customerName').value}<br>
         ${document.getElementById('orderName').value}<br>
@@ -957,8 +962,8 @@ function printThermalInvoice() {
         const itemTotal = row.querySelector('.itemTotal').value;
 
         itemsList.innerHTML += `
-            ${index + 1})  ${itemName} - ${itemSize}<br>
-            ${itemQty} x ${itemPrice} = ${itemTotal}<br>
+            ${index + 1}) ${itemName} - ${itemSize}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;${itemQty} x ${itemPrice} = ${itemTotal}<br>
         `;
     });
     thermalContent.appendChild(itemsList);
@@ -975,8 +980,10 @@ function printThermalInvoice() {
         Kurang         : ${document.getElementById('amountDue').textContent}<br>
         Kembali        : ${document.getElementById('changeAmount').textContent}<br>
         ---------------------------<br>
-        Terimakasih sudah berbagi rezeki<br>
-        bersama kami :)<br>
+        <div style="text-align: center;">
+            Terimakasih sudah berbagi rezeki<br>
+            bersama kami :)<br>
+        </div>
     `;
     thermalContent.appendChild(totalSection);
 
@@ -996,6 +1003,7 @@ function printThermalInvoice() {
                         margin: 0;
                         padding: 0;
                         line-height: 16px;
+                        text-align: center;
                     }
                     .thermal-invoice .logo img {
                         width: 100%;
@@ -1005,10 +1013,14 @@ function printThermalInvoice() {
                         text-align: center;
                     }
                     .thermal-invoice .item-details {
+                        text-align: left;
                         margin-left: 10px;
                     }
                     .thermal-invoice .total-section {
-                        text-align: right;
+                        text-align: left;
+                    }
+                    .thermal-invoice .total-section div {
+                        text-align: center;
                     }
                 </style>
             </head>
@@ -1018,7 +1030,6 @@ function printThermalInvoice() {
     printWindow.document.close();
     printWindow.print();
 }
-
-    </script>
+</script>
 </body>
 </html>
