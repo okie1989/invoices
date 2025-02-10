@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -99,6 +100,7 @@ body {
     }
     table, th, td {
         border: 1px solid #ccc;
+        table-layout: fixed;
     }
     th, td {
     padding: 0px;
@@ -309,11 +311,11 @@ p {
 
 @media print {
     .thermal-invoice {
-        width: 58mm;
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
-        font-size: 20px;
+        width: 62mm;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: 14px;
         text-transform: uppercase;
-        margin: 0;
+        margin left: -20px;
         padding: 0;
         line-height: 16px;
     }
@@ -323,6 +325,7 @@ margin-left: 50px;
     }
     .thermal-invoice .header, .thermal-invoice .footer {
         text-align: center;
+        font-size: 12px;
     }
     .thermal-invoice .item-details {
         margin-left: 2px;
@@ -356,6 +359,7 @@ margin-left: 50px;
     display: block;
     content: "";
     margin: 4px 0;
+    text-align: center;
 }
 
 
@@ -1002,7 +1006,7 @@ function printThermalInvoice() {
     companyInfo.innerHTML = `
         Jl. Riau Barat No.21 Kota Blitar<br>
         Telp/wa. 082257423324<br>
-        ---------------------------<br>
+        -----------------------------------------------------<br>
     `;
     thermalContent.appendChild(companyInfo);
 
@@ -1014,10 +1018,10 @@ function printThermalInvoice() {
     const invoiceDetails = document.createElement('div');
     invoiceDetails.innerHTML = `
         ${formattedDate}  ${document.getElementById('invoiceNumberDisplay').textContent}<br>
-        ---------------------------<br>
+        ---------------------------------------------<br>
         ${document.getElementById('customerName').value}<br>
         ${document.getElementById('orderName').value}<br>
-        ---------------------------<br>
+        ---------------------------------------------<br>
     `;
     thermalContent.appendChild(invoiceDetails);
 
@@ -1059,14 +1063,14 @@ function printThermalInvoice() {
     const totalSection = document.createElement('div');
     totalSection.className = 'total-section';
     totalSection.innerHTML = `
-        ---------------------------<br>
+        ---------------------------------------------<br>
         Total Qty       : ${document.getElementById('totalQty').textContent} Pcs<br>
         Total Harga   : ${document.getElementById('totalPrice').textContent}<br>
         Bayar            : ${document.getElementById('amountPaid').value}<br>
         Diskon          : ${document.getElementById('discount').value}<br>
         Kurang         : ${document.getElementById('amountDue').textContent}<br>
         Kembali        : ${document.getElementById('changeAmount').textContent}<br>
-        ---------------------------<br>
+        ---------------------------------------------<br>
         <div style="text-align: center;">
             Terimakasih sudah berbagi rezeki<br>
             bersama kami :)<br>
@@ -1083,12 +1087,11 @@ function printThermalInvoice() {
                 <style>
                     ${document.querySelector('style').innerHTML}
                     .thermal-invoice {
-                        width: 58mm;
-                        font-family: 'Arial', sans-serif;
-                        font-size: 12px;
+                        width: 62mm;
+                        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+                        font-size: 14px;
+                        margin-left: 0px;
                         text-transform: uppercase;
-                        margin: 0;
-                        padding: 0;
                         line-height: 16px;
                         text-align: center;
                     }
@@ -1098,6 +1101,7 @@ function printThermalInvoice() {
                     }
                     .thermal-invoice .header, .thermal-invoice .footer {
                         text-align: center;
+                        font-size: 12px;
                     }
                     .thermal-invoice .item-details {
                         text-align: left;
@@ -1108,6 +1112,7 @@ function printThermalInvoice() {
                         display: block;
                         content: "";
                         margin: 4px 0;
+                        text-align: center;
                     }
                     .thermal-invoice .total-section {
                         text-align: left;
