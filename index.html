@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -94,7 +95,7 @@ body {
         font-size: 14px;
     }
     table {
-        width: 100%;
+        width: 95%;
         border-collapse: collapse;
         margin-bottom: 20px;
     }
@@ -145,8 +146,9 @@ body {
     text-align: right;
     font-weight: bold;
     margin-bottom: 20px;
+    margin-right: 320px;
     COLUMN-COUNT: 2;
-    COLUMN-GAP: 500PX;
+    COLUMN-GAP: 400PX;
 }
     .action-buttons {
         display: flex;
@@ -250,6 +252,14 @@ p {
 p {
     margin: auto;
 }
+
+
+    .unpaid {
+        color: red;
+    }
+    .paid {
+        color: green;
+    }
 
 
     @media print {
@@ -749,35 +759,56 @@ function addItem() {
         }
 
         function updateInvoiceList() {
-            const list = document.getElementById('savedInvoicesList');
-            list.innerHTML = '';
-            
-            database.ref('invoices').once('value', (snapshot) => {
-                const invoices = [];
-                snapshot.forEach((childSnapshot) => {
-                    const invoice = childSnapshot.val();
-                    invoices.push(invoice);
-                });
+    const list = document.getElementById('savedInvoicesList');
+    list.innerHTML = '';
+    
+    database.ref('invoices').once('value', (snapshot) => {
+        const invoices = [];
+        snapshot.forEach((childSnapshot) => {
+            const invoice = childSnapshot.val();
+            invoices.push(invoice);
+        });
 
-                invoices.sort((a, b) => b.invoiceNumber.localeCompare(a.invoiceNumber));
+        // Sort invoices by date
+        invoices.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-                invoices.forEach(invoice => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <div>
-                            ${invoice.invoiceNumber}<br>
-                            <small>${invoice.customerName || 'Tanpa Nama'}</small><br>
-                            <small>${invoice.date}</small>
-                        </div>
-                        <div class="invoice-actions">
-                            <button onclick="loadInvoice('${invoice.invoiceNumber}')">Edit</button>
-                            <button onclick="deleteSavedInvoice('${invoice.invoiceNumber}')">Hapus</button>
-                        </div>
-                    `;
-                    list.appendChild(li);
-                });
+        // Group invoices by date
+        const groupedInvoices = {};
+        invoices.forEach(invoice => {
+            const date = invoice.date;
+            if (!groupedInvoices[date]) {
+                groupedInvoices[date] = [];
+            }
+            groupedInvoices[date].push(invoice);
+        });
+
+        // Display grouped invoices
+        Object.keys(groupedInvoices).forEach(date => {
+            const dateHeader = document.createElement('li');
+            dateHeader.innerHTML = `<strong>${date}</strong>`;
+            dateHeader.style.listStyleType = 'none';
+            dateHeader.style.marginTop = '10px';
+            list.appendChild(dateHeader);
+
+            groupedInvoices[date].forEach(invoice => {
+                const li = document.createElement('li');
+                li.className = invoice.lunas ? 'paid' : 'unpaid';
+                li.innerHTML = `
+                    <div>
+                        ${invoice.invoiceNumber}<br>
+                        <small>${invoice.customerName || 'Tanpa Nama'}</small><br>
+                        <small>${invoice.date}</small>
+                    </div>
+                    <div class="invoice-actions">
+                        <button onclick="loadInvoice('${invoice.invoiceNumber}')">Edit</button>
+                        <button onclick="deleteSavedInvoice('${invoice.invoiceNumber}')">Hapus</button>
+                    </div>
+                `;
+                list.appendChild(li);
             });
-        }
+        });
+    });
+}
 
         function loadInvoice(invoiceNumber) {
     database.ref('invoices/' + invoiceNumber).once('value', (snapshot) => {
