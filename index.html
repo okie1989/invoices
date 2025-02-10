@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -163,6 +161,10 @@ body {
         background-color: #007bff;
         color: white;
     }
+    .print-thermal-btn {
+        background-color: #1f4772;
+        color: white;
+    }
     .delete-btn {
         background-color: #dc3545;
         color: white;
@@ -301,6 +303,31 @@ p {
     margin-top: 10px;
     color: #555;
     line-height: 1px;
+}
+
+@media print {
+    .thermal-invoice {
+        width: 58mm;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+        font-size: 20px;
+        text-transform: uppercase;
+        margin: 0;
+        padding: 0;
+        line-height: 16px;
+    }
+    .thermal-invoice .logo img {
+        width: 100%;
+margin-left: 50px;
+    }
+    .thermal-invoice .header, .thermal-invoice .footer {
+        text-align: center;
+    }
+    .thermal-invoice .item-details {
+        margin-left: 10px;
+    }
+    .thermal-invoice .total-section {
+        text-align: right;
+    }
 }
 
 
@@ -449,6 +476,7 @@ p {
             <button class="load-btn" onclick="showSavedInvoices()">Buka Nota</button>
             <button class="reset-btn" onclick="resetNota()">Reset</button>
             <button class="print-btn" onclick="printInvoice()">Print</button>
+            <button class="print-thermal-btn" onclick="printThermalInvoice()">Cetak Struk</button>
         </div>
 
         <table id="itemsTable">
@@ -838,6 +866,7 @@ function printInvoice() {
         document.getElementById('amountPaid').addEventListener('input', calculateTotal);
         document.getElementById('discount').addEventListener('input', calculateTotal);
         document.querySelectorAll('#itemsTable tbody tr').forEach(row => addEventListenersToRow(row));
+        document.querySelector('.print-thermal-btn').addEventListener('click', printThermalInvoice);
 
         window.onclick = function(event) {
             const modal = document.getElementById('invoiceModal');
@@ -879,6 +908,95 @@ function updateDatalistForColumn(selector, datalistId, currentInput) {
     const uniqueValues = [...new Set(values)];
     const datalist = document.getElementById(datalistId);
     datalist.innerHTML = uniqueValues.map(value => `<option value="${value}">`).join('');
+}
+
+function printThermalInvoice() {
+    const invoiceElement = document.querySelector('.invoice');
+    const printClone = invoiceElement.cloneNode(true);
+
+    // Create thermal invoice content
+    const thermalContent = document.createElement('div');
+    thermalContent.className = 'thermal-invoice';
+
+    // Add logo
+    const logo = document.createElement('div');
+    logo.className = 'logo';
+    logo.innerHTML = '<img src="https://i.imgur.com/75tlt7m.png" alt="Logo KANVAS MERCHANDISE">';
+    thermalContent.appendChild(logo);
+
+    // Add company info
+    const companyInfo = document.createElement('div');
+    companyInfo.className = 'header';
+    companyInfo.innerHTML = `
+        ---------------------------<br>
+        Jl. Riau Barat 21 Kota Blitar<br>
+        Telp/wa. 082257423324<br>
+        ---------------------------<br>
+    `;
+    thermalContent.appendChild(companyInfo);
+
+    // Add invoice details
+    const invoiceDetails = document.createElement('div');
+    invoiceDetails.innerHTML = `
+        ${document.getElementById('invoiceDateDisplay').textContent}<br>
+        No. Invoice: ${document.getElementById('invoiceNumberDisplay').textContent}<br>
+        Kepada Yth. ${document.getElementById('customerName').value}<br>
+        ${document.getElementById('orderName').value}<br>
+        ---------------------------<br>
+    `;
+    thermalContent.appendChild(invoiceDetails);
+
+    // Add items
+    const itemsList = document.createElement('div');
+    itemsList.className = 'item-details';
+    document.querySelectorAll('#itemsTable tbody tr').forEach((row, index) => {
+        const itemName = row.querySelector('.itemName').value;
+        const itemSize = row.querySelector('.itemSize').value;
+        const itemQty = row.querySelector('.itemQty').value;
+        const itemPrice = row.querySelector('.itemPrice').value;
+        const itemTotal = row.querySelector('.itemTotal').value;
+
+        itemsList.innerHTML += `
+            ${index + 1}. ${itemName}<br>
+            - SIZE: ${itemSize}<br>
+            ${itemQty} x ${itemPrice} ${itemTotal}<br>
+        `;
+    });
+    thermalContent.appendChild(itemsList);
+
+    // Add total section
+    const totalSection = document.createElement('div');
+    totalSection.className = 'total-section';
+    totalSection.innerHTML = `
+        ---------------------------<br>
+        TOTAL QTY: ${document.getElementById('totalQty').textContent}<br>
+        TOTAL: Rp ${document.getElementById('totalPrice').textContent}<br>
+        DISKON: ${document.getElementById('discount').value}<br>
+        DIBAYAR: Rp ${document.getElementById('amountPaid').value}<br>
+        KEKURANGAN: ${document.getElementById('amountDue').textContent}<br>
+        KEMBALIAN: ${document.getElementById('changeAmount').textContent}<br>
+        ---------------------------<br>
+        STATUS: ${document.getElementById('lunasText').style.display === 'block' ? 'LUNAS' : 'BELUM LUNAS'}<br>
+        ---------------------------<br>
+        Terima Kasih<br>
+    `;
+    thermalContent.appendChild(totalSection);
+
+    // Open print window
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Cetak Struk Thermal</title>
+                <style>
+                    ${document.querySelector('style').innerHTML}
+                </style>
+            </head>
+            <body>${thermalContent.outerHTML}</body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
 }
     </script>
 </body>
