@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -329,6 +330,32 @@ margin-left: 50px;
     .thermal-invoice .total-section {
         text-align: right;
     }
+}
+
+@media print {
+    #itemsTable tr td {
+        border-bottom: none !important;
+    }
+    
+    #itemsTable tr:last-child td {
+        border-bottom: 1px solid #ccc !important;
+    }
+    
+    #itemsTable td[rowspan] {
+        border-bottom: 1px solid #ccc !important;
+    }
+}
+
+.thermal-invoice .item-details {
+    text-align: left;
+    margin-left: 10px;
+    line-height: 1.4;
+}
+
+.thermal-invoice .item-details br {
+    display: block;
+    content: "";
+    margin: 4px 0;
 }
 
 
@@ -823,19 +850,52 @@ function printInvoice() {
     const invoiceElement = document.querySelector('.invoice');
     const printClone = invoiceElement.cloneNode(true);
 
-    printClone.querySelectorAll('input, select').forEach(element => {
-        const span = document.createElement('span');
-        span.textContent = element.value;
-        
-        if(element.classList.contains('itemTotal') || element.classList.contains('itemPrice')) {
-            span.style.fontWeight = 'bold';
-        }
-        
-        element.parentNode.replaceChild(span, element);
+    // Group items by name
+    const groupedItems = {};
+    document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+        const name = row.querySelector('.itemName').value;
+        if (!groupedItems[name]) groupedItems[name] = [];
+        groupedItems[name].push({
+            size: row.querySelector('.itemSize').value,
+            qty: row.querySelector('.itemQty').value,
+            price: row.querySelector('.itemPrice').value,
+            total: row.querySelector('.itemTotal').value
+        });
     });
 
-    printClone.querySelectorAll('.action-buttons, button, .delete-btn-cell').forEach(el => el.remove());
+    // Rebuild table with merged rows
+    const tbody = printClone.querySelector('#itemsTable tbody');
+    tbody.innerHTML = '';
+    let counter = 1;
 
+    Object.entries(groupedItems).forEach(([name, items]) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td rowspan="${items.length}">${name}</td>
+            <td>${items[0].size}</td>
+            <td>${items[0].qty}</td>
+            <td>${items[0].price}</td>
+            <td>${items[0].total}</td>
+        `;
+        tbody.appendChild(row);
+
+        for (let i = 1; i < items.length; i++) {
+            const subRow = document.createElement('tr');
+            subRow.innerHTML = `
+                <td>${items[i].size}</td>
+                <td>${items[i].qty}</td>
+                <td>${items[i].price}</td>
+                <td>${items[i].total}</td>
+            `;
+            tbody.appendChild(subRow);
+        }
+        counter++;
+    });
+
+    // Remove action buttons and inputs
+    printClone.querySelectorAll('.action-buttons, button, .delete-btn-cell, input, select').forEach(el => el.remove());
+
+    // Open print window
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
         <html>
@@ -853,6 +913,15 @@ function printInvoice() {
                             border: none;
                             box-shadow: none;
                         }
+                        #itemsTable tr td {
+                            border-bottom: none !important;
+                        }
+                        #itemsTable tr:last-child td {
+                            border-bottom: 1px solid #ccc !important;
+                        }
+                        #itemsTable td[rowspan] {
+                            border-bottom: 1px solid #ccc !important;
+                        }
                     }
                 </style>
             </head>
@@ -862,6 +931,7 @@ function printInvoice() {
     printWindow.document.close();
     printWindow.print();
 }
+
         document.getElementById('invoiceNumberDisplay').textContent = generateInvoiceNumber();
         displayDate();
         document.getElementById('amountPaid').addEventListener('input', calculateTotal);
@@ -951,21 +1021,38 @@ function printThermalInvoice() {
     `;
     thermalContent.appendChild(invoiceDetails);
 
-    // Add items
+    // Group items by name
+    const groupedItems = {};
+    document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+        const name = row.querySelector('.itemName').value;
+        if (!groupedItems[name]) groupedItems[name] = [];
+        groupedItems[name].push({
+            size: row.querySelector('.itemSize').value,
+            qty: row.querySelector('.itemQty').value,
+            price: row.querySelector('.itemPrice').value,
+            total: row.querySelector('.itemTotal').value
+        });
+    });
+
+    // Add items dengan grouping
     const itemsList = document.createElement('div');
     itemsList.className = 'item-details';
-    document.querySelectorAll('#itemsTable tbody tr').forEach((row, index) => {
-        const itemName = row.querySelector('.itemName').value;
-        const itemSize = row.querySelector('.itemSize').value;
-        const itemQty = row.querySelector('.itemQty').value;
-        const itemPrice = row.querySelector('.itemPrice').value;
-        const itemTotal = row.querySelector('.itemTotal').value;
+    let itemCounter = 1;
 
+    Object.entries(groupedItems).forEach(([name, items]) => {
         itemsList.innerHTML += `
-            ${index + 1}) ${itemName} - ${itemSize}<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;${itemQty} x ${itemPrice} = ${itemTotal}<br>
+            ${itemCounter}) ${name}<br>
         `;
+
+        items.forEach(item => {
+            itemsList.innerHTML += `
+                &nbsp;&nbsp;${item.size} - ${item.qty} x ${item.price} = ${item.total}<br>
+            `;
+        });
+
+        itemCounter++;
     });
+
     thermalContent.appendChild(itemsList);
 
     // Add total section
@@ -1015,6 +1102,12 @@ function printThermalInvoice() {
                     .thermal-invoice .item-details {
                         text-align: left;
                         margin-left: 10px;
+                        line-height: 1.4;
+                    }
+                    .thermal-invoice .item-details br {
+                        display: block;
+                        content: "";
+                        margin: 4px 0;
                     }
                     .thermal-invoice .total-section {
                         text-align: left;
