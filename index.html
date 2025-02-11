@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -65,18 +61,25 @@ body {
     font-family: monospace;
     text-transform: uppercase;
 }
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        margin-left: 20px;
-    }
-    .form-group input {
-        padding: 5px;
-        margin: 5px 0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
+.form-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .form-group input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+
+        }
+
     .order-name-section {
         margin: 10px 0 20px;
         display: flex;
@@ -163,10 +166,7 @@ body {
         cursor: pointer;
         min-width: 120px;
     }
-    .print-btn {
-        background-color: #007bff;
-        color: white;
-    }
+
     .print-thermal-btn {
         background-color: #1f4772;
         color: white;
@@ -191,6 +191,12 @@ body {
         background-color: #6c757d;
         color: white;
     }
+    .preview-btn {
+        background-color: #1b8cf0;
+        color: white;
+    }
+
+
     #lunasText {
     color: green;
     font-weight: bold;
@@ -260,56 +266,10 @@ p {
     .paid {
         color: green;
     }
-
-
-    @media print {
-        @page {
-            size: A4;
-            margin: 10mm;
-
-        }
-        body {
-            font-size: 14px;
-            width: 210mm;
-            min-height: 297mm;
-
-    }
-
-    .form-group.style{
-    text-transform: uppercase;
-}
-
-.order-name-section {
-    text-transform: uppercase;
-}
-
-        .action-buttons, button, .delete-btn-cell, input, select {
-            display: none !important;
-        }
-
-        table {
-            margin-top: 15mm;
-            font-size: 16px;
-            text-transform: uppercase;
-        }
-        .header {
-            margin-bottom: 0px;
-        }
-        .company-info h2 {
-            font-size: 28px;
-        }
-        th:nth-child(6), td:nth-child(6) {
-            display: none;
-        }
-        th:first-child::after {
-            content: "Jenis Barang";
-        }
-    }
-
-    
     .bank-info {
     font-size: 12px;
     margin-inline: 2em;
+    margin-top: 2em;
     line-height: 1px;
 }
     .additional-info {
@@ -317,6 +277,58 @@ p {
     margin-top: 10px;
     color: #555;
     line-height: 1px;
+}
+
+
+/* Style untuk modal preview */
+#previewModal .modal-content {
+    width: 100%;
+    max-width: 1200px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-transform: uppercase;
+}
+
+#previewContent {
+    font-family: 'Roboto', sans-serif;
+}
+
+#previewContent .action-buttons {
+    display: none; /* Sembunyikan tombol aksi */
+}
+
+#previewContent input,
+#previewContent select,
+#previewContent button {
+    display: none; /* Sembunyikan input dan tombol */
+}
+
+/* Sederhanakan tampilan tabel */
+#previewContent table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border: none; /* Hilangkan border tabel */
+}
+
+#previewContent table th,
+#previewContent table td {
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-bottom: 1px solid #000; /* Hanya garis bawah */
+    padding: 5px;
+    text-align: left;
+    font-size: 14px;
+}
+
+#previewContent table thead tr {
+    border-bottom: 2px solid #000; /* Garis header lebih tebal */
+}
+
+#previewContent table tbody tr:last-child td {
+    border-bottom: none; /* Hilangkan garis bawah di row terakhir */
 }
 
 @media print {
@@ -342,20 +354,6 @@ margin-left: 50px;
     }
     .thermal-invoice .total-section {
         text-align: right;
-    }
-}
-
-@media print {
-    #itemsTable tr td {
-        border-bottom: none !important;
-    }
-    
-    #itemsTable tr:last-child td {
-        border-bottom: 1px solid #ccc !important;
-    }
-    
-    #itemsTable td[rowspan] {
-        border-bottom: 1px solid #ccc !important;
     }
 }
 
@@ -513,12 +511,11 @@ margin-left: 50px;
         </div>
 
         <div class="action-buttons">
-            <button class="new-btn" onclick="newInvoice()">Nota Baru</button>
             <button class="save-btn" onclick="saveInvoice()">Simpan Nota</button>
             <button class="load-btn" onclick="showSavedInvoices()">Buka Nota</button>
             <button class="reset-btn" onclick="resetNota()">Reset</button>
-            <button class="print-btn" onclick="printInvoice()">Print</button>
             <button class="print-thermal-btn" onclick="printThermalInvoice()">Cetak Struk</button>
+            <button class="preview-btn" onclick="showPreview()">Preview</button>
         </div>
 
         <table id="itemsTable">
@@ -575,6 +572,14 @@ margin-left: 50px;
         <!-- ... -->
     </div>
 
+<!-- Modal untuk Preview -->
+<div id="previewModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePreviewModal()">&times;</span>
+        <div id="previewContent"></div>
+    </div>
+</div>
+
     <!-- Modal untuk menampilkan nota tersimpan -->
     <div id="invoiceModal" class="modal">
         <div class="modal-content">
@@ -625,6 +630,75 @@ margin-left: 50px;
         document.getElementById('invoiceNumberDisplay').textContent = newNumber;
     });
 }
+
+
+function mergeDuplicateCells(table) {
+    const rows = table.querySelectorAll('tbody tr');
+    let previousValue = null;
+    let startIndex = 0;
+
+    rows.forEach((row, index) => {
+        const currentCell = row.querySelector('td:first-child');
+        const currentValue = currentCell.textContent.trim();
+
+        if (currentValue === previousValue) {
+            // Gabungkan sel jika nilai sama dengan sebelumnya
+            rows[startIndex].querySelector('td:first-child').rowSpan = (index - startIndex + 1);
+            currentCell.remove(); // Hapus sel yang digabungkan
+        } else {
+            // Mulai rentang baru
+            previousValue = currentValue;
+            startIndex = index;
+        }
+    });
+}
+
+function showPreview() {
+    const invoiceElement = document.querySelector('.invoice');
+    const previewClone = invoiceElement.cloneNode(true);
+
+    // Hilangkan tombol aksi
+    previewClone.querySelector('.action-buttons').remove();
+
+    // Sembunyikan input dan ganti dengan teks biasa
+    previewClone.querySelectorAll('input, select, button').forEach(element => {
+        const value = element.value || element.textContent;
+        const span = document.createElement('span');
+        span.textContent = value;
+        element.replaceWith(span);
+    });
+
+    // Hilangkan kolom aksi dari tabel
+    const table = previewClone.querySelector('table');
+    if (table) {
+        table.querySelectorAll('.delete-btn-cell').forEach(cell => {
+            cell.remove(); // Hapus kolom aksi
+        });
+
+        // Gabungkan sel yang memiliki "Jenis Barang" sama
+        mergeDuplicateCells(table);
+    }
+
+    // Tampilkan di modal
+    document.getElementById('previewContent').innerHTML = '';
+    document.getElementById('previewContent').appendChild(previewClone);
+
+    // Tampilkan modal
+    document.getElementById('previewModal').style.display = 'block';
+}
+
+function closePreviewModal() {
+    document.getElementById('previewModal').style.display = 'none';
+}
+
+// Tutup modal jika klik di luar modal
+window.onclick = function(event) {
+    const modal = document.getElementById('previewModal');
+    if (event.target == modal) {
+        closePreviewModal();
+    }
+}
+
 
         function displayDate() {
             const now = new Date();
@@ -679,15 +753,6 @@ function addItem() {
             button.closest('tr').remove();
             calculateTotal();
         }
-
-        function newInvoice() {
-    if (confirm('Apakah Anda ingin membuat nota baru? Perubahan yang belum disimpan akan hilang.')) {
-        generateInvoiceNumber(); // Ini akan otomatis update nomor
-        displayDate();
-        resetNota();
-        toggleForm(true);
-    }
-}
 
 
         function resetNota() {
@@ -881,91 +946,6 @@ document.querySelectorAll('#itemsTable tbody tr').forEach(row => addEventListene
 document.getElementById('amountPaid').addEventListener('input', calculateTotal);
 document.getElementById('discount').addEventListener('input', calculateTotal);
 
-function printInvoice() {
-    const invoiceElement = document.querySelector('.invoice');
-    const printClone = invoiceElement.cloneNode(true);
-
-    // Group items by name
-    const groupedItems = {};
-    document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
-        const name = row.querySelector('.itemName').value;
-        if (!groupedItems[name]) groupedItems[name] = [];
-        groupedItems[name].push({
-            size: row.querySelector('.itemSize').value,
-            qty: row.querySelector('.itemQty').value,
-            price: row.querySelector('.itemPrice').value,
-            total: row.querySelector('.itemTotal').value
-        });
-    });
-
-    // Rebuild table with merged rows
-    const tbody = printClone.querySelector('#itemsTable tbody');
-    tbody.innerHTML = '';
-    let counter = 1;
-
-    Object.entries(groupedItems).forEach(([name, items]) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td rowspan="${items.length}">${name}</td>
-            <td>${items[0].size}</td>
-            <td>${items[0].qty}</td>
-            <td>${items[0].price}</td>
-            <td>${items[0].total}</td>
-        `;
-        tbody.appendChild(row);
-
-        for (let i = 1; i < items.length; i++) {
-            const subRow = document.createElement('tr');
-            subRow.innerHTML = `
-                <td>${items[i].size}</td>
-                <td>${items[i].qty}</td>
-                <td>${items[i].price}</td>
-                <td>${items[i].total}</td>
-            `;
-            tbody.appendChild(subRow);
-        }
-        counter++;
-    });
-
-    // Remove action buttons and inputs
-    printClone.querySelectorAll('.action-buttons, button, .delete-btn-cell, input, select').forEach(el => el.remove());
-
-    // Open print window
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <html>
-            <head>
-                <title>Print Nota - ${document.getElementById('invoiceNumberDisplay').textContent}</title>
-                <style>
-                    ${document.querySelector('style').innerHTML}
-                    
-                    @media print {
-                        body { 
-                            font-size: 12pt;
-                            margin: 0;
-                        }
-                        .invoice {
-                            border: none;
-                            box-shadow: none;
-                        }
-                        #itemsTable tr td {
-                            border-bottom: none !important;
-                        }
-                        #itemsTable tr:last-child td {
-                            border-bottom: 1px solid #ccc !important;
-                        }
-                        #itemsTable td[rowspan] {
-                            border-bottom: 1px solid #ccc !important;
-                        }
-                    }
-                </style>
-            </head>
-            <body>${printClone.outerHTML}</body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.print();
-}
 
         document.getElementById('invoiceNumberDisplay').textContent = generateInvoiceNumber();
         displayDate();
