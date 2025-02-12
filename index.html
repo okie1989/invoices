@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -6,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nota Pembayaran - KANVAS MERCHANDISE</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
 body {
         font-family: 'Roboto', sans-serif;
@@ -280,12 +282,22 @@ p {
     margin-top: 2em;
     line-height: 1px;
 }
-    .additional-info {
+.additional-info {
     font-size: 10px;
-    margin-top: 10px;
+    margin-top: -50px;
     color: #555;
-    line-height: 1px;
+    margin-left: 693px;
 }
+
+.save-jpg-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
 
 
 /* Style untuk modal preview */
@@ -555,8 +567,8 @@ margin-left: 50px;
         </div>
         
         <div class="payment-info">
-        <p><strong>Dibayar:</strong> Rp <input type="number" id="amountPaid" value=""></p>
-        <p><strong>Diskon:</strong> Rp <input type="number" id="discount" value=""></p>
+            <p><strong>Dibayar:</strong> Rp <input type="text" id="amountPaid" value=""></p>
+            <p><strong>Diskon:</strong> Rp <input type="text" id="discount" value=""></p>
         <p><strong>Kekurangan:</strong> Rp <span id="amountDue">0</span></p>
         <p><strong>Kembalian:</strong> Rp <span id="changeAmount">0</span></p>
         <p id="lunasText">LUNAS</p>
@@ -584,6 +596,7 @@ margin-left: 50px;
 <div id="previewModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closePreviewModal()">&times;</span>
+        <button class="save-jpg-btn" onclick="saveAsJPG()">Simpan sebagai JPG</button>
         <div id="previewContent"></div>
     </div>
 </div>
@@ -705,7 +718,17 @@ window.onclick = function(event) {
     if (event.target == modal) {
         closePreviewModal();
     }
-}
+
+                // Tambahkan tombol save di dalam preview content
+                const saveBtn = document.createElement('button');
+            saveBtn.className = 'save-jpg-btn';
+            saveBtn.textContent = 'Simpan sebagai JPG';
+            saveBtn.onclick = saveAsJPG;
+            
+            // Sisipkan sebelum preview content
+            previewClone.insertBefore(saveBtn, previewClone.firstChild);
+        }
+
 
 
         function displayDate() {
@@ -716,31 +739,32 @@ window.onclick = function(event) {
         }
 
         function calculateTotal() {
-            let totalQty = 0, totalPrice = 0;
+    let totalQty = 0, totalPrice = 0;
 
-            document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
-                const qty = Math.abs(parseInt(row.querySelector('.itemQty').value) || 0);
-                const price = parseFloat(row.querySelector('.itemPrice').value.replace(/\./g, '')) || 0;
-                const total = qty * price;
-                row.querySelector('.itemTotal').value = formatRupiah(total);
-        
-                totalQty += qty;
-                totalPrice += total;
-            });
-        
-            document.getElementById('totalQty').textContent = totalQty;
-            document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
-        
-            const paid = parseFloat(document.getElementById('amountPaid').value.replace(/\./g, '')) || 0;
-            const discount = parseFloat(document.getElementById('discount').value.replace(/\./g, '')) || 0;
-            const due = totalPrice - paid - discount;
-            const change = Math.max(paid - (totalPrice - discount), 0);
-        
-            document.getElementById('amountDue').textContent = formatRupiah(Math.max(due, 0));
-            document.getElementById('changeAmount').textContent = formatRupiah(change);
-        
-            document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
-        }
+    document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+        const qty = Math.abs(parseInt(row.querySelector('.itemQty').value) || 0);
+        const price = parseFloat(row.querySelector('.itemPrice').value.replace(/\./g, '')) || 0;
+        const total = qty * price;
+        row.querySelector('.itemTotal').value = formatRupiah(total);
+
+        totalQty += qty;
+        totalPrice += total;
+    });
+
+    document.getElementById('totalQty').textContent = totalQty;
+    document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
+
+    const paid = parseFloat(document.getElementById('amountPaid').value.replace(/\./g, '')) || 0;
+    const discount = parseFloat(document.getElementById('discount').value.replace(/\./g, '')) || 0;
+    const due = totalPrice - paid - discount;
+    const change = Math.max(paid - (totalPrice - discount), 0);
+
+    document.getElementById('amountDue').textContent = formatRupiah(Math.max(due, 0));
+    document.getElementById('changeAmount').textContent = formatRupiah(change);
+
+    document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
+}
+
 
 function addItem() {
     const newRow = document.createElement('tr');
@@ -937,7 +961,9 @@ function addItem() {
 }
 
 function formatRupiahInput(value) {
+    // Hapus semua karakter non-digit
     const num = value.replace(/\D/g, '');
+    // Format angka dengan titik sebagai pemisah ribuan
     return num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
@@ -950,9 +976,17 @@ function addEventListenersToRow(row) {
     });
 }
 
+document.getElementById('amountPaid').addEventListener('input', function(e) {
+    this.value = formatRupiahInput(this.value);
+    calculateTotal(); // Panggil fungsi calculateTotal untuk memperbarui total
+});
+
+document.getElementById('discount').addEventListener('input', function(e) {
+    this.value = formatRupiahInput(this.value);
+    calculateTotal(); // Panggil fungsi calculateTotal untuk memperbarui total
+});
+
 document.querySelectorAll('#itemsTable tbody tr').forEach(row => addEventListenersToRow(row));
-document.getElementById('amountPaid').addEventListener('input', calculateTotal);
-document.getElementById('discount').addEventListener('input', calculateTotal);
 
 
         document.getElementById('invoiceNumberDisplay').textContent = generateInvoiceNumber();
@@ -1003,6 +1037,30 @@ function updateDatalistForColumn(selector, datalistId, currentInput) {
     datalist.innerHTML = uniqueValues.map(value => `<option value="${value}">`).join('');
 }
 
+// Fungsi untuk menyimpan sebagai JPG
+function saveAsJPG() {
+            // Ambil elemen preview content
+            const previewContent = document.getElementById('previewContent');
+            
+            // Sembunyikan elemen yang tidak diinginkan di dalam preview
+            const elementsToHide = previewContent.querySelectorAll('.close, .save-jpg-btn');
+            elementsToHide.forEach(el => el.style.display = 'none');
+            
+            // Ambil screenshot
+            html2canvas(previewContent, {
+                scale: 2, // Kualitas gambar 2x
+                logging: false // Nonaktifkan logging
+            }).then(canvas => {
+                // Kembalikan tampilan elemen yang disembunyikan
+                elementsToHide.forEach(el => el.style.display = '');
+                
+                // Konversi ke JPG dan download
+                const link = document.createElement('a');
+                link.download = `invoice-${Date.now()}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            });
+        }
 
 function printThermalInvoice() {
     const invoiceElement = document.querySelector('.invoice');
