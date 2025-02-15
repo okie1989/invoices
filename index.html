@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -6,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nota Pembayaran - KANVAS MERCHANDISE</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
 body {
@@ -80,6 +82,7 @@ body {
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
+            text-transform: uppercase;
 
         }
 
@@ -99,6 +102,7 @@ body {
         border: 1px solid #ccc;
         border-radius: 4px;
         font-size: 14px;
+        text-transform: uppercase;
     }
     table {
         width: 95%;
@@ -147,6 +151,7 @@ th {
         box-sizing: border-box;
         border: 1px solid #ccc;
         border-radius: 4px;
+        text-transform: uppercase;
     }
     .total {
     text-align: center;
@@ -179,9 +184,19 @@ th {
         color: white;
     }
     .delete-btn {
-        background-color: #dc3545;
-        color: white;
-    }
+        background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  min-width: -webkit-fill-available;
+  border-radius: 43px;
+}
+.delete-btn:hover {
+  background-color: RoyalBlue;
+}
+
     .reset-btn {
         background-color: #ffc107;
         color: black;
@@ -254,6 +269,7 @@ th {
     .invoice-actions button {
         margin-left: 10px;
         padding: 5px 10px;
+        min-inline-size: min-content;
     }
     .payment-info {
     column-count: 5;
@@ -420,102 +436,171 @@ margin-left: 50px;
 }
 
 
-    /* Mobile Optimizations */
-    @media screen and (max-width: 600px) {
-        body {
-            margin: 10px;
-            font-size: 16px;
-        }
-        .header {
-            flex-direction: column;
-        }
-        .invoice-date {
-            text-align: left;
-            margin-top: 10px;
-            font-size: 16px;
-        }
-        .form-group {
-            margin-left: 0;
-        }
-        table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-        }
-        th:first-child::after {
-            content: "" !important;
-        }
-        th:first-child span {
-            display: inline !important;
-        }
-        input, select {
-            font-size: 16px !important;
-            min-height: 40px;
-            padding: 8px !important;
-        }
-        .action-buttons {
-            flex-direction: column;
-        }
-        .action-buttons button {
-            width: 100%;
-            margin: 5px 0;
-            padding: 15px 20px;
-            font-size: 16px;
-        }
-        .order-name-section {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 5px;
-        }
-        .order-name-section label {
-            width: 100%;
-            margin-bottom: 5px;
-        }
-        .order-name-section input {
-            width: 100%;
-        }
-        .delete-btn-cell button {
-            padding: 8px 12px;
-            font-size: 14px;
-        }
-        .payment-info input {
-            font-size: 18px !important;
-            padding: 12px !important;
-        }
-        .logo {
-            margin-bottom: 15px;
-        }
-        .company-info h2 {
-            font-size: 20px;
-        }
-        .invoice-number {
-            font-size: 16px;
-        }
-        td:first-child, th:first-child {
-            min-width: 150px;
-        }
-        .total {
-            font-size: 18px;
-        }
+@media screen and (max-width: 600px) {
+    body {
+        margin: 10px;
+        font-size: 16px;
     }
 
-    input, select, button {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        border-radius: 8px !important;
+    .header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
-    input[type="number"] {
-        inputmode: numeric;
+
+    .invoice-date {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 16px;
     }
-    .itemQty, .itemPrice {
-        min-width: 80px;
+
+    .form-group {
+        flex-direction: inherit;
+        align-items: center;
     }
-        /* Tambahkan style untuk uppercase */
-        input[type="text"], #customerName, #orderName, .itemName, .itemSize {
-            text-transform: uppercase;
-        }
+
+    .form-group label {
+        margin-bottom: 5px;
+    }
+
+    .form-group input {
+        width: 100%;
+    }
+
+    .order-name-section {
+        flex-direction: inherit;
+        align-items: center;
+    }
+
+    .order-name-section label {
+        margin-bottom: 5px;
+    }
+
+    .order-name-section input {
+        width: 100%;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    th, td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .action-buttons button {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+    }
+
+    .total {
+        column-count: 1;
+        text-align: left;
+    }
+
+    .payment-info {
+        column-count: 1;
+    }
+
+    .bank-info {
+        margin-inline: 0;
+        margin-top: 1em;
+        line-height: 1.5;
+    }
+
+    .additional-info {
+        margin-left: 0;
+    text-align: center;
+    line-height: 18%;
+    display: table-column;
+    }
+
+    .modal-content {
+        width: 90%;
+        margin: 10% auto;
+    }
+
+    #previewModal .modal-content {
+        width: 90%;
+        max-width: none;
+    }
+}
+
+/* Ensure inputs and buttons are touch-friendly */
+input, select, button {
+    min-height: 40px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* Disable zoom on input focus */
+input, select, textarea {
+    font-size: 16px;
+}
+
+/* Ensure buttons are easily tappable */
+button {
+    min-width: 120px;
+    padding: 12px 20px;
+}
+
+/* Adjust logo size for mobile */
+.logo {
+    width: 80px;
+    margin-bottom: 15px;
+}
+
+/* Adjust company info for mobile */
+.company-info h2 {
+    font-size: 20px;
+}
+
+.company-info p {
+    font-size: 14px;
+}
+
+/* Ensure table headers are readable */
+th {
+    font-size: 14px;
+}
+
+/* Adjust total section for mobile */
+.total {
+    font-size: 18px;
+    padding: 10px;
+}
+
+/* Ensure modal is centered and readable */
+.modal-content {
+    padding: 15px;
+}
+
+/* Ensure preview modal is readable */
+#previewModal .modal-content {
+    padding: 15px;
+}
+
+/* Ensure share buttons are easily tappable */
+.share-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+}
+
+/* Ensure save JPG button is easily tappable */
+.save-jpg-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+}
     </style>
     <style>
         .disabled-form input:disabled,
@@ -565,7 +650,10 @@ margin-left: 50px;
             <button class="reset-btn" onclick="resetNota()">Reset</button>
             <button class="print-thermal-btn" onclick="printThermalInvoice()">Cetak Struk</button>
             <button class="preview-btn" onclick="showPreview()">Preview</button>
+        
         </div>
+
+        
 
         <table id="itemsTable">
             <thead>
@@ -575,7 +663,7 @@ margin-left: 50px;
                     <th>Qty</th>
                     <th>Harga</th>
                     <th>Jumlah</th>
-                    <th class="delete-btn-cell">Aksi</th>
+                    <th class="delete-btn-cell"></th>
                 </tr>
             </thead>
             <tbody>
@@ -585,7 +673,7 @@ margin-left: 50px;
                     <td><input type="number" class="itemQty"></td>
                     <td><input type="text" class="itemPrice"></td>
                     <td><input type="text" class="itemTotal" readonly></td>
-                    <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
+                    <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
                 </tr>
             </tbody>
         </table>
@@ -869,7 +957,7 @@ function addItem() {
         <td><input type="number" class="itemQty"></td>
         <td><input type="text" class="itemPrice" list="pricesList"></td>
         <td><input type="text" class="itemTotal" readonly></td>
-        <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
+        <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
     `;
     document.querySelector('#itemsTable tbody').appendChild(newRow);
     addEventListenersToRow(newRow);
@@ -892,7 +980,7 @@ function addItem() {
             <td><input type="number" class="itemQty"></td>
             <td><input type="text" class="itemPrice"></td>
             <td><input type="text" class="itemTotal" readonly></td>
-            <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
+            <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
         </tr>`;
     document.getElementById('amountPaid').value = '';
     document.getElementById('discount').value = '0';
@@ -1020,7 +1108,7 @@ function openSavedInvoicesModal() {
                     </div>
                     <div class="invoice-actions">
                         <button onclick="loadInvoice('${invoice.invoiceNumber}')">Edit</button>
-                        <button onclick="deleteSavedInvoice('${invoice.invoiceNumber}')">Hapus</button>
+                        <button onclick="deleteSavedInvoice('${invoice.invoiceNumber}')"><i class="fa fa-trash"></i></button>
                     </div>
                 `;
                 list.appendChild(li);
@@ -1050,7 +1138,7 @@ function openSavedInvoicesModal() {
                 <td><input type="number" class="itemQty" value="${item.qty}"></td>
                 <td><input type="text" class="itemPrice" value="${formatRupiahInput(item.price)}"></td>
                 <td><input type="text" class="itemTotal" readonly value="${item.total}"></td>
-                <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)">Hapus</button></td>
+                <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
             `;
             tbody.appendChild(row);
             addEventListenersToRow(row);
