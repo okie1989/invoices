@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -697,9 +698,12 @@ margin-left: 50px;
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h3>Nota Tersimpan</h3>
+            <input type="text" id="searchCustomerName" oninput="searchInvoices()" placeholder="Cari berdasarkan nama pelanggan...">
+        <ul id="savedInvoicesList"></ul>
             <ul id="savedInvoicesList"></ul>
         </div>
     </div>
+
 
     <script>
         // Firebase configuration and initialization
@@ -945,6 +949,33 @@ function addItem() {
             modal.style.display = 'block';
             updateInvoiceList();
         }
+
+
+        function searchInvoices() {
+    const searchQuery = document.getElementById('searchCustomerName').value.toLowerCase();
+    const invoices = document.querySelectorAll('#savedInvoicesList li');
+    
+    invoices.forEach(invoice => {
+        const customerName = invoice.textContent.toLowerCase();
+        if (customerName.includes(searchQuery)) {
+            invoice.style.display = 'block';
+        } else {
+            invoice.style.display = 'none';
+        }
+    });
+}
+
+function closeSavedInvoicesModal() {
+    document.getElementById('savedInvoicesModal').style.display = 'none';
+}
+
+function openSavedInvoicesModal() {
+    document.getElementById('savedInvoicesModal').style.display = 'block';
+}
+
+
+
+
 
         function updateInvoiceList() {
     const list = document.getElementById('savedInvoicesList');
