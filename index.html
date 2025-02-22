@@ -1,5 +1,7 @@
 
 
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -18,11 +20,15 @@ body {
     width: 100%;
     max-width: 1500px;
     margin: 0 auto;
-    border: 1px solid #ccc;
+    border: 1px solid #e7e7e7;
     padding: 20px;
     box-sizing: border-box;
-    background-color: #f9f9f9;
+    background-color: #fffdfd;
     border: solid;
+    background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
 }
     .header {
         display: flex;
@@ -104,6 +110,7 @@ body {
         font-size: 14px;
         text-transform: uppercase;
     }
+    
     table {
         width: 95%;
         border-collapse: collapse;
@@ -164,6 +171,7 @@ th {
     font-size: 14pt;
     border-style: solid;
     padding: 5px;
+    
 }
     .action-buttons {
         display: flex;
@@ -179,8 +187,13 @@ th {
     min-width: 120px;
     border-bottom-left-radius: 42px;
     border-top-right-radius: 46px;
+    transition: all 0.3s ease;
+    transform: scale(1);
 }
-
+.action-buttons button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
     .print-thermal-btn {
         background-color: #1f4772;
         color: white;
@@ -251,6 +264,7 @@ th {
         height: 100%;
         overflow: auto;
         background-color: rgba(0,0,0,0.4);
+        transition: opacity 0.3s ease;
     }
     .modal-content {
         background-color: #fefefe;
@@ -259,20 +273,38 @@ th {
         border: 1px solid #888;
         width: 80%;
         max-width: 500px;
+        animation: slideIn 0.3s ease;
+        background: linear-gradient(135deg, #fff, #f9f9f9);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+        
     }
+    @keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
     .close {
         color: #aaa;
         float: right;
         font-size: 28px;
         font-weight: bold;
         cursor: pointer;
+        transition: color 0.3s ease;
     }
     .close:hover {
         color: black;
+        color: #977676;
     }
     #savedInvoicesList {
         list-style-type: none;
         padding: 0;
+        
     }
     #savedInvoicesList li {
         padding: 10px;
@@ -280,7 +312,12 @@ th {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        transition: background-color 0.3s ease;
     }
+
+    #savedInvoicesList li:hover {
+    background-color: #f1f1f1;
+}
     .invoice-actions button {
         margin-left: 10px;
         padding: 5px 10px;
@@ -355,10 +392,13 @@ p {
             margin: 0 10px;
             font-weight: 500;
             transition: 0.3s;
+            transition: all 0.3s ease;
         }
         
         .share-btn:hover {
             opacity: 0.9;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
         .share-btn.whatsapp {
@@ -368,6 +408,29 @@ p {
         .share-btn.download {
             background: #2196F3;
         }
+
+        body::-webkit-scrollbar {
+    width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+input:focus, select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    transition: all 0.3s ease;
+}
 
 
 /* Style untuk modal preview */
