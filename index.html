@@ -1,17 +1,13 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nota Pembayaran - KANVAS MERCHANDISE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nota Pembayaran - KANVAS MERCHANDISE</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
 body {
         font-family: 'Roboto', sans-serif;
         margin: 20px;
@@ -28,7 +24,6 @@ body {
     background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-
 }
     .header {
         display: flex;
@@ -89,9 +84,7 @@ body {
             border-radius: 4px;
             font-size: 14px;
             text-transform: uppercase;
-
         }
-
     .order-name-section {
         margin: 10px 0 20px;
         display: flex;
@@ -110,7 +103,6 @@ body {
         font-size: 14px;
         text-transform: uppercase;
     }
-    
     table {
         width: 95%;
         border-collapse: collapse;
@@ -171,7 +163,6 @@ th {
     font-size: 14pt;
     border-style: solid;
     padding: 5px;
-    
 }
     .action-buttons {
         display: flex;
@@ -211,7 +202,6 @@ th {
 .delete-btn:hover {
   background-color: RoyalBlue;
 }
-
     .reset-btn {
         background-color: #ffc107;
         color: black;
@@ -232,8 +222,6 @@ th {
         background-color: #1b8cf0;
         color: white;
     }
-
-
     #lunasText {
     position: fixed;
     top: 50%;
@@ -247,13 +235,11 @@ th {
     display: none;
     animation: lunasPop 1s ease;
 }
-
 @keyframes lunasPop {
     0% { transform: translate(-50%, -50%) scale(0) rotate(-30deg); }
     50% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); }
     100% { transform: translate(-50%, -50%) scale(1) rotate(-15deg); }
 }
-
     .modal {
         display: none;
         position: fixed;
@@ -277,7 +263,6 @@ th {
         background: linear-gradient(135deg, #fff, #f9f9f9);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-        
     }
     @keyframes slideIn {
     from {
@@ -304,7 +289,6 @@ th {
     #savedInvoicesList {
         list-style-type: none;
         padding: 0;
-        
     }
     #savedInvoicesList li {
         padding: 10px;
@@ -314,7 +298,6 @@ th {
         align-items: center;
         transition: background-color 0.3s ease;
     }
-
     #savedInvoicesList li:hover {
     background-color: #f1f1f1;
 }
@@ -337,17 +320,12 @@ th {
     text-transform: uppercase;
     font-weight: bold;
 }
-
 p {
     line-height: normal;
 }
-
 p {
     margin: auto;
 }
-
-
-
     .unpaid {
         color: red;
     }
@@ -366,7 +344,6 @@ p {
     color: #555;
     margin-left: 317px;
 }
-
 .save-jpg-btn {
             background: #2196F3;
             color: white;
@@ -376,12 +353,10 @@ p {
             cursor: pointer;
             margin: 10px 0;
         }
-
         .share-buttons {
             text-align: center;
             margin: 15px 0;
         }
-        
         .share-btn {
             background: #25D366;
             color: white;
@@ -394,45 +369,35 @@ p {
             transition: 0.3s;
             transition: all 0.3s ease;
         }
-        
         .share-btn:hover {
             opacity: 0.9;
             transform: translateY(-3px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        
         .share-btn.whatsapp {
             background: #25D366;
         }
-        
         .share-btn.download {
             background: #2196F3;
         }
-
         body::-webkit-scrollbar {
     width: 10px;
 }
-
 body::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
-
 body::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 5px;
 }
-
 body::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
-
 input:focus, select:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     transition: all 0.3s ease;
 }
-
-
 /* Style untuk modal preview */
 #previewModal .modal-content {
     max-width: 90%;
@@ -440,12 +405,10 @@ input:focus, select:focus {
     border-radius: 15px;
     overflow: hidden;
 }
-
 #previewContent {
     transform: scale(0.98);
     transition: transform 0.3s;
 }
-
 #previewContent:hover {
     transform: scale(1);
 }
@@ -454,7 +417,6 @@ input:focus, select:focus {
 #previewContent button {
     display: none; /* Sembunyikan input dan tombol */
 }
-
 /* Sederhanakan tampilan tabel */
 #previewContent table {
     width: 100%;
@@ -462,7 +424,6 @@ input:focus, select:focus {
     margin-bottom: 20px;
     border: none; /* Hilangkan border tabel */
 }
-
 #previewContent table th,
 #previewContent table td {
     border-left: none;
@@ -473,15 +434,12 @@ input:focus, select:focus {
     text-align: left;
     font-size: 14px;
 }
-
 #previewContent table thead tr {
     border-bottom: 2px solid #000; /* Garis header lebih tebal */
 }
-
 #previewContent table tbody tr:last-child td {
     border-bottom: none; /* Hilangkan garis bawah di row terakhir */
 }
-
 @media print {
     .thermal-invoice {
         width: 62mm;
@@ -507,340 +465,315 @@ margin-left: 50px;
         text-align: right;
     }
 }
-
 .thermal-invoice .item-details {
     text-align: left;
     margin-left: 10px;
     line-height: 1.4;
 }
-
 .thermal-invoice .item-details br {
     display: block;
     content: "";
     margin: 4px 0;
     text-align: center;
 }
-
-
 @media screen and (max-width: 600px) {
     body {
         margin: 10px;
         font-size: 16px;
     }
-
     .header {
         flex-direction: column;
         align-items: center;
         text-align: center;
     }
-
     .invoice-date {
         text-align: center;
         margin-top: 10px;
         font-size: 16px;
     }
-
     .form-group {
         flex-direction: inherit;
         align-items: center;
     }
-
     .form-group label {
         margin-bottom: 5px;
     }
-
     .form-group input {
         width: 100%;
     }
-
     .order-name-section {
         flex-direction: inherit;
         align-items: center;
     }
-
     .order-name-section label {
         margin-bottom: 5px;
     }
-
     .order-name-section input {
         width: 100%;
     }
-
     table {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
     }
-
     th, td {
         padding: 10px;
         font-size: 14px;
     }
-
     .action-buttons {
         flex-direction: column;
         gap: 10px;
     }
-
     .action-buttons button {
         width: 100%;
         padding: 15px;
         font-size: 16px;
     }
-
     .total {
         column-count: 1;
         text-align: left;
     }
-
     .payment-info {
         column-count: 1;
     }
-
     .bank-info {
         margin-inline: 0;
         margin-top: 1em;
         line-height: 1.5;
     }
-
     .additional-info {
         margin-left: 0;
     text-align: center;
     line-height: 18%;
     display: table-column;
     }
-
     .modal-content {
         width: 90%;
         margin: 10% auto;
     }
-
     #previewModal .modal-content {
         width: 90%;
         max-width: none;
     }
 }
-
 /* Ensure inputs and buttons are touch-friendly */
 input, select, button {
     min-height: 40px;
     padding: 10px;
     font-size: 16px;
 }
-
 /* Disable zoom on input focus */
 input, select, textarea {
     font-size: 16px;
 }
-
 /* Ensure buttons are easily tappable */
 button {
     min-width: 120px;
     padding: 12px 20px;
 }
-
 /* Adjust logo size for mobile */
 .logo {
     width: 80px;
     margin-bottom: 15px;
 }
-
 /* Adjust company info for mobile */
 .company-info h2 {
     font-size: 20px;
 }
-
 .company-info p {
     font-size: 14px;
 }
-
 /* Ensure table headers are readable */
 th {
     font-size: 14px;
 }
-
 /* Adjust total section for mobile */
 .total {
     font-size: 18px;
     padding: 10px;
 }
-
 /* Ensure modal is centered and readable */
 .modal-content {
     padding: 15px;
 }
-
 /* Ensure preview modal is readable */
 #previewModal .modal-content {
     padding: 15px;
 }
-
 /* Ensure share buttons are easily tappable */
 .share-btn {
     padding: 12px 25px;
     font-size: 16px;
 }
-
 /* Ensure save JPG button is easily tappable */
 .save-jpg-btn {
     padding: 12px 25px;
     font-size: 16px;
 }
-    </style>
-    <style>
+</style>
+<style>
         .disabled-form input:disabled,
         .disabled-form button:disabled {
             background-color: #f0f0f0;
             cursor: not-allowed;
             opacity: 0.7;
         }
-    </style>
-    <!-- Add Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+</style>
+<!-- Add Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 </head>
 <body>
-
-    <datalist id="itemNamesList"></datalist>
+<datalist id="itemNamesList"></datalist>
 <datalist id="sizesList"></datalist>
 <datalist id="pricesList"></datalist>
-
-    <div class="invoice">
-        <div class="header">
-            <div class="logo">
-                <img src="https://i.imgur.com/75tlt7m.png" alt="Logo">
-            </div>
-            <div class="company-info">
-                <h2>KANVAS MERCHANDISE</h2>
-                <p>Jl. Riau Barat No.21, Kota Blitar</p>
-                <p>Telp. +6282257423324</p>
-                <div class="invoice-number">No. Invoice: <span id="invoiceNumberDisplay"></span></div>
-                <div class="invoice-date">Tgl: <span id="invoiceDateDisplay"></span></div>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label>Kepada Yth.</label>
-            <input type="text" id="customerName" placeholder="Nama Pelanggan">
-        </div>
-
-        <div class="order-name-section">
-            <label for="orderName">Nama Pesanan:</label>
-            <input type="text" id="orderName" placeholder="Masukkan nama pesanan">
-        </div>
-
-        <div class="action-buttons">
-            <button class="save-btn" onclick="saveInvoice()">Simpan Nota</button>
-            <button class="load-btn" onclick="showSavedInvoices()">Buka Nota</button>
-            <button class="reset-btn" onclick="resetNota()">Reset</button>
-            <button class="print-thermal-btn" onclick="printThermalInvoice()">Cetak Struk</button>
-            <button class="preview-btn" onclick="showPreview()">Preview</button>
-        
-        </div>
-
-        
-
-        <table id="itemsTable">
-            <thead>
-                <tr>
-                    <th><span>Nama Barang</span></th>
-                    <th>Size</th>
-                    <th>Qty</th>
-                    <th>Harga</th>
-                    <th>Jumlah</th>
-                    <th class="delete-btn-cell"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input type="text" class="itemName"></td>
-                    <td><input type="text" class="itemSize" placeholder="..."></td>
-                    <td><input type="number" class="itemQty"></td>
-                    <td><input type="text" class="itemPrice"></td>
-                    <td><input type="text" class="itemTotal" readonly></td>
-                    <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="total">
-            <p><strong>Jumlah Barang:</strong> <span id="totalQty">0</span></p>
-            <p><strong>Total Harga:</strong> Rp <span id="totalPrice">0</span></p>
-        </div>
-        
-        <div class="payment-info">
-            <p><strong>Dibayar:</strong> Rp <input type="text" id="amountPaid" value=""></p>
-            <p><strong>Diskon:</strong> Rp <input type="text" id="discount" value=""></p>
-
-            <div class="amountDue">
-                <p><strong>Kekurangan:</strong> 
-                    Rp <span id="amountDue">0</span></p> 
-            </div>
-        
-        <p><strong>Kembalian:</strong> Rp <span id="changeAmount">0</span></p>
-        <p id="lunasText">LUNAS</p>
-    </div>
-
-   
-
-        <div class="bank-info">
-            <p><strong>Transfer Bank:</strong></p>
-            <p>BRI: 350701030785536 a/n Okky Maulana M</p>
-            <p>BCA: 0901702593 a/n Okky Maulana M</p>
-        </div>
-
-        <div class="additional-info">
-            <p><strong>Keterangan:</strong></p>
-            <p>1. Batas konfimasi dp 1x24 jam setelah tagihan dikirim.</p>
-            <p>2. Lewat dari 1x24 jam, maka dateline produksi dihitung setelah konfirmasi DP.</p>
-            <p>3. Pastikan sudah mengecek detail pesanan, kelalaian pelanggan bukan tanggung jawab kami.</p>
-        </div>
-    </div>
-
-        <!-- Bagian tabel dan tombol aksi lainnya -->
-        <!-- ... -->
-    </div>
-
+<div class="invoice">
+	<div class="header">
+		<div class="logo">
+			<img src="https://i.imgur.com/75tlt7m.png" alt="Logo">
+		</div>
+		<div class="company-info">
+			<h2>KANVAS MERCHANDISE</h2>
+			<p>
+				Jl. Riau Barat No.21, Kota Blitar
+			</p>
+			<p>
+				Telp. +6282257423324
+			</p>
+			<div class="invoice-number">
+				No. Invoice: <span id="invoiceNumberDisplay"></span>
+			</div>
+			<div class="invoice-date">
+				Tgl: <span id="invoiceDateDisplay"></span>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label>Kepada Yth.</label>
+		<input type="text" id="customerName" placeholder="Nama Pelanggan"></div>
+	<div class="order-name-section">
+		<label for="orderName">Nama Pesanan:</label>
+		<input type="text" id="orderName" placeholder="Masukkan nama pesanan"></div>
+	<div class="action-buttons">
+		<button class="save-btn" onclick="saveInvoice()">Simpan Nota</button>
+		<button class="load-btn" onclick="showSavedInvoices()">Buka Nota</button>
+		<button class="reset-btn" onclick="resetNota()">Reset</button>
+		<button class="print-thermal-btn" onclick="printThermalInvoice()">Cetak Struk</button>
+		<button class="preview-btn" onclick="showPreview()">Preview</button>
+	</div>
+	<table id="itemsTable">
+	<thead>
+	<tr>
+		<th>
+			<span>Nama Barang</span>
+		</th>
+		<th>Size</th>
+		<th>Qty</th>
+		<th>Harga</th>
+		<th>Jumlah</th>
+		<th class="delete-btn-cell"></th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>
+			<input type="text" class="itemName"></td>
+		<td>
+			<input type="text" class="itemSize" placeholder="..."></td>
+		<td>
+			<input type="number" class="itemQty"></td>
+		<td>
+			<input type="text" class="itemPrice"></td>
+		<td>
+			<input type="text" class="itemTotal" readonly></td>
+		<td class="delete-btn-cell">
+			<button class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button>
+		</td>
+	</tr>
+	</tbody>
+	</table>
+	<div class="total">
+		<p>
+			<strong>Jumlah Barang:</strong><span id="totalQty">0</span>
+		</p>
+		<p>
+			<strong>Total Harga:</strong> Rp <span id="totalPrice">0</span>
+		</p>
+	</div>
+	<div class="payment-info">
+		<p>
+			<strong>Dibayar:</strong> Rp <input type="text" id="amountPaid" value=""></p>
+		<p>
+			<strong>Diskon:</strong> Rp <input type="text" id="discount" value=""></p>
+		<div class="amountDue">
+			<p>
+				<strong>Kekurangan:</strong> Rp <span id="amountDue">0</span>
+			</p>
+		</div>
+		<p>
+			<strong>Kembalian:</strong> Rp <span id="changeAmount">0</span>
+		</p>
+		<p id="lunasText">LUNAS</p>
+	</div>
+	<div class="bank-info">
+		<p>
+			<strong>Transfer Bank:</strong>
+		</p>
+		<p>
+			BRI: 350701030785536 a/n Okky Maulana M
+		</p>
+		<p>
+			BCA: 0901702593 a/n Okky Maulana M
+		</p>
+	</div>
+	<div class="additional-info">
+		<p>
+			<strong>Keterangan:</strong>
+		</p>
+		<p>
+			1. Batas konfimasi dp 1x24 jam setelah tagihan dikirim.
+		</p>
+		<p>
+			2. Lewat dari 1x24 jam, maka dateline produksi dihitung setelah konfirmasi DP.
+		</p>
+		<p>
+			3. Pastikan sudah mengecek detail pesanan, kelalaian pelanggan bukan tanggung jawab kami.
+		</p>
+	</div>
+</div>
+<!-- Bagian tabel dan tombol aksi lainnya -->
+<!-- ... --></div>
 <!-- Modal untuk Preview -->
 <div id="previewModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closePreviewModal()">&times;</span>
-            <div class="share-buttons">
-                <button class="share-btn whatsapp" onclick="shareToWhatsApp()">
-                    <i class="fab fa-whatsapp"></i> Share ke WA
-                </button>
-                <button class="share-btn download" onclick="downloadJPG()">
-                    <i class="fas fa-download"></i> Download
-                </button>
-            </div>
-            <div id="previewContent"></div>
-        </div>
-    </div>
-
-    <script>
+<div class="modal-content">
+	<span class="close" onclick="closePreviewModal()">&times;</span>
+	<div class="share-buttons">
+		<button class="share-btn whatsapp" onclick="shareToWhatsApp()">
+		<i class="fab fa-whatsapp"></i> Share ke WA </button>
+		<button class="share-btn download" onclick="downloadJPG()">
+		<i class="fas fa-download"></i> Download </button>
+	</div>
+	<div id="previewContent"></div>
+</div>
+</div>
+<script>
         let currentCanvas = null;
-        
         async function capturePreview() {
             const previewContent = document.getElementById('previewContent');
             const elementsToHide = previewContent.querySelectorAll('.close, .share-buttons');
-            
             // Sembunyikan elemen yang tidak perlu
             elementsToHide.forEach(el => el.style.display = 'none');
-            
             // Ambil screenshot
             const canvas = await html2canvas(previewContent, {
                 scale: 2,
                 logging: false,
                 backgroundColor: '#ffffff' // Pastikan background putih
             });
-            
             // Tampilkan kembali elemen
             elementsToHide.forEach(el => el.style.display = '');
-            
             return canvas;
         }
-
         async function downloadJPG() {
             const canvas = await capturePreview();
             const link = document.createElement('a');
@@ -848,12 +781,10 @@ th {
             link.href = canvas.toDataURL('image/jpeg', 0.95);
             link.click();
         }
-
         async function shareToWhatsApp() {
             const canvas = await capturePreview();
             canvas.toBlob(blob => {
                 const file = new File([blob], 'invoice.jpg', { type: 'image/jpeg' });
-                
                 if(navigator.share) {
                     // Untuk mobile
                     navigator.share({
@@ -869,24 +800,19 @@ th {
             }, 'image/jpeg');
         }
     </script>
-    
-    <!-- Tambahkan Font Awesome untuk ikon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
-
-    <!-- Modal untuk menampilkan nota tersimpan -->
-    <div id="invoiceModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h3>Nota Tersimpan</h3>
-            <input type="text" id="searchCustomerName" oninput="searchInvoices()" placeholder="Cari berdasarkan nama pelanggan...">
-        <ul id="savedInvoicesList"></ul>
-            <ul id="savedInvoicesList"></ul>
-        </div>
-    </div>
-
-
-    <script>
+<!-- Tambahkan Font Awesome untuk ikon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- Modal untuk menampilkan nota tersimpan -->
+<div id="invoiceModal" class="modal">
+<div class="modal-content">
+	<span class="close" onclick="closeModal()">&times;</span>
+	<h3>Nota Tersimpan</h3>
+	<input type="text" id="searchCustomerName" oninput="searchInvoices()" placeholder="Cari berdasarkan nama pelanggan...">
+	<ul id="savedInvoicesList"></ul>
+	<ul id="savedInvoicesList"></ul>
+</div>
+</div>
+<script>
         // Firebase configuration and initialization
         const firebaseConfig = {
             apiKey: "AIzaSyDkUgsmEytdSix4d5lvT7bUrhr9sVQlqyY",
@@ -897,47 +823,36 @@ th {
             messagingSenderId: "439292206643",
             appId: "1:439292206643:web:8458a829217583c546cd46"
         };
-
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
-
         function generateInvoiceNumber() {
     const now = new Date();
     const datePart = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-    
     // Cari nomor terakhir dari database
     database.ref('invoices').orderByKey().limitToLast(1).once('value', (snapshot) => {
         let lastNumber = 0;
-        
         snapshot.forEach((childSnapshot) => {
             const lastInvoiceNumber = childSnapshot.key;
             const lastNumberPart = lastInvoiceNumber.split('-')[2];
             lastNumber = parseInt(lastNumberPart);
         });
-
         // Jika tidak ada invoice sebelumnya, mulai dari 1
         if (lastNumber === 0) {
             lastNumber = 1;
         } else {
             lastNumber += 1;
         }
-
         const newNumber = `INV-${datePart}-${String(lastNumber).padStart(3,'0')}`;
         document.getElementById('invoiceNumberDisplay').textContent = newNumber;
     });
 }
-
-
 function mergeDuplicateCells(table) {
     const rows = table.querySelectorAll('tbody tr');
     let previousValue = null;
     let startIndex = 0;
-
     rows.forEach((row, index) => {
         const currentCell = row.querySelector('td:first-child');
         const currentValue = currentCell.textContent.trim();
-
         if (currentValue === previousValue) {
             // Gabungkan sel jika nilai sama dengan sebelumnya
             rows[startIndex].querySelector('td:first-child').rowSpan = (index - startIndex + 1);
@@ -949,14 +864,11 @@ function mergeDuplicateCells(table) {
         }
     });
 }
-
 function showPreview() {
     const invoiceElement = document.querySelector('.invoice');
     const previewClone = invoiceElement.cloneNode(true);
-
     // Hilangkan tombol aksi
     previewClone.querySelector('.action-buttons').remove();
-
     // Sembunyikan input dan ganti dengan teks biasa
     previewClone.querySelectorAll('input, select, button').forEach(element => {
         const value = element.value || element.textContent;
@@ -964,84 +876,75 @@ function showPreview() {
         span.textContent = value;
         element.replaceWith(span);
     });
-
     // Hilangkan kolom aksi dari tabel
     const table = previewClone.querySelector('table');
     if (table) {
         table.querySelectorAll('.delete-btn-cell').forEach(cell => {
             cell.remove(); // Hapus kolom aksi
         });
-
         // Gabungkan sel yang memiliki "Jenis Barang" sama
         mergeDuplicateCells(table);
     }
-
     // Tampilkan di modal
     document.getElementById('previewContent').innerHTML = '';
     document.getElementById('previewContent').appendChild(previewClone);
-
     // Tampilkan modal
     document.getElementById('previewModal').style.display = 'block';
 }
-
 function closePreviewModal() {
     document.getElementById('previewModal').style.display = 'none';
 }
-
 // Tutup modal jika klik di luar modal
 window.onclick = function(event) {
     const modal = document.getElementById('previewModal');
     if (event.target == modal) {
         closePreviewModal();
     }
-
                 // Tambahkan tombol save di dalam preview content
                 const saveBtn = document.createElement('button');
             saveBtn.className = 'save-jpg-btn';
             saveBtn.textContent = 'Simpan sebagai JPG';
             saveBtn.onclick = saveAsJPG;
-            
             // Sisipkan sebelum preview content
             previewClone.insertBefore(saveBtn, previewClone.firstChild);
         }
-
-
-
         function displayDate() {
             const now = new Date();
             const options = { day: 'numeric', month: 'long', year: 'numeric' };
             const formattedDate = now.toLocaleDateString('id-ID', options);
             document.getElementById('invoiceDateDisplay').textContent = formattedDate;
         }
-
+        // Fungsi calculateTotal yang diperbarui
         function calculateTotal() {
-    let totalQty = 0, totalPrice = 0;
-
-    document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
-        const qty = Math.abs(parseInt(row.querySelector('.itemQty').value) || 0);
-        const price = parseFloat(row.querySelector('.itemPrice').value.replace(/\./g, '')) || 0;
-        const total = qty * price;
-        row.querySelector('.itemTotal').value = formatRupiah(total);
-
-        totalQty += qty;
-        totalPrice += total;
-    });
-
-    document.getElementById('totalQty').textContent = totalQty;
-    document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
-
-    const paid = parseFloat(document.getElementById('amountPaid').value.replace(/\./g, '')) || 0;
-    const discount = parseFloat(document.getElementById('discount').value.replace(/\./g, '')) || 0;
-    const due = totalPrice - paid - discount;
-    const change = Math.max(paid - (totalPrice - discount), 0);
-
-    document.getElementById('amountDue').textContent = formatRupiah(Math.max(due, 0));
-    document.getElementById('changeAmount').textContent = formatRupiah(change);
-
-    document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
-}
-
-
+            let totalQty = 0, totalPrice = 0;
+            document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+                const qty = Math.abs(parseFloat(row.querySelector('.itemQty').value) || 0);
+                const price = parseFloat(row.querySelector('.itemPrice').value.replace(/\./g, '')) || 0;
+                const total = qty * price;
+                row.querySelector('.itemTotal').value = formatRupiah(total);
+                totalQty += qty;
+                totalPrice += total;
+            });
+            document.getElementById('totalQty').textContent = totalQty;
+            document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
+            const paid = parseFloat(document.getElementById('amountPaid').value.replace(/\./g, '')) || 0;
+            const discount = parseFloat(document.getElementById('discount').value.replace(/\./g, '')) || 0;
+            const due = totalPrice - paid - discount;
+            const change = Math.max(paid - (totalPrice - discount), 0);
+            document.getElementById('amountDue').textContent = formatRupiah(due);
+            document.getElementById('changeAmount').textContent = formatRupiah(change);
+            document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
+        }
+        // Event listener untuk kolom harga
+        document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+            const priceInput = row.querySelector('.itemPrice');
+            priceInput.addEventListener('input', function (e) {
+                this.value = this.value.replace(/[^0-9-]/g, ''); // Hanya izinkan angka dan minus
+                this.value = this.value.replace(/(?!^-)-/g, ''); // Hanya satu minus di awal
+                this.value = formatRupiahInput(this.value); // Format nilai
+                calculateTotal(); // Perbarui total
+            });
+        });
 function addItem() {
     const newRow = document.createElement('tr');
     newRow.innerHTML = ` 
@@ -1056,13 +959,10 @@ function addItem() {
     addEventListenersToRow(newRow);
     newRow.querySelector('.itemName').focus();
 }
-
         function deleteRow(button) {
             button.closest('tr').remove();
             calculateTotal();
         }
-
-
         function resetNota() {
     document.getElementById('customerName').value = '';
     document.getElementById('orderName').value = '';
@@ -1078,18 +978,14 @@ function addItem() {
     document.getElementById('amountPaid').value = '';
     document.getElementById('discount').value = '0';
     calculateTotal();
-
     toggleForm(false); // Nonaktifkan form setelah reset
 }
-
-
         function saveInvoice() {
             const customerName = document.getElementById('customerName').value;
             if(!customerName) {
                 alert('Harap isi nama pelanggan!');
                 return;
             }
-
             const invoiceData = {
                 customerName: customerName,
                 invoiceNumber: document.getElementById('invoiceNumberDisplay').textContent,
@@ -1103,7 +999,6 @@ function addItem() {
                 lunas: document.getElementById('lunasText').style.display === 'block',
                 date: document.getElementById('invoiceDateDisplay').textContent
             };
-
             document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
                 invoiceData.items.push({
                     name: row.querySelector('.itemName').value,
@@ -1113,7 +1008,6 @@ function addItem() {
                     total: row.querySelector('.itemTotal').value
                 });
             });
-
             // Save to Firebase
             database.ref('invoices/' + invoiceData.invoiceNumber).set(invoiceData)
                 .then(() => {
@@ -1124,18 +1018,14 @@ function addItem() {
                     console.error('Error saving invoice: ', error);
                 });
         }
-
         function showSavedInvoices() {
             const modal = document.getElementById('invoiceModal');
             modal.style.display = 'block';
             updateInvoiceList();
         }
-
-
         function searchInvoices() {
     const searchQuery = document.getElementById('searchCustomerName').value.toLowerCase();
     const invoices = document.querySelectorAll('#savedInvoicesList li');
-    
     invoices.forEach(invoice => {
         const customerName = invoice.textContent.toLowerCase();
         if (customerName.includes(searchQuery)) {
@@ -1145,33 +1035,23 @@ function addItem() {
         }
     });
 }
-
 function closeSavedInvoicesModal() {
     document.getElementById('savedInvoicesModal').style.display = 'none';
 }
-
 function openSavedInvoicesModal() {
     document.getElementById('savedInvoicesModal').style.display = 'block';
 }
-
-
-
-
-
         function updateInvoiceList() {
     const list = document.getElementById('savedInvoicesList');
     list.innerHTML = '';
-    
     database.ref('invoices').once('value', (snapshot) => {
         const invoices = [];
         snapshot.forEach((childSnapshot) => {
             const invoice = childSnapshot.val();
             invoices.push(invoice);
         });
-
         // Sort invoices by date
         invoices.sort((a, b) => new Date(b.date) - new Date(a.date));
-
         // Group invoices by date
         const groupedInvoices = {};
         invoices.forEach(invoice => {
@@ -1181,7 +1061,6 @@ function openSavedInvoicesModal() {
             }
             groupedInvoices[date].push(invoice);
         });
-
         // Display grouped invoices
         Object.keys(groupedInvoices).forEach(date => {
             const dateHeader = document.createElement('li');
@@ -1189,7 +1068,6 @@ function openSavedInvoicesModal() {
             dateHeader.style.listStyleType = 'none';
             dateHeader.style.marginTop = '10px';
             list.appendChild(dateHeader);
-
             groupedInvoices[date].forEach(invoice => {
                 const li = document.createElement('li');
                 li.className = invoice.lunas ? 'paid' : 'unpaid';
@@ -1209,18 +1087,15 @@ function openSavedInvoicesModal() {
         });
     });
 }
-
         function loadInvoice(invoiceNumber) {
     database.ref('invoices/' + invoiceNumber).once('value', (snapshot) => {
         const invoiceData = snapshot.val();
-        
         document.getElementById('customerName').value = invoiceData.customerName || '';
         document.getElementById('invoiceNumberDisplay').textContent = invoiceData.invoiceNumber;
         document.getElementById('orderName').value = invoiceData.orderName || '';
         document.getElementById('amountPaid').value = invoiceData.amountPaid || '';
         document.getElementById('discount').value = invoiceData.discount || '0';
         document.getElementById('invoiceDateDisplay').textContent = invoiceData.date || '';
-        
         const tbody = document.querySelector('#itemsTable tbody');
         tbody.innerHTML = '';
         invoiceData.items.forEach(item => {
@@ -1236,13 +1111,11 @@ function openSavedInvoicesModal() {
             tbody.appendChild(row);
             addEventListenersToRow(row);
         });
-
         calculateTotal();
         closeModal();
         toggleForm(true); // Aktifkan form setelah load
     });
 }
-
         function deleteSavedInvoice(invoiceNumber) {
             if (confirm(`Apakah Anda yakin ingin menghapus ${invoiceNumber}?`)) {
                 database.ref('invoices/' + invoiceNumber).remove()
@@ -1254,22 +1127,23 @@ function openSavedInvoicesModal() {
                     });
             }
         }
-
         function closeModal() {
             document.getElementById('invoiceModal').style.display = 'none';
         }
-
         function formatRupiah(angka) {
-    return angka.toLocaleString('id-ID');
+    const isNegative = angka < 0;
+    const absoluteValue = Math.abs(angka);
+    return (isNegative ? '-' : '') + absoluteValue.toLocaleString('id-ID');
 }
-
 function formatRupiahInput(value) {
-    // Hapus semua karakter non-digit
-    const num = value.replace(/\D/g, '');
+    // Pertahankan tanda minus jika ada
+    const isNegative = value.includes('-');
+    // Hapus semua karakter non-digit kecuali tanda minus
+    const num = value.replace(/[^0-9-]/g, '');
     // Format angka dengan titik sebagai pemisah ribuan
-    return num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    const formatted = num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return isNegative ? `-${formatted.replace('-', '')}` : formatted;
 }
-
 function addEventListenersToRow(row) {
     row.querySelector('.itemQty').addEventListener('input', calculateTotal);
     const priceInput = row.querySelector('.itemPrice');
@@ -1278,27 +1152,21 @@ function addEventListenersToRow(row) {
         calculateTotal();
     });
 }
-
 document.getElementById('amountPaid').addEventListener('input', function(e) {
     this.value = formatRupiahInput(this.value);
     calculateTotal(); // Panggil fungsi calculateTotal untuk memperbarui total
 });
-
 document.getElementById('discount').addEventListener('input', function(e) {
     this.value = formatRupiahInput(this.value);
     calculateTotal(); // Panggil fungsi calculateTotal untuk memperbarui total
 });
-
 document.querySelectorAll('#itemsTable tbody tr').forEach(row => addEventListenersToRow(row));
-
-
         document.getElementById('invoiceNumberDisplay').textContent = generateInvoiceNumber();
         displayDate();
         document.getElementById('amountPaid').addEventListener('input', calculateTotal);
         document.getElementById('discount').addEventListener('input', calculateTotal);
         document.querySelectorAll('#itemsTable tbody tr').forEach(row => addEventListenersToRow(row));
         document.querySelector('.print-thermal-btn').addEventListener('click', printThermalInvoice);
-
         window.onclick = function(event) {
             const modal = document.getElementById('invoiceModal');
             if (event.target == modal) {
@@ -1313,7 +1181,6 @@ document.querySelectorAll('#itemsTable tbody tr').forEach(row => addEventListene
             if (event.key === 'Enter') {
                 const activeElement = document.activeElement;
                 const currentRow = activeElement.closest('tr');
-                
                 if(activeElement.classList.contains('itemPrice') || 
                   (currentRow && currentRow === document.querySelector('#itemsTable tbody tr:last-child'))) {
                     addItem();
@@ -1330,7 +1197,6 @@ document.querySelectorAll('#itemsTable tbody tr').forEach(row => addEventListene
         updateDatalistForColumn('.itemPrice', 'pricesList', target);
     }
 });
-
 function updateDatalistForColumn(selector, datalistId, currentInput) {
     const inputs = Array.from(document.querySelectorAll(selector))
         .filter(input => input !== currentInput);
@@ -1339,16 +1205,13 @@ function updateDatalistForColumn(selector, datalistId, currentInput) {
     const datalist = document.getElementById(datalistId);
     datalist.innerHTML = uniqueValues.map(value => `<option value="${value}">`).join('');
 }
-
 // Fungsi untuk menyimpan sebagai JPG
 function saveAsJPG() {
             // Ambil elemen preview content
             const previewContent = document.getElementById('previewContent');
-            
             // Sembunyikan elemen yang tidak diinginkan di dalam preview
             const elementsToHide = previewContent.querySelectorAll('.close, .save-jpg-btn');
             elementsToHide.forEach(el => el.style.display = 'none');
-            
             // Ambil screenshot
             html2canvas(previewContent, {
                 scale: 2, // Kualitas gambar 2x
@@ -1356,7 +1219,6 @@ function saveAsJPG() {
             }).then(canvas => {
                 // Kembalikan tampilan elemen yang disembunyikan
                 elementsToHide.forEach(el => el.style.display = '');
-                
                 // Konversi ke JPG dan download
                 const link = document.createElement('a');
                 link.download = `invoice-${Date.now()}.jpg`;
@@ -1364,21 +1226,17 @@ function saveAsJPG() {
                 link.click();
             });
         }
-
 function printThermalInvoice() {
     const invoiceElement = document.querySelector('.invoice');
     const printClone = invoiceElement.cloneNode(true);
-
     // Create thermal invoice content
     const thermalContent = document.createElement('div');
     thermalContent.className = 'thermal-invoice';
-
     // Add logo
     const logo = document.createElement('div');
     logo.className = 'logo';
     logo.innerHTML = '<img src="https://i.imgur.com/75tlt7m.png" alt="Logo KANVAS MERCHANDISE">';
     thermalContent.appendChild(logo);
-
     // Add company info
     const companyInfo = document.createElement('div');
     companyInfo.className = 'header';
@@ -1388,11 +1246,9 @@ function printThermalInvoice() {
         -----------------------------------------------------<br>
     `;
     thermalContent.appendChild(companyInfo);
-
     // Format tanggal menjadi 10/2/2025
     const now = new Date();
     const formattedDate = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
-
     // Add invoice details
     const invoiceDetails = document.createElement('div');
     invoiceDetails.innerHTML = `
@@ -1403,7 +1259,6 @@ function printThermalInvoice() {
         ---------------------------------------------<br>
     `;
     thermalContent.appendChild(invoiceDetails);
-
     // Group items by name
     const groupedItems = {};
     document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
@@ -1416,28 +1271,22 @@ function printThermalInvoice() {
             total: row.querySelector('.itemTotal').value
         });
     });
-
     // Add items dengan grouping
     const itemsList = document.createElement('div');
     itemsList.className = 'item-details';
     let itemCounter = 1;
-
     Object.entries(groupedItems).forEach(([name, items]) => {
         itemsList.innerHTML += `
             ${itemCounter}) ${name}<br>
         `;
-
         items.forEach(item => {
             itemsList.innerHTML += `
                 &nbsp;&nbsp;${item.size} - ${item.qty} x ${item.price} = ${item.total}<br>
             `;
         });
-
         itemCounter++;
     });
-
     thermalContent.appendChild(itemsList);
-
     // Add total section
     const totalSection = document.createElement('div');
     totalSection.className = 'total-section';
@@ -1452,11 +1301,9 @@ function printThermalInvoice() {
         ---------------------------------------------<br>
         <div style="text-align: center;">
             Terimakasih sudah berbagi rezeki<br>
-            bersama kami :)<br>
-        </div>
+            bersama kami :)<br></div>
     `;
     thermalContent.appendChild(totalSection);
-
     // Open print window
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
