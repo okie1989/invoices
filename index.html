@@ -424,27 +424,22 @@ input:focus, select:focus {
     margin-bottom: 20px;
     border: none; /* Hilangkan border tabel */
 }
-#previewContent table th,
-#previewContent table td {
+#previewContent table th, 
+	#previewContent table td {
     border-left: none;
     border-right: none;
     border-top: none;
-    border-bottom: 1px solid #000; /* Hanya garis bawah */
+    border-bottom: 1px solid #000;
     padding: 5px;
     text-align: left;
     font-size: 14px;
+    text-align-last: center;
 }
 #previewContent table thead tr {
     border-bottom: 2px solid #000; /* Garis header lebih tebal */
 }
 #previewContent table tbody tr:last-child td {
     border-bottom: none; /* Hilangkan garis bawah di row terakhir */
-}
-	input, select, button {
-    min-height: 40px;
-    padding: 10px;
-    font-size: 16px;
-    text-align-last: center;
 }
 @media print {
     .thermal-invoice {
