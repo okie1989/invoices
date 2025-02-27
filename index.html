@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <style>
 body {
         font-family: 'Roboto', sans-serif;
@@ -111,7 +112,7 @@ body {
     }
     table, th, td {
         border: 1px solid #ccc;
-        table-layout: fixed;
+        table-layout: auto;
     }
     th, td {
     padding: 0px;
@@ -955,7 +956,7 @@ th {
 /* Responsif */
 @media (max-width: 768px) {
   #reportModal .modal-content {
-    width: 90%;
+    width: 120%;
     margin: 10% auto;
     padding: 20px;
   }
@@ -989,6 +990,149 @@ th {
   justify-content: space-between;
   padding: 8px;
   border-bottom: 1px solid #eee;
+}
+/* CSS untuk tabel laporan keuangan */
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Tambahkan scroll horizontal jika tabel terlalu lebar */
+    margin-top: 20px;
+}
+#transactionDetails {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    font-size: 14px;
+    text-align: center;
+}
+#transactionDetails th,
+#transactionDetails td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+#transactionDetails th {
+    background-color: #4dcbdd;
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#transactionDetails tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+#transactionDetails tbody tr:hover {
+    background-color: #f1f1f1;
+}
+/* Responsif untuk tampilan mobile */
+@media (max-width: 768px) {
+    #transactionDetails {
+        font-size: 12px;
+    }
+    #transactionDetails th,
+    #transactionDetails td {
+        padding: 8px;
+    }
+    .table-container {
+        overflow-x: scroll; /* Pastikan tabel bisa di-scroll horizontal di mobile */
+    }
+}
+/* Modal Pengeluaran */
+#expensesModal .modal-content {
+    max-width: 600px;
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+}
+#expensesModal .form-group {
+    margin-bottom: 15px;
+}
+#expensesModal label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+#expensesModal input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+/* Tabel Pengeluaran */
+#expensesTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+#expensesTable th,
+#expensesTable td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+#expensesTable th {
+    background-color: #4dcbdd;
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#expensesTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+#expensesTable tbody tr:hover {
+    background-color: #f1f1f1;
+}
+#saveExpensesButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+/* Tabel Compact */
+.compact-table {
+    font-size: 12px;
+}
+.compact-table th, 
+.compact-table td {
+    padding: 8px 10px;
+}
+.compact-table .action-btn {
+    padding: 4px 8px;
+    margin: 2px;
+    font-size: 12px;
+}
+/* Tombol Ikon */
+.fa-edit { color: #2196F3; }
+.fa-trash { color: #f44336; }
+#expensesItemsTable {
+    width: 100%;
+    margin: 10px 0;
+    border-collapse: collapse;
+}
+#expensesItemsTable th, #expensesItemsTable td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+#expensesItemsTable input {
+    width: 100%;
+    box-sizing: border-box;
+}
+.add-item-btn {
+    margin: 10px 0;
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.add-item-btn:hover {
+    background-color: #218838;
+}
+.delete-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+}
+.delete-btn:hover {
+    color: #c82333;
 }
 </style>
 <style>
@@ -1040,6 +1184,8 @@ th {
 		<button class="reset-btn" onclick="resetNota()">Reset</button>
 		<button class="print-thermal-btn" onclick="printThermalInvoice()">Cetak Struk</button>
 		<button class="preview-btn" onclick="showPreview()">Preview</button>
+		<button onclick="openexpensesModal()" class="report-btn">
+		<i class="fas fa-money-bill-wave"></i> Tambah Pengeluaran </button>
 		<button class="report-btn" onclick="showFinancialReport()">
 		<i class="fas fa-chart-line"></i>
 		Laporan Keuangan </button>
@@ -1124,6 +1270,69 @@ th {
 		</p>
 	</div>
 </div>
+<div id="expensesModal" class="modal">
+	<div class="modal-content">
+		<span class="close" onclick="closeexpensesModal()">&times;</span>
+		<h2 id="expensesModalTitle">Tambah Pengeluaran</h2>
+		<form id="expensesForm">
+			<div class="form-group">
+				<label>No. Nota Pengeluaran:</label>
+				<input type="text" id="expensesNumber" readonly></div>
+			<div class="form-group">
+				<label>Nama Supplier:</label>
+				<input type="text" id="expensesupplier" required></div>
+			<div class="form-group">
+				<label>Tanggal:</label>
+				<input type="date" id="expensesDate" required></div>
+			<!-- Tabel untuk input barang -->
+			<table id="expensesItemsTable">
+			<thead>
+			<tr>
+				<th>Nama Barang</th>
+				<th>Qty</th>
+				<th>Harga Satuan</th>
+				<th>Total</th>
+				<th>Aksi</th>
+			</tr>
+			</thead>
+			<tbody>
+			<!-- Baris pertama akan diisi oleh JavaScript --></tbody>
+			</table>
+			<button type="button" onclick="addexpensesItemRow()" class="add-item-btn">
+			<i class="fas fa-plus"></i> Tambah Barang </button>
+			<div class="form-group">
+				<label>Keterangan:</label>
+				<input type="text" id="expensesDescription"></div>
+			<div class="total-section">
+				<strong>Total Pengeluaran:</strong> Rp <span id="expensesGrandTotal">0</span>
+			</div>
+			<button type="button" onclick="saveexpenses()" class="save-btn">Simpan Pengeluaran</button>
+			<button type="button" onclick="clearexpensesForm()" class="reset-btn">Reset</button>
+		</form>
+	</div>
+</div>
+<!-- Tabel Nota Pengeluaran Tersimpan -->
+<div class="invoice">
+	<h2>Nota Pengeluaran Tersimpan</h2>
+	<table id="expensesTable" class="compact-table">
+	<thead>
+	<tr>
+		<th>No. Nota</th>
+		<th>Supplier</th>
+		<th>Total</th>
+		<th>Tanggal</th>
+		<th width="80">Aksi</th>
+	</tr>
+	</thead>
+	<tbody>
+	<!-- Data akan diisi --></tbody>
+	</table>
+</div>
+<div class="pagination">
+	<button onclick="changePage(-1)">❮</button>
+	<span id="currentPage">1</span>
+	<button onclick="changePage(1)">❯</button>
+</div>
 <div id="reportModal" class="modal">
 	<div class="modal-content">
 		<span class="close" onclick="closeReportModal()">&times;</span>
@@ -1137,14 +1346,32 @@ th {
 				<!-- Options bulan akan diisi oleh JavaScript --></select>
 			<select id="reportYear" onchange="generateFinancialReport()">
 				<!-- Options tahun akan diisi oleh JavaScript --></select>
+			<button onclick="exportToExcel()" class="report-btn">
+			<i class="fas fa-file-excel"></i> Export to Excel </button>
 		</div>
 		<div class="report-summary">
 			<h3>Total Pemasukan: <span id="totalIncome">Rp 0</span></h3>
-			<h3>Total Piutang: <span id="totalReceivable">Rp 0</span></h3>
+			<h3>Total Pengeluaran: <span id="totalexpenses">Rp 0</span></h3>
+			<h3>Profit: <span id="totalProfit">Rp 0</span></h3>
 		</div>
 		<div class="debt-list">
-			<h3>Daftar Piutang Customer</h3>
-			<div id="debtItems"></div>
+			<h3>Detail Transaksi</h3>
+			<div class="table-container">
+				<table id="transactionDetails">
+				<thead>
+				<tr>
+					<th>Jenis</th>
+					<th>No. Invoice</th>
+					<th>Pelanggan/Barang</th>
+					<th>Tanggal</th>
+					<th>Total</th>
+					<th>Status</th>
+				</tr>
+				</thead>
+				<tbody>
+				<!-- Data transaksi akan diisi oleh JavaScript --></tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
@@ -1580,11 +1807,9 @@ function updateInvoiceList() {
     return (isNegative ? '-' : '') + absoluteValue.toLocaleString('id-ID');
 }
 function formatRupiahInput(value) {
-    // Pertahankan tanda minus jika ada
     const isNegative = value.includes('-');
-    // Hapus semua karakter non-digit kecuali tanda minus
     const num = value.replace(/[^0-9-]/g, '');
-    // Format angka dengan titik sebagai pemisah ribuan
+    return num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     const formatted = num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     return isNegative ? `-${formatted.replace('-', '')}` : formatted;
 }
@@ -1803,6 +2028,10 @@ function showFinancialReport() {
   initializeDateFilters();
   generateFinancialReport();
   document.getElementById('reportModal').style.display = 'block';
+  document.addEventListener('DOMContentLoaded', () => {
+    loadExpenses();
+    generateFinancialReport();
+});
 }
 // Inisialisasi filter tanggal
 function initializeDateFilters() {
@@ -1824,51 +2053,314 @@ function initializeDateFilters() {
 }
 // Generate laporan
 async function generateFinancialReport() {
-  const snapshot = await database.ref('invoices').once('value');
-  const invoices = snapshot.val() || {};
-  const periodType = document.getElementById('reportPeriod').value;
-  const selectedMonth = document.getElementById('reportMonth').value;
-  const selectedYear = document.getElementById('reportYear').value;
-  let totalIncome = 0;
-  let totalReceivable = 0;
-  const debtList = {};
-  Object.values(invoices).forEach(invoice => {
-    const invoiceDate = new Date(invoice.date);
-    const invoiceYear = invoiceDate.getFullYear();
-    const invoiceMonth = invoiceDate.getMonth() + 1;
-    // Filter berdasarkan periode
-    if ((periodType === 'monthly' && 
-        invoiceMonth == selectedMonth && 
-        invoiceYear == selectedYear) ||
-       (periodType === 'yearly' && 
-        invoiceYear == selectedYear)) {
-      const total = parseInt(invoice.totalPrice.replace(/\./g, ''));
-      const paid = parseInt(invoice.amountPaid.replace(/\./g, '') || 0);
-      const discount = parseInt(invoice.discount.replace(/\./g, '') || 0);
-      const receivable = total - paid - discount;
-      if (!invoice.lunas && receivable > 0) {
-        totalReceivable += receivable;
-        debtList[invoice.customerName] = (debtList[invoice.customerName] || 0) + receivable;
-      }
-      if (invoice.lunas) {
-        totalIncome += (paid - discount);
-      }
+    try {
+        const [invoicesSnapshot, expensesSnapshot] = await Promise.all([
+            database.ref('invoices').once('value'),
+            database.ref('expenses').once('value')
+        ]);
+        const invoices = invoicesSnapshot.val() || {};
+        const expenses = expensesSnapshot.val() || {};
+        const periodType = document.getElementById('reportPeriod').value;
+        const selectedMonth = document.getElementById('reportMonth').value;
+        const selectedYear = document.getElementById('reportYear').value;
+        let totalIncome = 0;
+        let totalexpenses = 0;
+        const transactionDetails = [];
+        // Proses Pemasukan (Invoices)
+        Object.values(invoices).forEach(invoice => {
+            const invoiceDate = new Date(invoice.date);
+            const invoiceYear = invoiceDate.getFullYear();
+            const invoiceMonth = invoiceDate.getMonth() + 1;
+            if ((periodType === 'monthly' && invoiceMonth == selectedMonth && invoiceYear == selectedYear) ||
+                (periodType === 'yearly' && invoiceYear == selectedYear)) {
+                const total = parseInt(invoice.totalPrice.replace(/\./g, ''));
+                const paid = parseInt(invoice.amountPaid.replace(/\./g, '') || 0);
+                const discount = parseInt(invoice.discount.replace(/\./g, '') || 0);
+                if (invoice.lunas) {
+                    totalIncome += (paid - discount);
+                }
+                transactionDetails.push({
+                    type: 'Pemasukan',
+                    invoiceNumber: invoice.invoiceNumber,
+                    customerName: invoice.customerName,
+                    date: invoice.date,
+                    total: total,
+                    status: invoice.lunas ? 'LUNAS' : 'BELUM LUNAS'
+                });
+            }
+        });
+        // Proses Pengeluaran (Expenses)
+        Object.values(expenses).forEach(expense => {
+            const expenseDate = new Date(expense.date);
+            const expenseYear = expenseDate.getFullYear();
+            const expenseMonth = expenseDate.getMonth() + 1;
+            if ((periodType === 'monthly' && expenseMonth == selectedMonth && expenseYear == selectedYear) ||
+                (periodType === 'yearly' && expenseYear == selectedYear)) {
+                const total = expense.grandTotal || 0;
+                totalexpenses += total;
+                transactionDetails.push({
+                    type: 'Pengeluaran',
+                    invoiceNumber: expense.expensesNumber,
+                    customerName: expense.supplier,
+                    date: expense.date,
+                    total: total,
+                    status: 'LUNAS'
+                });
+            }
+        });
+        // Update Ringkasan
+        const totalProfit = totalIncome - totalexpenses;
+        document.getElementById('totalIncome').textContent = formatRupiah(totalIncome);
+        document.getElementById('totalexpenses').textContent = formatRupiah(totalexpenses);
+        document.getElementById('totalProfit').textContent = formatRupiah(totalProfit);
+        // Update Tabel Detail Transaksi
+        const transactionTableBody = document.querySelector('#transactionDetails tbody');
+        transactionTableBody.innerHTML = transactionDetails.map(transaction => `
+            <tr>
+                <td>${transaction.type}</td>
+                <td>${transaction.invoiceNumber}</td>
+                <td>${transaction.customerName}</td>
+                <td>${transaction.date}</td>
+                <td>${formatRupiah(transaction.total)}</td>
+                <td>${transaction.status}</td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error("Error generating report:", error);
+        alert("Terjadi kesalahan saat memuat laporan!");
     }
-  });
-  // Update tampilan
-  document.getElementById('totalIncome').textContent = formatRupiah(totalIncome);
-  document.getElementById('totalReceivable').textContent = formatRupiah(totalReceivable);
-  const debtItems = document.getElementById('debtItems');
-  debtItems.innerHTML = Object.entries(debtList)
-    .map(([name, amount]) => `
-      <div class="debt-item">
-        <span>${name}</span>
-        <span>${formatRupiah(amount)}</span>
-      </div>`
-    ).join('');
 }
 function closeReportModal() {
-  document.getElementById('reportModal').style.display = 'none';
+    document.getElementById('reportModal').style.display = 'none';
+}
+let currentexpensesId = null; // Untuk menyimpan ID pengeluaran yang sedang diedit
+// Buka modal pengeluaran
+function openexpensesModal() {
+    openexpensesModal(true); // Panggil dengan mode baru
+}
+// Fungsi clear form
+function clearexpensesForm() {
+    document.getElementById('expensesForm').reset();
+    document.getElementById('expensesNumber').value = generateexpensesNumber();
+    document.querySelector('#expensesItemsTable tbody').innerHTML = ''; // Kosongkan tabel barang
+    document.getElementById('expensesGrandTotal').textContent = '0';
+    currentexpensesId = null;
+    addexpensesItemRow(); // Tambahkan baris pertama secara otomatis
+}
+// Tutup modal pengeluaran
+function closeexpensesModal() {
+    document.getElementById('expensesModal').style.display = 'none';
+}
+// Generate nomor nota pengeluaran
+function generateexpensesNumber() {
+    const now = new Date();
+    const datePart = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+    const randomPart = Math.floor(Math.random() * 900) + 100; // 3 digit acak
+    return `EXP-${datePart}-${randomPart}`;
+}
+function calculateexpensesTotal() {
+    const qty = parseInt(document.getElementById('expensesQty').value) || 0;
+    const unitPrice = parseInt(
+        document.getElementById('expensesUnitPrice').value.replace(/[^0-9]/g, '')
+    ) || 0;
+    document.getElementById('expensesTotalPrice').value = (qty * unitPrice).toLocaleString('id-ID');
+}
+// Simpan pengeluaran ke Firebase
+function addexpenses() {
+    const expensesData = {
+        itemName: document.getElementById('expensesItemName').value,
+        qty: parseFloat(document.getElementById('expensesQty').value),
+        size: document.getElementById('expensesize').value,
+        unitPrice: parseFloat(document.getElementById('expensesUnitPrice').value.replace(/\./g, '')),
+        totalPrice: parseFloat(document.getElementById('expensesTotalPrice').value.replace(/\./g, '')),
+        description: document.getElementById('expensesDescription').value,
+        date: new Date().toISOString() // Simpan tanggal dalam format ISO
+    };
+    database.ref('expenses').push(expensesData)
+        .then(() => {
+            alert('Pengeluaran berhasil disimpan!');
+            closeexpensesModal();
+            document.getElementById('expensesForm').reset();
+        })
+        .catch((error) => {
+            console.error('Gagal menyimpan pengeluaran:', error);
+        });
+}
+function saveexpenses() {
+    const expensesData = {
+        expensesNumber: document.getElementById('expensesNumber').value,
+        supplier: document.getElementById('expensesupplier').value,
+        date: document.getElementById('expensesDate').value,
+        description: document.getElementById('expensesDescription').value,
+        items: [], // Array untuk menyimpan semua barang
+        grandTotal: parseFloat(document.getElementById('expensesGrandTotal').textContent.replace(/\./g, '')) || 0
+    };
+    // Ambil data semua barang
+    document.querySelectorAll('#expensesItemsTable tbody tr').forEach(row => {
+        const item = {
+            name: row.querySelector('.expensesItemName').value,
+            qty: parseFloat(row.querySelector('.expensesQty').value) || 0,
+            unitPrice: parseFloat(row.querySelector('.expensesUnitPrice').value.replace(/\./g, '')) || 0,
+            total: parseFloat(row.querySelector('.expensesItemTotal').value.replace(/\./g, '')) || 0
+        };
+        expensesData.items.push(item);
+    });
+    // Simpan ke Firebase
+    const expenseRef = currentexpensesId ? 
+        database.ref('expenses/' + currentexpensesId) : 
+        database.ref('expenses').push();
+    expenseRef.set(expensesData)
+        .then(() => {
+            alert('Data berhasil disimpan!');
+            clearexpensesForm();
+            loadexpenses();
+            closeexpensesModal();
+        })
+        .catch((error) => {
+            console.error("Gagal menyimpan:", error);
+        });
+}
+    function addexpensesItemRow() {
+    const tbody = document.querySelector('#expensesItemsTable tbody');
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td><input type="text" class="expensesItemName"></td>
+        <td><input type="number" class="expensesQty" min="1" value="1"></td>
+        <td><input type="text" class="expensesUnitPrice"></td>
+        <td><input type="text" class="expensesItemTotal" readonly></td>
+        <td><button type="button" onclick="removeexpensesItemRow(this)" class="delete-btn">
+            <i class="fas fa-trash"></i>
+        </button></td>
+    `;
+    tbody.appendChild(newRow);
+    // Tambahkan event listener untuk hitung total otomatis
+    newRow.querySelector('.expensesQty').addEventListener('input', calculateexpensesItemTotal);
+    newRow.querySelector('.expensesUnitPrice').addEventListener('input', calculateexpensesItemTotal);
+}
+function removeexpensesItemRow(button) {
+    const row = button.closest('tr');
+    row.remove();
+    calculateGrandTotal();
+}
+function calculateexpensesItemTotal(event) {
+    const row = event.target.closest('tr');
+    const qty = parseFloat(row.querySelector('.expensesQty').value) || 0;
+    const unitPrice = parseFloat(row.querySelector('.expensesUnitPrice').value.replace(/\./g, '')) || 0;
+    const total = qty * unitPrice;
+    row.querySelector('.expensesItemTotal').value = formatRupiah(total);
+    calculateGrandTotal();
+}
+function calculateGrandTotal() {
+    let grandTotal = 0;
+    document.querySelectorAll('#expensesItemsTable tbody tr').forEach(row => {
+        const total = parseFloat(row.querySelector('.expensesItemTotal').value.replace(/\./g, '')) || 0;
+        grandTotal += total;
+    });
+    document.getElementById('expensesGrandTotal').textContent = formatRupiah(grandTotal);
+}
+// Panggil fungsi ini saat halaman dimuat
+document.addEventListener('DOMContentLoaded', function() {
+    loadexpenses();
+    generateInvoiceNumber(); // Pastikan nomor invoice juga ter-generate
+});
+// Fungsi untuk memuat data pengeluaran
+function loadexpenses() {
+    database.ref('expenses').once('value', (snapshot) => {
+        const expenses = snapshot.val() || {};
+        const tbody = document.querySelector('#expensesTable tbody');
+        tbody.innerHTML = '';
+        Object.entries(expenses).forEach(([id, expense]) => {
+            const row = `
+                <tr>
+                    <td>${expense.expensesNumber}</td>
+                    <td>${expense.supplier}</td>
+                    <td>${formatRupiah(expense.grandTotal)}</td>
+                    <td>${expense.date.split('-').reverse().join('/')}</td>
+                    <td>
+                        <button onclick="editexpenses('${id}')" class="action-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteexpenses('${id}')" class="action-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }).catch((error) => {
+        console.error("Error loading expenses:", error);
+        alert("Gagal memuat data pengeluaran!");
+    });
+}
+// Edit pengeluaran
+function editexpenses(id) {
+    database.ref(`expenses/${id}`).once('value').then((snapshot) => {
+        const expense = snapshot.val();
+        console.log("Data dari Firebase:", expense); // Debugging
+        // Buka modal tanpa reset form
+        openexpensesModal(false);
+        // Isi data utama
+        document.getElementById('expensesNumber').value = expense.expensesNumber;
+        document.getElementById('expensesupplier').value = expense.supplier || '';
+        document.getElementById('expensesDate').value = expense.date;
+        document.getElementById('expensesDescription').value = expense.description || '';
+        // Kosongkan tabel barang sebelum mengisi
+        const tbody = document.querySelector('#expensesItemsTable tbody');
+        tbody.innerHTML = '';
+        // Isi data barang
+        if (expense.items && expense.items.length > 0) {
+            expense.items.forEach(item => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td><input type="text" class="expensesItemName" value="${item.name}"></td>
+                    <td><input type="number" class="expensesQty" min="1" value="${item.qty}"></td>
+                    <td><input type="text" class="expensesUnitPrice" value="${formatRupiah(item.unitPrice)}"></td>
+                    <td><input type="text" class="expensesItemTotal" readonly value="${formatRupiah(item.total)}"></td>
+                    <td><button type="button" onclick="removeexpensesItemRow(this)" class="delete-btn">
+                        <i class="fas fa-trash"></i>
+                    </button></td>
+                `;
+                tbody.appendChild(newRow);
+                // Tambahkan event listener untuk hitung total otomatis
+                newRow.querySelector('.expensesQty').addEventListener('input', calculateexpensesItemTotal);
+                newRow.querySelector('.expensesUnitPrice').addEventListener('input', calculateexpensesItemTotal);
+            });
+        } else {
+            // Jika tidak ada data barang, tambahkan baris kosong
+            addexpensesItemRow();
+        }
+        // Isi total keseluruhan
+        document.getElementById('expensesGrandTotal').textContent = formatRupiah(expense.grandTotal || 0);
+        // Set ID yang sedang diedit
+        currentexpensesId = id;
+        document.getElementById('expensesModalTitle').textContent = 'Edit Pengeluaran';
+    }).catch((error) => {
+        console.error("Gagal memuat pengeluaran:", error);
+        alert("Terjadi kesalahan saat memuat data pengeluaran!");
+    });
+}
+// Modifikasi fungsi openexpensesModal
+function openexpensesModal(isNew = true) {
+    const modal = document.getElementById('expensesModal');
+    if(isNew) {
+        clearexpensesForm(); // Hanya reset form untuk data baru
+    }
+    modal.style.display = 'block';
+}
+// Hapus pengeluaran
+function deleteexpenses(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus pengeluaran ini?')) {
+        database.ref(`expenses/${id}`).remove()
+            .then(() => {
+                alert('Pengeluaran berhasil dihapus!');
+                loadexpenses();
+                generateFinancialReport(); // Perbarui laporan keuangan
+            })
+            .catch((error) => {
+                console.error("Gagal menghapus:", error);
+            });
+    }
 }
 </script>
 </body>
