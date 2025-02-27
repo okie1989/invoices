@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -615,6 +616,161 @@ th {
     padding: 12px 25px;
     font-size: 16px;
 }
+
+
+/* Tambahan CSS untuk modal yang ditingkatkan */
+#invoiceModal .modal-content {
+    max-width: 800px;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+}
+
+#invoiceModal .modal-header {
+    background: #1f4772;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#invoiceModal .modal-body {
+    padding: 20px;
+}
+
+#invoiceModal .search-bar {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+#invoiceModal .search-bar input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#invoiceModal .search-bar button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background: #28a745;
+    color: white;
+    cursor: pointer;
+}
+
+#invoiceModal .invoice-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#invoiceModal .invoice-group {
+    margin-bottom: 20px;
+}
+
+#invoiceModal .invoice-group h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+#invoiceModal .invoice-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#invoiceModal .invoice-item:hover {
+    background: #f9f9f9;
+}
+
+#invoiceModal .invoice-item .invoice-info {
+    flex: 1;
+}
+
+#invoiceModal .invoice-item .invoice-info .invoice-number {
+    font-weight: bold;
+    color: #1f4772;
+}
+
+#invoiceModal .invoice-item .invoice-info .customer-name {
+    font-size: 14px;
+    color: #555;
+}
+
+#invoiceModal .invoice-item .invoice-status {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#invoiceModal .invoice-item .invoice-status.paid {
+    color: #28a745;
+}
+
+#invoiceModal .invoice-item .invoice-status.unpaid {
+    color: #dc3545;
+}
+
+#invoiceModal .invoice-item .invoice-actions {
+    display: flex;
+    gap: 10px;
+}
+
+#invoiceModal .invoice-item .invoice-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #1f4772;
+    font-size: 16px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Tambahan CSS untuk tombol filter unpaid */
+#invoiceModal .filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#invoiceModal .filter-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+#invoiceModal .filter-buttons button.active {
+    background: #1f4772;
+    color: white;
+}
+
+#invoiceModal .filter-buttons button:hover {
+    opacity: 0.9;
+}
+
+
 </style>
 <style>
         .disabled-form input:disabled,
@@ -808,14 +964,25 @@ th {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <!-- Modal untuk menampilkan nota tersimpan -->
 <div id="invoiceModal" class="modal">
-<div class="modal-content">
-	<span class="close" onclick="closeModal()">&times;</span>
-	<h3>Nota Tersimpan</h3>
-	<input type="text" id="searchCustomerName" oninput="searchInvoices()" placeholder="Cari berdasarkan nama pelanggan...">
-	<ul id="savedInvoicesList"></ul>
-	<ul id="savedInvoicesList"></ul>
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Nota Tersimpan</h3>
+        </div>
+        <div class="modal-body">
+            <div class="search-bar">
+                <input type="text" id="searchCustomerName" oninput="searchInvoices()" placeholder="Cari berdasarkan nama pelanggan...">
+                <button onclick="searchInvoices()"><i class="fa fa-search"></i> Cari</button>
+            </div>
+            <div class="filter-buttons">
+                <button onclick="showAllInvoices()">Semua Nota</button>
+                <button onclick="showUnpaidInvoices()">Nota Belum Lunas</button>
+            </div>
+            <div class="invoice-list" id="savedInvoicesList"></div>
+        </div>
+    </div>
 </div>
-</div>
+
 <script>
         // Firebase configuration and initialization
         const firebaseConfig = {
@@ -1029,29 +1196,53 @@ function addItem() {
         }
         function searchInvoices() {
     const searchQuery = document.getElementById('searchCustomerName').value.toLowerCase();
-    const invoices = document.querySelectorAll('#savedInvoicesList li');
+    const invoices = document.querySelectorAll('#savedInvoicesList .invoice-item');
     invoices.forEach(invoice => {
-        const customerName = invoice.textContent.toLowerCase();
+        const customerName = invoice.querySelector('.customer-name').textContent.toLowerCase();
         if (customerName.includes(searchQuery)) {
-            invoice.style.display = 'block';
+            invoice.style.display = 'flex'; // Tampilkan nota yang sesuai
         } else {
-            invoice.style.display = 'none';
+            invoice.style.display = 'none'; // Sembunyikan nota yang tidak sesuai
         }
     });
 }
+
+function showUnpaidInvoices() {
+    const invoices = document.querySelectorAll('#savedInvoicesList .invoice-item');
+    invoices.forEach(invoice => {
+        const isLunas = invoice.getAttribute('data-lunas') === 'true';
+        invoice.style.display = isLunas ? 'none' : 'flex';
+    });
+}
+
+
+function showAllInvoices() {
+    const invoices = document.querySelectorAll('#savedInvoicesList .invoice-item');
+    invoices.forEach(invoice => {
+        invoice.style.display = 'flex'; // Tampilkan semua nota
+    });
+}
+
+
 function closeSavedInvoicesModal() {
     document.getElementById('savedInvoicesModal').style.display = 'none';
 }
 function openSavedInvoicesModal() {
     document.getElementById('savedInvoicesModal').style.display = 'block';
 }
-        function updateInvoiceList() {
+function updateInvoiceList() {
     const list = document.getElementById('savedInvoicesList');
     list.innerHTML = '';
     database.ref('invoices').once('value', (snapshot) => {
         const invoices = [];
         snapshot.forEach((childSnapshot) => {
             const invoice = childSnapshot.val();
+            
+            // Pastikan status lunas disimpan sebagai boolean
+            if(typeof invoice.lunas === 'undefined') {
+                invoice.lunas = false; // Default ke unpaid jika tidak ada data
+            }
+            
             invoices.push(invoice);
         });
         // Sort invoices by date
@@ -1067,30 +1258,41 @@ function openSavedInvoicesModal() {
         });
         // Display grouped invoices
         Object.keys(groupedInvoices).forEach(date => {
-            const dateHeader = document.createElement('li');
-            dateHeader.innerHTML = `<strong>${date}</strong>`;
-            dateHeader.style.listStyleType = 'none';
-            dateHeader.style.marginTop = '10px';
+            const dateHeader = document.createElement('div');
+            dateHeader.className = 'invoice-group';
+            dateHeader.innerHTML = `<h3>${date}</h3>`;
             list.appendChild(dateHeader);
             groupedInvoices[date].forEach(invoice => {
-                const li = document.createElement('li');
-                li.className = invoice.lunas ? 'paid' : 'unpaid';
+                const li = document.createElement('div');
+                li.className = 'invoice-item';
                 li.innerHTML = `
-                    <div>
-                        ${invoice.invoiceNumber}<br>
-                        <small>${invoice.customerName || 'Tanpa Nama'}</small><br>
-                        <small>${invoice.date}</small>
+                    <div class="invoice-info">
+                        <div class="invoice-number">${invoice.invoiceNumber}</div>
+                        <div class="customer-name">${invoice.customerName || 'Tanpa Nama'}</div>
+                    </div>
+                    <div class="invoice-status ${invoice.lunas ? 'paid' : 'unpaid'}">
+                        ${invoice.lunas ? 'LUNAS' : 'BELUM LUNAS'}
                     </div>
                     <div class="invoice-actions">
-                        <button onclick="loadInvoice('${invoice.invoiceNumber}')">Edit</button>
                         <button onclick="deleteSavedInvoice('${invoice.invoiceNumber}')"><i class="fa fa-trash"></i></button>
                     </div>
                 `;
+
+                // Tambahkan data attribute untuk status lunas
+        li.setAttribute('data-lunas', invoice.lunas);
+        
+        // Tampilkan status dengan format yang konsisten
+        const statusText = invoice.lunas ? 'LUNAS' : 'BELUM LUNAS';
+        li.querySelector('.invoice-status').textContent = statusText;
+
+
+                li.addEventListener('click', () => loadInvoice(invoice.invoiceNumber));
                 list.appendChild(li);
             });
         });
     });
 }
+
         function loadInvoice(invoiceNumber) {
     database.ref('invoices/' + invoiceNumber).once('value', (snapshot) => {
         const invoiceData = snapshot.val();
