@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -113,9 +114,10 @@ body {
         margin-bottom: 20px;
     }
     table, th, td {
-        border: 1px solid #ccc;
-        table-layout: auto;
-    }
+    border: 1px solid #ccc;
+    table-layout: auto;
+    width: fit-content;
+}
     th, td {
     padding: 0px;
     text-align: left;
@@ -1203,8 +1205,12 @@ th {
 		<th>Size</th>
 		<th>Qty</th>
 		<th>Harga</th>
-		<th>Jumlah</th>
-		<th class="delete-btn-cell"></th>
+        <th style="
+    width: 14%;
+">Jumlah</th>
+		<th class="delete-btn-cell" style="
+            width: 3%;"></th>
+        
 	</tr>
 	</thead>
 	<tbody>
