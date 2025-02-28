@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -144,7 +145,7 @@ th {
         width: 15%;
     }
     td:nth-child(5), th:nth-child(5) {
-        width: 15%;
+        width: 5%;
     }
     input, select {
         width: 100%;
@@ -1065,9 +1066,10 @@ th {
 }
 #expensesTable th,
 #expensesTable td {
-    padding: 12px;
+    padding: 0px;
     border: 1px solid #ddd;
     text-align: center;
+    width: -webkit-fill-available;
 }
 #expensesTable th {
     background-color: #4dcbdd;
@@ -1097,6 +1099,7 @@ th {
     padding: 4px 8px;
     margin: 2px;
     font-size: 12px;
+    display: contents;
 }
 /* Tombol Ikon */
 .fa-edit { color: #2196F3; }
@@ -1313,7 +1316,9 @@ th {
 </div>
 <!-- Tabel Nota Pengeluaran Tersimpan -->
 <div class="invoice">
-	<h2>Nota Pengeluaran Tersimpan</h2>
+    <h2 style="
+        justify-self: center;
+    ">Nota Pengeluaran Tersimpan</h2></h2>
 	<table id="expensesTable" class="compact-table">
 	<thead>
 	<tr>
@@ -1327,11 +1332,6 @@ th {
 	<tbody>
 	<!-- Data akan diisi --></tbody>
 	</table>
-</div>
-<div class="pagination">
-	<button onclick="changePage(-1)">❮</button>
-	<span id="currentPage">1</span>
-	<button onclick="changePage(1)">❯</button>
 </div>
 <div id="reportModal" class="modal">
 	<div class="modal-content">
