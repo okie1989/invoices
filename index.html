@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -2144,7 +2143,7 @@ async function generateFinancialReport() {
         const totalexpensesElem = document.getElementById('totalexpenses');
         const totalProfitElem = document.getElementById('totalProfit');
         const totalReceivableElem = document.getElementById('totalReceivable');
-        
+
         if (!totalIncomeElem || !totalexpensesElem || !totalProfitElem || !totalReceivableElem) {
             throw new Error('Elemen laporan tidak ditemukan');
         }
@@ -2160,8 +2159,8 @@ async function generateFinancialReport() {
         const expenses = expensesSnapshot.val() || {};
 
         // Ambil nilai bulan dan tahun yang dipilih
-        const selectedMonth = document.getElementById('reportMonth')?.value;
-        const selectedYear = document.getElementById('reportYear')?.value;
+        const selectedMonth = parseInt(document.getElementById('reportMonth').value);
+        const selectedYear = parseInt(document.getElementById('reportYear').value);
 
         if (!selectedMonth || !selectedYear) {
             throw new Error('Bulan atau tahun tidak valid');
@@ -2174,18 +2173,25 @@ async function generateFinancialReport() {
         const transactionDetails = [];
         const receivableDetails = [];
 
-        // Proses Pemasukan (Invoices)
+        // Daftar nama bulan
+        const months = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+
+        // Proses SEMUA invoice hingga bulan yang dipilih
         Object.values(invoices).forEach(invoice => {
             try {
                 const invoiceDate = new Date(invoice.date);
                 const invoiceYear = invoiceDate.getFullYear();
                 const invoiceMonth = invoiceDate.getMonth() + 1;
-                
-                if (invoiceMonth == selectedMonth && invoiceYear == selectedYear) {
+
+                // Filter: Tahun sama & bulan <= bulan dipilih
+                if (invoiceYear === selectedYear && invoiceMonth <= selectedMonth) {
                     const total = parseInt(invoice.totalPrice?.replace(/\./g, '') || 0);
                     const paid = parseInt(invoice.amountPaid?.replace(/\./g, '') || 0);
                     const discount = parseInt(invoice.discount?.replace(/\./g, '') || 0);
-                    
+
                     if (invoice.lunas) {
                         totalIncome += (paid - discount);
                     } else {
@@ -2196,7 +2202,8 @@ async function generateFinancialReport() {
                                 customer: invoice.customerName || 'Tanpa Nama',
                                 number: invoice.invoiceNumber || '-',
                                 date: invoice.date || '-',
-                                amount: dueAmount
+                                amount: dueAmount,
+                                month: invoiceMonth // Tambah properti bulan untuk grouping
                             });
                         }
                     }
@@ -2215,17 +2222,17 @@ async function generateFinancialReport() {
             }
         });
 
-        // Proses Pengeluaran (Expenses)
+        // Proses Pengeluaran (Expenses) untuk bulan yang dipilih
         Object.values(expenses).forEach(expense => {
             try {
                 const expenseDate = new Date(expense.date);
                 const expenseYear = expenseDate.getFullYear();
                 const expenseMonth = expenseDate.getMonth() + 1;
-                
-                if (expenseMonth == selectedMonth && expenseYear == selectedYear) {
+
+                if (expenseMonth === selectedMonth && expenseYear === selectedYear) {
                     const total = expense.grandTotal || 0;
                     totalexpenses += total;
-                    
+
                     transactionDetails.push({
                         type: 'Pengeluaran',
                         invoiceNumber: expense.expensesNumber || '-',
@@ -2262,17 +2269,42 @@ async function generateFinancialReport() {
             `).join('');
         }
 
-        // Update Tabel Piutang
+        // Update Tabel Piutang dengan Grouping Bulan
         const receivableTableBody = document.querySelector('#receivableDetails tbody');
         if (receivableTableBody) {
-            receivableTableBody.innerHTML = receivableDetails.map(receivable => `
-                <tr>
-                    <td>${receivable.customer}</td>
-                    <td>${receivable.number}</td>
-                    <td>${receivable.date}</td>
-                    <td>${formatRupiah(receivable.amount)}</td>
-                </tr>
-            `).join('');
+            let output = '';
+
+            // Group piutang per bulan
+            const groupedByMonth = receivableDetails.reduce((acc, curr) => {
+                const monthName = months[curr.month - 1]; // Konversi angka bulan ke nama bulan
+                if (!acc[monthName]) acc[monthName] = [];
+                acc[monthName].push(curr);
+                return acc;
+            }, {});
+
+            // Tampilkan per bulan
+            Object.entries(groupedByMonth).forEach(([monthName, items]) => {
+                output += `
+                    <tr>
+                        <td colspan="4" style="background: #f0f0f0; font-weight: bold;">
+                            ${monthName}
+                        </td>
+                    </tr>
+                `;
+
+                items.forEach(item => {
+                    output += `
+                        <tr>
+                            <td>${item.customer}</td>
+                            <td>${item.number}</td>
+                            <td>${item.date}</td>
+                            <td>${formatRupiah(item.amount)}</td>
+                        </tr>
+                    `;
+                });
+            });
+
+            receivableTableBody.innerHTML = output;
         }
 
     } catch (error) {
