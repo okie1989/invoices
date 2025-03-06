@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -207,10 +205,6 @@ th {
 .delete-btn:hover {
   background-color: RoyalBlue;
 }
-    .reset-btn {
-        background-color: #ffc107;
-        color: black;
-    }
     .new-btn {
         background-color: #17a2b8;
         color: white;
@@ -906,6 +900,7 @@ th {
   box-shadow: 0 3px 10px rgba(0,0,0,0.1);
   border-left: 4px solid #4CAF50;
 }
+
 /* Daftar Piutang */
 .debt-list {
   background: #fff;
@@ -926,6 +921,61 @@ th {
   transform: translateX(10px);
   background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.report-summary h3 {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#totalIncome {
+    color: #28a745; /* Hijau untuk pemasukan */
+}
+
+#totalexpenses {
+    color: #dc3545; /* Merah untuk pengeluaran */
+}
+
+#totalProfit {
+    color: #17a2b8; /* Biru untuk SALDO */
+}
+
+#totalReceivable {
+    color: #ffc107; /* Kuning untuk piutang */
+}
+
+.debt-list {
+    margin-top: 20px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+#transactionDetails, #receivableDetails {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+#transactionDetails th, #transactionDetails td,
+#receivableDetails th, #receivableDetails td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#transactionDetails th {
+    background-color: #4dcbdd; /* Warna header tabel transaksi */
+    color: #333;
+}
+
+#receivableDetails th {
+    background-color: #f8d7da; /* Warna header tabel piutang */
+    color: #721c24;
 }
 /* Tombol Aksi Laporan */
 .report-actions {
@@ -1140,6 +1190,26 @@ th {
 .delete-btn:hover {
     color: #c82333;
 }
+
+#receivableDetails {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+}
+
+#receivableDetails th, 
+#receivableDetails td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#receivableDetails th {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
 </style>
 <style>
         .disabled-form input:disabled,
@@ -1187,7 +1257,6 @@ th {
 	<div class="action-buttons">
 		<button class="save-btn" onclick="saveInvoice()">Simpan Nota</button>
 		<button class="load-btn" onclick="showSavedInvoices()">Buka Nota</button>
-		<button class="reset-btn" onclick="resetNota()">Reset</button>
 		<button class="print-thermal-btn" onclick="printThermalInvoice()">Cetak Struk</button>
 		<button class="preview-btn" onclick="showPreview()">Preview</button>
 		<button onclick="openexpensesModal()" class="report-btn">
@@ -1341,46 +1410,70 @@ th {
 	</table>
 </div>
 <div id="reportModal" class="modal">
-	<div class="modal-content">
-		<span class="close" onclick="closeReportModal()">&times;</span>
-		<h2>Laporan Keuangan</h2>
-		<div class="filter-container">
-			<select id="reportPeriod" onchange="generateFinancialReport()">
-				<option value="monthly">Bulanan</option>
-				<option value="yearly">Tahunan</option>
-			</select>
-			<select id="reportMonth" onchange="generateFinancialReport()">
-				<!-- Options bulan akan diisi oleh JavaScript --></select>
-			<select id="reportYear" onchange="generateFinancialReport()">
-				<!-- Options tahun akan diisi oleh JavaScript --></select>
-			<button onclick="exportToExcel()" class="report-btn">
-			<i class="fas fa-file-excel"></i> Export to Excel </button>
-		</div>
-		<div class="report-summary">
-			<h3>Total Pemasukan: <span id="totalIncome">Rp 0</span></h3>
-			<h3>Total Pengeluaran: <span id="totalexpenses">Rp 0</span></h3>
-			<h3>Laba Bersih: <span id="totalProfit">Rp 0</span></h3>
-		</div>
-		<div class="debt-list">
-			<h3>Detail Transaksi</h3>
-			<div class="table-container">
-				<table id="transactionDetails">
-				<thead>
-				<tr>
-					<th>Jenis</th>
-					<th>No. Invoice</th>
-					<th>Pelanggan/Barang</th>
-					<th>Tanggal</th>
-					<th>Total</th>
-					<th>Status</th>
-				</tr>
-				</thead>
-				<tbody>
-				<!-- Data transaksi akan diisi oleh JavaScript --></tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+    <div class="modal-content">
+        <span class="close" onclick="closeReportModal()">&times;</span>
+        <h2>Laporan Keuangan</h2>
+        
+        <!-- Filter Bulan dan Tahun -->
+        <div class="filter-container">
+            <select id="reportMonth" onchange="generateFinancialReport()">
+                <!-- Options bulan akan diisi oleh JavaScript -->
+            </select>
+            <select id="reportYear" onchange="generateFinancialReport()">
+                <!-- Options tahun akan diisi oleh JavaScript -->
+            </select>
+        </div>
+
+        <!-- Ringkasan Laporan -->
+        <div class="report-summary">
+            <h3>Total Pemasukan: <span id="totalIncome">Rp 0</span></h3>
+            <h3>Total Pengeluaran: <span id="totalexpenses">Rp 0</span></h3>
+            <h3>SALDO : <span id="totalProfit">Rp 0</span></h3>
+            <h3>Total Piutang: <span id="totalReceivable">Rp 0</span></h3>
+        </div>
+
+        <!-- Tabel Detail Transaksi -->
+        <div class="debt-list">
+            <h3>Detail Transaksi</h3>
+            <div class="table-container">
+                <table id="transactionDetails">
+                    <thead>
+                        <tr>
+                            <th>Jenis</th>
+                            <th>No. Invoice</th>
+                            <th>Pelanggan/Barang</th>
+                            <th>Tanggal</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data transaksi akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tabel Piutang -->
+        <div class="debt-list">
+            <h3>Detail Piutang</h3>
+            <div class="table-container">
+                <table id="receivableDetails">
+                    <thead>
+                        <tr>
+                            <th>Nama Pelanggan</th>
+                            <th>No. Invoice</th>
+                            <th>Tanggal</th>
+                            <th>Jumlah Piutang</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data piutang akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Bagian tabel dan tombol aksi lainnya -->
 <!-- ... --></div>
@@ -1613,23 +1706,7 @@ function addItem() {
             button.closest('tr').remove();
             calculateTotal();
         }
-        function resetNota() {
-    document.getElementById('customerName').value = '';
-    document.getElementById('orderName').value = '';
-    document.querySelector('#itemsTable tbody').innerHTML = `
-        <tr>
-            <td><input type="text" class="itemName"></td>
-            <td><input type="text" class="itemSize" placeholder="..."></td>
-            <td><input type="number" class="itemQty"></td>
-            <td><input type="text" class="itemPrice"></td>
-            <td><input type="text" class="itemTotal" readonly></td>
-            <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
-        </tr>`;
-    document.getElementById('amountPaid').value = '';
-    document.getElementById('discount').value = '0';
-    calculateTotal();
-    toggleForm(false); // Nonaktifkan form setelah reset
-}
+    
         function saveInvoice() {
             const customerName = document.getElementById('customerName').value;
             if(!customerName) {
@@ -2061,82 +2138,148 @@ function initializeDateFilters() {
 // Generate laporan
 async function generateFinancialReport() {
     try {
+        // Pastikan elemen yang diperlukan ada
+        const totalIncomeElem = document.getElementById('totalIncome');
+        const totalexpensesElem = document.getElementById('totalexpenses');
+        const totalProfitElem = document.getElementById('totalProfit');
+        const totalReceivableElem = document.getElementById('totalReceivable');
+        
+        if (!totalIncomeElem || !totalexpensesElem || !totalProfitElem || !totalReceivableElem) {
+            throw new Error('Elemen laporan tidak ditemukan');
+        }
+
+        // Ambil data dari Firebase
         const [invoicesSnapshot, expensesSnapshot] = await Promise.all([
             database.ref('invoices').once('value'),
             database.ref('expenses').once('value')
         ]);
+
+        // Inisialisasi variabel invoices dan expenses
         const invoices = invoicesSnapshot.val() || {};
         const expenses = expensesSnapshot.val() || {};
-        const periodType = document.getElementById('reportPeriod').value;
-        const selectedMonth = document.getElementById('reportMonth').value;
-        const selectedYear = document.getElementById('reportYear').value;
+
+        // Ambil nilai bulan dan tahun yang dipilih
+        const selectedMonth = document.getElementById('reportMonth')?.value;
+        const selectedYear = document.getElementById('reportYear')?.value;
+
+        if (!selectedMonth || !selectedYear) {
+            throw new Error('Bulan atau tahun tidak valid');
+        }
+
+        // Inisialisasi variabel untuk perhitungan
         let totalIncome = 0;
         let totalexpenses = 0;
+        let totalReceivable = 0;
         const transactionDetails = [];
+        const receivableDetails = [];
+
         // Proses Pemasukan (Invoices)
         Object.values(invoices).forEach(invoice => {
-            const invoiceDate = new Date(invoice.date);
-            const invoiceYear = invoiceDate.getFullYear();
-            const invoiceMonth = invoiceDate.getMonth() + 1;
-            if ((periodType === 'monthly' && invoiceMonth == selectedMonth && invoiceYear == selectedYear) ||
-                (periodType === 'yearly' && invoiceYear == selectedYear)) {
-                const total = parseInt(invoice.totalPrice.replace(/\./g, ''));
-                const paid = parseInt(invoice.amountPaid.replace(/\./g, '') || 0);
-                const discount = parseInt(invoice.discount.replace(/\./g, '') || 0);
-                if (invoice.lunas) {
-                    totalIncome += (paid - discount);
+            try {
+                const invoiceDate = new Date(invoice.date);
+                const invoiceYear = invoiceDate.getFullYear();
+                const invoiceMonth = invoiceDate.getMonth() + 1;
+                
+                if (invoiceMonth == selectedMonth && invoiceYear == selectedYear) {
+                    const total = parseInt(invoice.totalPrice?.replace(/\./g, '') || 0);
+                    const paid = parseInt(invoice.amountPaid?.replace(/\./g, '') || 0);
+                    const discount = parseInt(invoice.discount?.replace(/\./g, '') || 0);
+                    
+                    if (invoice.lunas) {
+                        totalIncome += (paid - discount);
+                    } else {
+                        const dueAmount = total - paid - discount;
+                        if (dueAmount > 0) {
+                            totalReceivable += dueAmount;
+                            receivableDetails.push({
+                                customer: invoice.customerName || 'Tanpa Nama',
+                                number: invoice.invoiceNumber || '-',
+                                date: invoice.date || '-',
+                                amount: dueAmount
+                            });
+                        }
+                    }
+
+                    transactionDetails.push({
+                        type: 'Pemasukan',
+                        invoiceNumber: invoice.invoiceNumber || '-',
+                        customerName: invoice.customerName || 'Tanpa Nama',
+                        date: invoice.date || '-',
+                        total: total,
+                        status: invoice.lunas ? 'LUNAS' : 'BELUM LUNAS'
+                    });
                 }
-                transactionDetails.push({
-                    type: 'Pemasukan',
-                    invoiceNumber: invoice.invoiceNumber,
-                    customerName: invoice.customerName,
-                    date: invoice.date,
-                    total: total,
-                    status: invoice.lunas ? 'LUNAS' : 'BELUM LUNAS'
-                });
+            } catch (error) {
+                console.error('Error processing invoice:', error);
             }
         });
+
         // Proses Pengeluaran (Expenses)
         Object.values(expenses).forEach(expense => {
-            const expenseDate = new Date(expense.date);
-            const expenseYear = expenseDate.getFullYear();
-            const expenseMonth = expenseDate.getMonth() + 1;
-            if ((periodType === 'monthly' && expenseMonth == selectedMonth && expenseYear == selectedYear) ||
-                (periodType === 'yearly' && expenseYear == selectedYear)) {
-                const total = expense.grandTotal || 0;
-                totalexpenses += total;
-                transactionDetails.push({
-                    type: 'Pengeluaran',
-                    invoiceNumber: expense.expensesNumber,
-                    customerName: expense.supplier,
-                    date: expense.date,
-                    total: total,
-                    status: 'LUNAS'
-                });
+            try {
+                const expenseDate = new Date(expense.date);
+                const expenseYear = expenseDate.getFullYear();
+                const expenseMonth = expenseDate.getMonth() + 1;
+                
+                if (expenseMonth == selectedMonth && expenseYear == selectedYear) {
+                    const total = expense.grandTotal || 0;
+                    totalexpenses += total;
+                    
+                    transactionDetails.push({
+                        type: 'Pengeluaran',
+                        invoiceNumber: expense.expensesNumber || '-',
+                        customerName: expense.supplier || 'Tanpa Nama',
+                        date: expense.date || '-',
+                        total: total,
+                        status: 'LUNAS'
+                    });
+                }
+            } catch (error) {
+                console.error('Error processing expense:', error);
             }
         });
+
         // Update Ringkasan
         const totalProfit = totalIncome - totalexpenses;
-        document.getElementById('totalIncome').textContent = formatRupiah(totalIncome);
-        document.getElementById('totalexpenses').textContent = formatRupiah(totalexpenses);
-        document.getElementById('totalProfit').textContent = formatRupiah(totalProfit);
+        totalIncomeElem.textContent = formatRupiah(totalIncome);
+        totalexpensesElem.textContent = formatRupiah(totalexpenses);
+        totalProfitElem.textContent = formatRupiah(totalProfit);
+        totalReceivableElem.textContent = formatRupiah(totalReceivable);
+
         // Update Tabel Detail Transaksi
         const transactionTableBody = document.querySelector('#transactionDetails tbody');
-        transactionTableBody.innerHTML = transactionDetails.map(transaction => `
-            <tr>
-                <td>${transaction.type}</td>
-                <td>${transaction.invoiceNumber}</td>
-                <td>${transaction.customerName}</td>
-                <td>${transaction.date}</td>
-                <td>${formatRupiah(transaction.total)}</td>
-                <td>${transaction.status}</td>
-            </tr>
-        `).join('');
+        if (transactionTableBody) {
+            transactionTableBody.innerHTML = transactionDetails.map(transaction => `
+                <tr>
+                    <td>${transaction.type}</td>
+                    <td>${transaction.invoiceNumber}</td>
+                    <td>${transaction.customerName}</td>
+                    <td>${transaction.date}</td>
+                    <td>${formatRupiah(transaction.total)}</td>
+                    <td>${transaction.status}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Update Tabel Piutang
+        const receivableTableBody = document.querySelector('#receivableDetails tbody');
+        if (receivableTableBody) {
+            receivableTableBody.innerHTML = receivableDetails.map(receivable => `
+                <tr>
+                    <td>${receivable.customer}</td>
+                    <td>${receivable.number}</td>
+                    <td>${receivable.date}</td>
+                    <td>${formatRupiah(receivable.amount)}</td>
+                </tr>
+            `).join('');
+        }
+
     } catch (error) {
         console.error("Error generating report:", error);
-        alert("Terjadi kesalahan saat memuat laporan!");
+        alert("Terjadi kesalahan saat memuat laporan: " + error.message);
     }
 }
+
 function closeReportModal() {
     document.getElementById('reportModal').style.display = 'none';
 }
@@ -2300,6 +2443,7 @@ function loadexpenses() {
         alert("Gagal memuat data pengeluaran!");
     });
 }
+
 // Edit pengeluaran
 function editexpenses(id) {
     database.ref(`expenses/${id}`).once('value').then((snapshot) => {
@@ -2369,6 +2513,7 @@ function deleteexpenses(id) {
             });
     }
 }
+    
 </script>
 </body>
 </html>
