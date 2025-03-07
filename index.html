@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -306,24 +308,23 @@ th {
         min-inline-size: min-content;
     }
     .payment-info {
-    column-count: 5;
+    column-count: 4;
     text-align-last: left;
     border-bottom-style: double;
     border-top-style: double;
     padding: 5px;
     column-gap: 7%;
+    font-size: 100%;
+    background-color: #bffb84;
+    text-transform:none
 }
-.amountDue {
-    font-size: 24px;
-    color: red;
-    text-transform: uppercase;
-    font-weight: bold;
-}
+
 p {
     line-height: normal;
 }
 p {
     margin: auto;
+    text-transform: none;
 }
     .unpaid {
         color: red;
@@ -1210,6 +1211,39 @@ summary {
 details[open] summary {
     margin-bottom: 10px;
 }
+
+/* Style khusus untuk payment info */
+.payment-info p {
+    font-size: 100%; /* Perbesar font */
+    color: #333; /* Warna default */
+}
+
+.payment-info p .amountDue,
+.payment-info p .changeAmount,
+.payment-info p .amountPaid,
+.payment-info p .discount {
+    font-size: 20px; /* Perbesar font untuk nilai */
+    font-weight: bold; /* Tebalkan font */
+}
+
+/* Warna merah untuk nilai yang ada */
+.payment-info p .amountDue:not(:empty),
+.payment-info p .changeAmount:not(:empty),
+.payment-info p .amountPaid:not(:empty),
+.payment-info p .discount:not(:empty) {
+    color: red;
+}
+
+/* Warna abu-abu untuk nilai 0 */
+.payment-info p .amountDue:empty,
+.payment-info p .changeAmount:empty,
+.payment-info p .amountPaid:empty,
+.payment-info p .discount:empty {
+    color: #999; /* Warna abu-abu */
+}
+
+
+
 </style>
 <style>
         .disabled-form input:disabled,
@@ -1305,20 +1339,13 @@ details[open] summary {
 		</p>
 	</div>
 	<div class="payment-info">
-		<p>
-			<strong>Dibayar:</strong> Rp <input type="text" id="amountPaid" value=""></p>
-		<p>
-			<strong>Diskon:</strong> Rp <input type="text" id="discount" value=""></p>
-		<div class="amountDue">
-			<p>
-				<strong>Kekurangan:</strong> Rp <span id="amountDue">0</span>
-			</p>
-		</div>
-		<p>
-			<strong>Kembalian:</strong> Rp <span id="changeAmount">0</span>
-		</p>
-		<p id="lunasText">LUNAS</p>
-	</div>
+        <p><strong>Dibayar:</strong> Rp <input type="text" id="amountPaid" value=""></p>
+        <p><strong>Diskon:</strong> Rp <input type="text" id="discount" value=""></p>
+        <p><strong>Kekurangan:</strong> Rp <span id="amountDue">0</span></p>
+        <p><strong>Kembalian:</strong> Rp <span id="changeAmount">0</span></p>
+        <p id="lunasText">LUNAS</p>
+	    </div>
+        
 	<div class="bank-info">
 		<p>
 			<strong>Transfer Bank:</strong>
@@ -1571,6 +1598,15 @@ details[open] summary {
         document.getElementById('invoiceNumberDisplay').textContent = newNumber;
     });
 }
+
+function toggleForm(isEnabled) {
+    const formElements = document.querySelectorAll('.invoice input, .invoice select, .invoice button');
+    formElements.forEach(element => {
+        element.disabled = !isEnabled;
+    });
+}
+
+
 function mergeDuplicateCells(table) {
     const rows = table.querySelectorAll('tbody tr');
     let previousValue = null;
@@ -1849,7 +1885,6 @@ function updateInvoiceList() {
         });
         calculateTotal();
         closeModal();
-        toggleForm(true); // Aktifkan form setelah load
     });
 }
         function deleteSavedInvoice(invoiceNumber) {
@@ -2517,6 +2552,8 @@ function deleteexpenses(id) {
             });
     }
 }
+
+
 </script>
 </body>
 </html>
