@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -1241,7 +1239,52 @@ details[open] summary {
 .payment-info p .discount:empty {
     color: #999; /* Warna abu-abu */
 }
+/* Container untuk input dan tombol centang */
+.input-with-checkmark {
+    position: relative;
+    display: inline-block;
+    width: 200px; /* Sesuaikan lebar sesuai kebutuhan */
+}
 
+/* Input field */
+.input-with-checkmark input {
+    width: 100%;
+    padding-right: 40px; /* Beri ruang untuk tombol centang */
+    box-sizing: border-box; /* Pastikan padding tidak melebihi lebar */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    height: 40px; /* Tinggi input */
+    padding-left: 10px; /* Padding kiri untuk teks */
+}
+
+/* Tombol centang */
+.checkmark-btn {
+    position: absolute;
+    right: 5px; /* Jarak dari kanan */
+    top: 50%; /* Posisikan di tengah vertikal */
+    transform: translateY(-50%); /* Geser ke atas setengah tinggi */
+    background: none;
+    border: none;
+    color: #28a745; /* Warna hijau */
+    cursor: pointer;
+    font-size: 18px; /* Ukuran ikon */
+    padding: 5px; /* Padding untuk area klik */
+    transition: color 0.3s ease; /* Animasi perubahan warna */
+}
+
+.checkmark-btn:hover {
+    color: #218838; /* Warna hijau lebih gelap saat hover */
+}
+
+.checkmark-btn:active {
+    transform: translateY(-50%) scale(0.9); /* Efek tekan saat diklik */
+}
+
+.fa, .fas {
+    font-weight: 900;
+    float: right;
+}
 
 
 </style>
@@ -1339,12 +1382,26 @@ details[open] summary {
 		</p>
 	</div>
 	<div class="payment-info">
-        <p><strong>Dibayar:</strong> Rp <input type="text" id="amountPaid" value=""></p>
-        <p><strong>Diskon:</strong> Rp <input type="text" id="discount" value=""></p>
-        <p><strong>Kekurangan:</strong> Rp <span id="amountDue">0</span></p>
-        <p><strong>Kembalian:</strong> Rp <span id="changeAmount">0</span></p>
+        <p>
+            <strong>Dibayar:</strong>
+            <div class="input-with-checkmark">
+                <input type="text" id="amountPaid" value="">
+                <button id="markAsPaid" class="checkmark-btn" onclick="markAsPaid()">
+                    <i class="fas fa-check"></i> <!-- Ikon centang dari Font Awesome -->
+                </button>
+            </div>
+        </p>
+        <p>
+            <strong>Diskon:</strong> Rp <input type="text" id="discount" value="">
+        </p>
+        <p>
+            <strong>Kekurangan:</strong> Rp <span id="amountDue">0</span>
+        </p>
+        <p>
+            <strong>Kembalian:</strong> Rp <span id="changeAmount">0</span>
+        </p>
         <p id="lunasText">LUNAS</p>
-	    </div>
+    </div>
         
 	<div class="bank-info">
 		<p>
@@ -2553,6 +2610,20 @@ function deleteexpenses(id) {
     }
 }
 
+function markAsPaid() {
+    const totalPrice = parseFloat(document.getElementById('totalPrice').textContent.replace(/\./g, '')) || 0;
+    const discount = parseFloat(document.getElementById('discount').value.replace(/\./g, '')) || 0;
+    const amountToPay = totalPrice - discount;
+
+    // Isi nilai "Dibayar" dengan total harga setelah diskon
+    document.getElementById('amountPaid').value = formatRupiah(amountToPay);
+
+    // Hitung ulang total
+    calculateTotal();
+
+    // Tampilkan teks "LUNAS"
+    document.getElementById('lunasText').style.display = 'block';
+}
 
 </script>
 </body>
