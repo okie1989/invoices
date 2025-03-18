@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -23,7 +22,7 @@ body {
     padding: 16px;
     box-sizing: border-box;
     border: groove;
-    background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
+    background: linear-gradient(260deg, #adff99, #e0e0e0);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
@@ -40,7 +39,7 @@ body {
 }
 
 .logo img {
-    width: 183px;
+    width: 148px;
     height: auto;
     border-radius: 8px;
     margin-top: -22%;
@@ -83,14 +82,13 @@ body {
 }
 
 .invoice-number {
-    font-size: 42px;
+    font-size: 32px;
     font-weight: 600;
     margin-bottom: 8px;
-    color: black;
+    color: #4b8dad;
     justify-self: right;
-    margin-top: -10%;
+    margin-top: -14%;
     text-align: right;
-    border-right: double;
     padding-right: 1%;
     font-family: monospace;
 }
@@ -102,7 +100,7 @@ body {
 }
 
 .invoice-date {
-    font-size: 27px;
+    font-size: 20px;
     font-weight: 400;
     opacity: 0.9;
     color: #000000;
@@ -115,13 +113,13 @@ body {
     font-size: 107%;
     color: #1a3332;
     text-align: left;
-    margin-top: -139px;
+    margin-top: -97px;
     font-style: italic;
     font-family: revert-layer;
     margin-left: 7%;
     margin-bottom: 7%;
     text-transform: capitalize;
-    padding-left: 1%;
+    padding-left: 2%;
 }
         
 
@@ -166,10 +164,7 @@ th {
     background-color: #4dcbdd;
     position: relative;
 }
-    th:first-child::after {
-        content: "Jenis Barang";
-        display: block;
-    }
+
     th:first-child span {
         display: none;
     }
@@ -261,54 +256,41 @@ th {
     50% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); }
     100% { transform: translate(-50%, -50%) scale(1) rotate(-15deg); }
 }
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0,0,0,0.4);
-        transition: opacity 0.3s ease;
-    }
-    .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 100%;
-    max-width: 500px;
-    animation: slideIn 0.3s ease;
-    background: linear-gradient(135deg, #fff, #f9f9f9);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-}
-    @keyframes slideIn {
-    from {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-.close {
-    color: #dd89a8;
-    float: right;
-    font-size: 48px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    margin-right: 18%;
-    background: deeppink;
-}
-    .close:hover {
-        color: black;
-        color: #977676;
-    }
+.modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #555;
+        }
     #savedInvoicesList {
         list-style-type: none;
         padding: 0;
@@ -379,7 +361,7 @@ p {
     text-align: center;
     margin: 14px 0;
     max-width: 98%;
-    margin-left: 30%;
+    margin-left: 0%;
 }
         .share-btn {
             background: #25D366;
@@ -612,8 +594,9 @@ input, select, textarea {
 }
 /* Ensure buttons are easily tappable */
 button {
-    min-width: 120px;
-    padding: 12px 20px;
+    background: linear-gradient(222deg, #647863 0%, #a4dda7 100%);
+    border: hidden;
+    text-transform: uppercase;
 }
 /* Adjust logo size for mobile */
 .logo {
@@ -622,9 +605,11 @@ button {
 }
 /* Adjust company info for mobile */
 .company-info h2 {
-    font-size: 34px;
-    MARGIN-BOTTOM: 9PX;
-    letter-spacing: 13px;
+    font-size: 68px;
+    MARGIN-BOTTOM: 8PX;
+    letter-spacing: 17px;
+    MARGIN-TOP: -1%;
+    COLOR: darkcyan;
 }
 .company-info p {
     font-size: 19px;
@@ -812,7 +797,7 @@ th {
 }
 #invoiceModal .modal-content {
     position: fixed;
-    top: 18%;
+    top: 42%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
@@ -908,17 +893,6 @@ th {
     transform: translateY(0);
     opacity: 1;
   }
-}
-#reportModal .close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  transition: all 0.2s ease;
-}
-#reportModal .close:hover {
-  color: #666;
-  transform: rotate(90deg);
 }
 /* Kontainer Filter */
 .filter-container {
@@ -1507,7 +1481,7 @@ details[open] summary {
 
 
 .invoice-note {
-    font-size: 36%;
+    font-size: 31%;
     color: #8f0c0c;
     font-style: italic;
     margin-top: -9px;
@@ -1616,7 +1590,7 @@ details[open] summary {
     gap: 15px;
     margin: 20px 0;
     padding: 14px;
-    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+    background: linear-gradient(145deg, #324b65, #e9ecef);
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
@@ -1848,7 +1822,61 @@ details[open] summary {
     opacity: 1;
 }
 
+/* Modal Nota Keluar */
+#notaKeluarModal .modal-content {
+    max-width: 800px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    animation: slideIn 0.3s ease;
+}
 
+#notaKeluarModal h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1f4772;
+}
+
+#notaKeluarTableContainer {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+#notaKeluarTableContainer table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#notaKeluarTableContainer th,
+#notaKeluarTableContainer td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#notaKeluarTableContainer th {
+    background-color: #4dcbdd;
+    color: #333;
+    font-weight: bold;
+}
+
+#notaKeluarTableContainer tr:hover {
+    background-color: #f1f1f1;
+}
+
+button.nota-keluar-btn {
+    background: linear-gradient(135deg, #184368 0%, #2E7D32 100%);
+}
+
+.error {
+            color: #dc3545;
+            background: #ffe6e6;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ffcccc;
+            margin: 10px 0;
+        }
 
 </style>
 <style>
@@ -1917,31 +1945,46 @@ details[open] summary {
 
 
 	<div class="action-buttons">
+        <!-- Tombol yang sudah ada -->
         <button class="save-btn" onclick="saveInvoice()">
             <i class="fas fa-save"></i> SIMPAN
         </button>
         <button class="load-btn" onclick="showSavedInvoices()">
-            <i class="fas fa-folder-open"></i>BUKA
+            <i class="fas fa-folder-open"></i> BUKA
         </button>
         <button class="print-thermal-btn" onclick="printThermalInvoice()">
-            <i class="fas fa-print"></i>PRINT
+            <i class="fas fa-print"></i> PRINT
         </button>
         <button class="preview-btn" onclick="showPreview()">
-            <i class="fas fa-eye"></i>LIHAT
+            <i class="fas fa-eye"></i> LIHAT
         </button>
         <button class="report-btn" onclick="openexpensesModal()">
-            <i class="fas fa-money-bill-wave"></i>DANA KELUAR
+            <i class="fas fa-money-bill-wave"></i> TAMBAH PENGELUARAN
+        </button>
+        <button onclick="showNotaKeluar()">
+            <i class="fa fa-file-invoice"></i> Nota Keluar
         </button>
         <button class="report-btn" onclick="showFinancialReport()">
-            <i class="fas fa-chart-line"></i>LAPORAN
+            <i class="fas fa-chart-line"></i> LAPORAN
         </button>
     </div>
+    
+
+    <!-- Modal Nota Keluar -->
+
+<div id="notaKeluarModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeNotaKeluarModal()">&times;</span>
+        <h2>📅 Nota Pengeluaran Tersimpan</h2>
+        <div id="notaKeluarTableContainer"></div>
+    </div>
+</div>
+
+
 	<table id="itemsTable">
 	<thead>
 	<tr>
-		<th>
-			<span>Nama Barang</span>
-		</th>
+		<th>Nama Barang</th>
 		<th>Size</th>
 		<th>Qty</th>
 		<th>Harga</th>
@@ -2031,8 +2074,8 @@ details[open] summary {
 </div>
 <div id="expensesModal" class="modal">
 	<div class="modal-content">
-		<span class="close" onclick="closeexpensesModal()">&times;</span>
-		<h2 id="expensesModalTitle">Tambah Pengeluaran</h2>
+        <span class="close" onclick="closeexpensesModal()">&times;</span>
+        <h2 id="expensesModalTitle">Tambah Pengeluaran</h2>
 		<form id="expensesForm">
 			<div class="form-group">
 				<label>No. Nota Pengeluaran:</label>
@@ -2070,12 +2113,7 @@ details[open] summary {
 		</form>
 	</div>
 </div>
-<!-- Tabel Nota Pengeluaran Tersimpan -->
-<div class="invoice">
-	<h2 style="justify-self: center;">Nota Pengeluaran Tersimpan</h2>
-	<div id="expensesTableContainer">
-		<!-- Data akan diisi oleh JavaScript --></div>
-</div>
+
 <div id="reportModal" class="modal">
 	<div class="modal-content">
 		<span class="close" onclick="closeReportModal()">&times;</span>
@@ -3404,7 +3442,7 @@ function loadexpenses() {
     database.ref('expenses').once('value', (snapshot) => {
         const expenses = snapshot.val() || {};
         const expensesTableContainer = document.getElementById('expensesTableContainer');
-        expensesTableContainer.innerHTML = '';
+ 
         // Kelompokkan pengeluaran berdasarkan bulan
         const groupedExpenses = {};
         Object.entries(expenses).forEach(([id, expense]) => {
@@ -3455,7 +3493,7 @@ function loadexpenses() {
                 </tbody>
             `;
             details.appendChild(table);
-            expensesTableContainer.appendChild(details);
+
         });
     }).catch((error) => {
         console.error("Error loading expenses:", error);
@@ -3545,6 +3583,210 @@ function markAsPaid() {
 
     // Tampilkan teks "LUNAS"
     document.getElementById('lunasText').style.display = 'block';
+}
+
+function showNotaKeluar() {
+    database.ref("expenses").once("value", (snapshot) => {
+        const expenses = snapshot.val() || {};
+        const container = document.getElementById("notaKeluarTableContainer");
+        container.innerHTML = "";
+        
+        // 1. Kelompokkan data berdasarkan tanggal
+        const groupedExpenses = Object.entries(expenses).reduce((acc, [id, expense]) => {
+            const date = new Date(expense.date).toISOString().split('T')[0];
+            if (!acc[date]) acc[date] = [];
+            acc[date].push({ id, ...expense });
+            return acc;
+        }, {});
+
+        // 2. Urutkan tanggal dari terbaru ke terlama
+        const sortedDates = Object.keys(groupedExpenses).sort((a, b) => new Date(b) - new Date(a));
+
+        // 3. Buat elemen HTML untuk setiap kelompok tanggal
+        sortedDates.forEach(date => {
+            const dateHeader = document.createElement("div");
+            dateHeader.className = "date-group";
+            dateHeader.innerHTML = `
+                <h3>${formatTanggalIndo(date)}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No. Nota</th>
+                            <th>Supplier</th>
+                            <th>Total</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${groupedExpenses[date].map(expense => `
+                            <tr>
+                                <td>${expense.expensesNumber}</td>
+                                <td>${expense.supplier}</td>
+                                <td>${formatRupiah(expense.grandTotal)}</td>
+                                <td>
+                                    <button onclick="editexpenses('${expense.id}')" class="edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="deleteNotaKeluar('${expense.id}')" class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            container.appendChild(dateHeader);
+        });
+    });
+    
+    document.getElementById("notaKeluarModal").style.display = "block";
+}
+
+// Fungsi untuk mengubah format tanggal ke Bahasa Indonesia
+function formatTanggalIndo(dateString) {
+    const date = new Date(dateString);
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('id-ID', options);
+}
+
+// Fungsi Edit (Update fungsi yang sudah ada)
+function editexpenses(id) {
+    database.ref(`expenses/${id}`).once("value").then((snapshot) => {
+        const expense = snapshot.val();
+        
+        // Isi form dengan data yang ada
+        document.getElementById("expensesNumber").value = expense.expensesNumber;
+        document.getElementById("expensesupplier").value = expense.supplier;
+        document.getElementById("expensesDate").value = expense.date;
+        document.getElementById("expensesDescription").value = expense.description || '';
+        
+        // Isi items
+        const tbody = document.querySelector("#expensesItemsTable tbody");
+        tbody.innerHTML = "";
+        expense.items.forEach(item => {
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td><input type="text" class="expensesItemName" value="${item.name}"></td>
+                <td><input type="number" class="expensesQty" value="${item.qty}"></td>
+                <td><input type="text" class="expensesUnitPrice" value="${formatRupiah(item.unitPrice)}"></td>
+                <td><input type="text" class="expensesItemTotal" readonly value="${formatRupiah(item.total)}"></td>
+                <td><button type="button" onclick="removeexpensesItemRow(this)" class="delete-btn">
+                    <i class="fas fa-trash"></i>
+                </button></td>
+            `;
+            tbody.appendChild(newRow);
+            newRow.querySelector(".expensesQty").addEventListener("input", calculateexpensesItemTotal);
+            newRow.querySelector(".expensesUnitPrice").addEventListener("input", calculateexpensesItemTotal);
+        });
+        
+        calculateGrandTotal();
+        currentexpensesId = id; // Set ID untuk update
+        document.getElementById("expensesModalTitle").textContent = "Edit Pengeluaran";
+        document.getElementById("expensesModal").style.display = "block";
+    });
+}
+
+// Update fungsi saveexpenses untuk handle edit
+function saveexpenses() {
+    const expensesData = {
+        expensesNumber: document.getElementById("expensesNumber").value,
+        supplier: document.getElementById("expensesupplier").value,
+        date: document.getElementById("expensesDate").value,
+        description: document.getElementById("expensesDescription").value,
+        items: [],
+        grandTotal: parseFloat(document.getElementById("expensesGrandTotal").textContent.replace(/\./g, '')) || 0
+    };
+
+    // Ambil items
+    document.querySelectorAll("#expensesItemsTable tbody tr").forEach(row => {
+        const item = {
+            name: row.querySelector(".expensesItemName").value,
+            qty: parseFloat(row.querySelector(".expensesQty").value) || 0,
+            unitPrice: parseFloat(row.querySelector(".expensesUnitPrice").value.replace(/\./g, '')) || 0,
+            total: parseFloat(row.querySelector(".expensesItemTotal").value.replace(/\./g, '')) || 0
+        };
+        expensesData.items.push(item);
+    });
+
+    // Tentukan path database (create or update)
+    const expenseRef = currentexpensesId ? 
+        database.ref(`expenses/${currentexpensesId}`) : 
+        database.ref("expenses").push();
+
+    expenseRef.set(expensesData)
+        .then(() => {
+            alert("Data berhasil disimpan!");
+            clearexpensesForm();
+            showNotaKeluar(); // Refresh tampilan nota keluar
+            closeexpensesModal();
+        })
+        .catch((error) => {
+            console.error("Gagal menyimpan:", error);
+        });
+}
+
+// Fungsi untuk menutup modal Nota Keluar
+function closeNotaKeluarModal() {
+    document.getElementById("notaKeluarModal").style.display = "none";
+}
+
+// Fungsi untuk memuat data pengeluaran
+function loadNotaKeluar() {
+    database.ref("expenses").once("value", (snapshot) => {
+        const expenses = snapshot.val() || {};
+        const container = document.getElementById("notaKeluarTableContainer");
+        container.innerHTML = "";
+
+        // Buat tabel untuk menampilkan data
+        const table = document.createElement("table");
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>No. Nota</th>
+                    <th>Supplier</th>
+                    <th>Total</th>
+                    <th>Tanggal</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${Object.entries(expenses)
+                    .map(
+                        ([id, expense]) => `
+                    <tr>
+                        <td>${expense.expensesNumber}</td>
+                        <td>${expense.supplier}</td>
+                        <td>${formatRupiah(expense.grandTotal)}</td>
+                        <td>${expense.date}</td>
+                        <td>
+                            <button onclick="deleteNotaKeluar('${id}')" class="delete-btn">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `
+                    )
+                    .join("")}
+            </tbody>
+        `;
+        container.appendChild(table);
+    });
+}
+
+// Fungsi untuk menghapus nota keluar
+function deleteNotaKeluar(id) {
+    if (confirm("Apakah Anda yakin ingin menghapus nota ini?")) {
+        database.ref(`expenses/${id}`)
+            .remove()
+            .then(() => {
+                alert("Nota berhasil dihapus!");
+                loadNotaKeluar(); // Muat ulang data setelah penghapusan
+            })
+            .catch((error) => {
+                console.error("Gagal menghapus nota:", error);
+            });
+    }
 }
 
 </script>
