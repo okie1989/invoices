@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -341,7 +342,7 @@ p {
     text-align: center;
     margin: 14px 0;
     max-width: 98%;
-    margin-left: 41%;
+    margin-left: 30%;
 }
         .share-btn {
             background: #25D366;
@@ -856,15 +857,14 @@ th {
   to { opacity: 1; }
 }
 #reportModal .modal-content {
-  background-color: #fff;
-  margin: 5% auto;
-  padding: 30px;
-  width: 80%;
-  max-width: 800px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  transform: translateY(-50px);
-  animation: slideDown 0.3s ease-out forwards;
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 30px;
+    max-width: 70%;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    transform: translateY(-50px);
+    animation: slideDown 0.3s ease-out forwards;
 }
 @keyframes slideDown {
   to {
@@ -1781,6 +1781,40 @@ details[open] summary {
         width: 100%;
     }
 }
+.duplicate-item {
+    background-color: #fff3cd !important;
+    border-color: #ffdf7e !important;
+    color: #b58105 !important;
+}
+
+// Tambahkan CSS untuk tooltip
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
 
 </style>
 <style>
@@ -2035,24 +2069,27 @@ details[open] summary {
 		</div>
 		<!-- Tabel Detail Transaksi (Awalnya Disembunyikan) -->
 		<div id="transactionDetails" class="detail-table" style="display: none;">
-			<h3>Detail Transaksi</h3>
-			<div class="table-container">
-				<table>
-				<thead>
-				<tr>
-					<th>Jenis</th>
-					<th>No. Invoice</th>
-					<th>Pelanggan/Barang</th>
-					<th>Tanggal</th>
-					<th>Total</th>
-					<th>Status</th>
-				</tr>
-				</thead>
-				<tbody>
-				<!-- Data transaksi akan diisi oleh JavaScript --></tbody>
-				</table>
-			</div>
-		</div>
+            <h3>Detail Transaksi</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>No Nota</th>
+                            <th>Nama Order</th>
+                            <th>Jenis Nota</th>
+                            <th>Pelanggan</th>
+                            <th>Supplier</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionDetailsBody">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 		<!-- Tabel Detail Piutang (Awalnya Disembunyikan) -->
 		<div id="receivableDetails" class="detail-table" style="display: none;">
 			<h3>Detail Piutang</h3>
@@ -2474,24 +2511,30 @@ window.onclick = function(event) {
         // Fungsi calculateTotal yang diperbarui
         function calculateTotal() {
             let totalQty = 0, totalPrice = 0;
-            document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
-                const qty = Math.abs(parseFloat(row.querySelector('.itemQty').value) || 0);
-                const price = parseFloat(row.querySelector('.itemPrice').value.replace(/\./g, '')) || 0;
-                const total = qty * price;
-                row.querySelector('.itemTotal').value = formatRupiah(total);
-                totalQty += qty;
-                totalPrice += total;
-            });
-            document.getElementById('totalQty').textContent = totalQty;
-            document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
-            const paid = parseFloat(document.getElementById('amountPaid').value.replace(/\./g, '')) || 0;
-            const discount = parseFloat(document.getElementById('discount').value.replace(/\./g, '')) || 0;
-            const due = totalPrice - paid - discount;
-            const change = Math.max(paid - (totalPrice - discount), 0);
-            document.getElementById('amountDue').textContent = formatRupiah(due);
-            document.getElementById('changeAmount').textContent = formatRupiah(change);
-            document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
-        }
+    document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+        const qty = Math.abs(parseFloat(row.querySelector('.itemQty').value)) || 0;
+        const price = parseFloat(row.querySelector('.itemPrice').value.replace(/\./g, '')) || 0;
+        const total = qty * price;
+        row.querySelector('.itemTotal').value = formatRupiah(total);
+        totalQty += qty;
+        totalPrice += total;
+    });
+
+    document.getElementById('totalQty').textContent = totalQty;
+    document.getElementById('totalPrice').textContent = formatRupiah(totalPrice);
+
+    const paid = parseFloat(document.getElementById('amountPaid').value.replace(/\./g, '')) || 0;
+    const discount = parseFloat(document.getElementById('discount').value.replace(/\./g, '')) || 0;
+    
+    // Hitung kekurangan dengan memperhitungkan DP sebagai bagian dari pembayaran
+    const due = totalPrice - paid - discount;
+    const change = Math.max(paid - (totalPrice - discount), 0);
+
+    document.getElementById('amountDue').textContent = formatRupiah(due);
+    document.getElementById('changeAmount').textContent = formatRupiah(change);
+    document.getElementById('lunasText').style.display = due <= 0 ? 'block' : 'none';
+}
+
         // Event listener untuk kolom harga
         document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
             const priceInput = row.querySelector('.itemPrice');
@@ -2502,7 +2545,7 @@ window.onclick = function(event) {
                 calculateTotal(); // Perbarui total
             });
         });
-function addItem() {
+        function addItem() {
     const newRow = document.createElement('tr');
     newRow.innerHTML = ` 
         <td><input type="text" class="itemName" list="itemNamesList"></td>
@@ -2512,8 +2555,11 @@ function addItem() {
         <td><input type="text" class="itemTotal" readonly></td>
         <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
     `;
-    document.querySelector('#itemsTable tbody').appendChild(newRow);
+    
+    // Tambahkan event listeners untuk row baru
     addEventListenersToRow(newRow);
+    
+    document.querySelector('#itemsTable tbody').appendChild(newRow);
     newRow.querySelector('.itemName').focus();
 }
         function deleteRow(button) {
@@ -2776,6 +2822,46 @@ document.querySelectorAll('#itemsTable tbody tr').forEach(row => addEventListene
                 closeModal();
             }
         }
+
+
+
+// Fungsi untuk cek item duplikat
+function checkDuplicateItems(currentInput) {
+    const currentValue = currentInput.value.trim().toLowerCase();
+    const allItemInputs = document.querySelectorAll('.itemName');
+    
+    allItemInputs.forEach(input => {
+        if (input !== currentInput) {
+            const inputValue = input.value.trim().toLowerCase();
+            if (inputValue === currentValue && currentValue !== '') {
+                input.classList.add('duplicate-item');
+                currentInput.classList.add('duplicate-item');
+            } else {
+                input.classList.remove('duplicate-item');
+                currentInput.classList.remove('duplicate-item');
+            }
+        }
+    });
+
+if (currentInput.classList.contains('duplicate-item')) {
+        currentInput.parentElement.classList.add('tooltip');
+        currentInput.insertAdjacentHTML('afterend', 
+            '<span class="tooltiptext">Item sudah ada di tabel!</span>');
+    } else {
+        currentInput.parentElement.classList.remove('tooltip');
+        const tooltip = currentInput.nextElementSibling;
+        if (tooltip && tooltip.classList.contains('tooltiptext')) {
+            tooltip.remove();
+        }
+    }
+}
+// Panggil fungsi ini setiap kali ada perubahan pada tabel
+document.addEventListener('input', function(e) {
+    if (e.target.classList.contains('itemName')) {
+        checkDuplicateItems(e.target);
+    }
+});
+
         window.onload = function() {
     document.getElementById('invoiceNumberDisplay').textContent = generateInvoiceNumber();
     displayDate();
@@ -2997,7 +3083,7 @@ function toggleDetail(tableId) {
 // Generate laporan
 async function generateFinancialReport() {
     try {
-        // Pastikan elemen yang diperlukan ada
+        // Validasi elemen laporan
         const totalIncomeElem = document.getElementById('totalIncome');
         const totalexpensesElem = document.getElementById('totalexpenses');
         const totalProfitElem = document.getElementById('totalProfit');
@@ -3005,122 +3091,147 @@ async function generateFinancialReport() {
         if (!totalIncomeElem || !totalexpensesElem || !totalProfitElem || !totalReceivableElem) {
             throw new Error('Elemen laporan tidak ditemukan');
         }
+
         // Ambil data dari Firebase
         const [invoicesSnapshot, expensesSnapshot] = await Promise.all([
             database.ref('invoices').once('value'),
             database.ref('expenses').once('value')
         ]);
-        // Inisialisasi variabel invoices dan expenses
+
+        // Inisialisasi data
         const invoices = invoicesSnapshot.val() || {};
         const expenses = expensesSnapshot.val() || {};
-        // Ambil nilai bulan dan tahun yang dipilih
-        const selectedMonth = document.getElementById('reportMonth')?.value;
-        const selectedYear = document.getElementById('reportYear')?.value;
-        if (!selectedMonth || !selectedYear) {
-            throw new Error('Bulan atau tahun tidak valid');
-        }
-        // Inisialisasi variabel untuk perhitungan
+        const selectedMonth = document.getElementById('reportMonth').value;
+        const selectedYear = document.getElementById('reportYear').value;
         let totalIncome = 0;
         let totalexpenses = 0;
         let totalReceivable = 0;
-        const transactionDetails = [];
+        const allTransactions = [];
         const receivableDetails = [];
-        // Proses Pemasukan (Invoices)
+
+        // Validasi periode
+        if (!selectedMonth || !selectedYear) {
+            throw new Error('Pilih bulan dan tahun terlebih dahulu');
+        }
+
+        // Proses data invoice
         Object.values(invoices).forEach(invoice => {
             try {
                 const invoiceDate = new Date(invoice.date);
-                const invoiceYear = invoiceDate.getFullYear();
-                const invoiceMonth = invoiceDate.getMonth() + 1;
-                if (invoiceMonth == selectedMonth && invoiceYear == selectedYear) {
-                    const total = parseInt(invoice.totalPrice?.replace(/\./g, '') || 0);
-                    const paid = parseInt(invoice.amountPaid?.replace(/\./g, '') || 0);
-                    const discount = parseInt(invoice.discount?.replace(/\./g, '') || 0);
-                    if (invoice.lunas) {
-                        totalIncome += (paid - discount);
-                    } else {
-                        const dueAmount = total - paid - discount;
-                        if (dueAmount > 0) {
-                            totalReceivable += dueAmount;
-                            receivableDetails.push({
-                                customer: invoice.customerName || 'Tanpa Nama',
-                                number: invoice.invoiceNumber || '-',
-                                date: invoice.date || '-',
-                                amount: dueAmount
-                            });
+                if (invoiceDate.getMonth() + 1 == selectedMonth && invoiceDate.getFullYear() == selectedYear) {
+                    // Hitung nilai
+                    const total = parseInt(invoice.totalPrice?.replace(/[^0-9]/g, '')) || 0;
+                    const paid = parseInt(invoice.amountPaid?.replace(/[^0-9]/g, '')) || 0;
+                    const discount = parseInt(invoice.discount?.replace(/[^0-9]/g, '')) || 0;
+                    
+                    // Update total
+                    totalIncome += paid - discount;
+                    const dueAmount = total - paid - discount;
+                    
+                    // Simpan transaksi
+                    allTransactions.push({
+                        date: invoiceDate,
+                        data: {
+                            tanggal: invoiceDate,
+                            noNota: invoice.invoiceNumber,
+                            namaOrder: invoice.orderName || 'Tanpa Nama Order',
+                            jenis: 'PEMASUKAN',
+                            pelanggan: invoice.customerName || '-',
+                            supplier: '-',
+                            total: total,
+                            status: invoice.lunas ? 'LUNAS' : 'BELUM LUNAS'
                         }
-                    }
-                    transactionDetails.push({
-                        type: 'Pemasukan',
-                        invoiceNumber: invoice.invoiceNumber || '-',
-                        customerName: invoice.customerName || 'Tanpa Nama',
-                        date: invoice.date || '-',
-                        total: total,
-                        status: invoice.lunas ? 'LUNAS' : 'BELUM LUNAS'
                     });
+
+                    // Hitung piutang
+                    if (!invoice.lunas && dueAmount > 0) {
+                        totalReceivable += dueAmount;
+                        receivableDetails.push({
+                            customer: invoice.customerName || 'Tanpa Nama',
+                            number: invoice.invoiceNumber,
+                            date: invoice.date,
+                            amount: dueAmount
+                        });
+                    }
                 }
             } catch (error) {
                 console.error('Error processing invoice:', error);
             }
         });
-        // Proses Pengeluaran (Expenses)
+
+        // Proses data pengeluaran
         Object.values(expenses).forEach(expense => {
             try {
                 const expenseDate = new Date(expense.date);
-                const expenseYear = expenseDate.getFullYear();
-                const expenseMonth = expenseDate.getMonth() + 1;
-                if (expenseMonth == selectedMonth && expenseYear == selectedYear) {
+                if (expenseDate.getMonth() + 1 == selectedMonth && expenseDate.getFullYear() == selectedYear) {
+                    // Hitung nilai
                     const total = expense.grandTotal || 0;
                     totalexpenses += total;
-                    transactionDetails.push({
-                        type: 'Pengeluaran',
-                        invoiceNumber: expense.expensesNumber || '-',
-                        customerName: expense.supplier || 'Tanpa Nama',
-                        date: expense.date || '-',
-                        total: total,
-                        status: 'LUNAS'
+
+                    // Simpan transaksi
+                    allTransactions.push({
+                        date: expenseDate,
+                        data: {
+                            tanggal: expenseDate,
+                            noNota: expense.expensesNumber,
+                            namaOrder: expense.description || '-',
+                            jenis: 'PENGELUARAN',
+                            pelanggan: '-',
+                            supplier: expense.supplier || '-',
+                            total: total,
+                            status: 'LUNAS'
+                        }
                     });
                 }
             } catch (error) {
                 console.error('Error processing expense:', error);
             }
         });
-        // Update Ringkasan
+
+        // Urutkan transaksi dari TERBARU ke TERLAMA
+        allTransactions.sort((a, b) => b.date - a.date);
+
+        // Update tabel transaksi
+        const transactionDetailsBody = document.querySelector('#transactionDetailsBody');
+        transactionDetailsBody.innerHTML = allTransactions.map(t => `
+            <tr>
+                <td>${t.data.tanggal.toLocaleDateString('id-ID')}</td>
+                <td>${t.data.noNota}</td>
+                <td>${t.data.namaOrder}</td>
+                <td>${t.data.jenis}</td>
+                <td>${t.data.pelanggan}</td>
+                <td>${t.data.supplier}</td>
+                <td>${formatRupiah(t.data.total)}</td>
+                <td>${t.data.status}</td>
+            </tr>
+        `).join('');
+
+        // Update ringkasan
         const totalProfit = totalIncome - totalexpenses;
         totalIncomeElem.textContent = formatRupiah(totalIncome);
         totalexpensesElem.textContent = formatRupiah(totalexpenses);
         totalProfitElem.textContent = formatRupiah(totalProfit);
         totalReceivableElem.textContent = formatRupiah(totalReceivable);
-        // Update Tabel Detail Transaksi
-        const transactionTableBody = document.querySelector('#transactionDetails tbody');
-        if (transactionTableBody) {
-            transactionTableBody.innerHTML = transactionDetails.map(transaction => `
-                <tr>
-                    <td>${transaction.type}</td>
-                    <td>${transaction.invoiceNumber}</td>
-                    <td>${transaction.customerName}</td>
-                    <td>${transaction.date}</td>
-                    <td>${formatRupiah(transaction.total)}</td>
-                    <td>${transaction.status}</td>
-                </tr>
-            `).join('');
-        }
-        // Update Tabel Piutang
+
+        // Update tabel piutang
         const receivableTableBody = document.querySelector('#receivableDetails tbody');
         if (receivableTableBody) {
             receivableTableBody.innerHTML = receivableDetails.map(receivable => `
                 <tr>
                     <td>${receivable.customer}</td>
                     <td>${receivable.number}</td>
-                    <td>${receivable.date}</td>
+                    <td>${new Date(receivable.date).toLocaleDateString('id-ID')}</td>
                     <td>${formatRupiah(receivable.amount)}</td>
                 </tr>
             `).join('');
         }
+
     } catch (error) {
-        console.error("Error generating report:", error);
-        alert("Terjadi kesalahan saat memuat laporan: " + error.message);
+        console.error("Gagal membuat laporan:", error);
+        alert("Terjadi kesalahan: " + error.message);
     }
 }
+
 function closeReportModal() {
     document.getElementById('reportModal').style.display = 'none';
 }
