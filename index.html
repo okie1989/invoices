@@ -27,64 +27,101 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 0px;
-    }
-    .logo {
-        width: 100px;
-        margin-right: 20px;
-    }
-    .logo img {
-    width: 150%;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 13px;
+    padding: 9px;
+    background: linear-gradient(322deg, #E0E0E0, #adff99);
+    border-radius: 12px;
+    color: white;
+    border-bottom: groove;
+}
+
+.logo img {
+    width: 183px;
     height: auto;
-    padding-left: 17%;
+    border-radius: 8px;
+    margin-top: -22%;
 }
-    .company-info {
-        flex: 1;
-    }
-    .company-info h2 {
-    margin: 0;
-    font-size: 47px;
-    color: #007bff;
-    margin-left: 5%;
+
+.company-info {
+    flex: 1;
+    margin-left: 20px;
 }
+
+.company-info h2 {
+    font-size: 61px;
+    MARGIN-BOTTOM: 9PX;
+    letter-spacing: 13px;
+    color: black;
+    margin-left: 7%;
+}
+
 .company-info p {
-    margin: 2px 0;
-    font-size: 20px;
-    color: #000000;
+    margin: 4px 0;
+    font-size: 14px;
+    font-weight: 400;
+    opacity: 0.9;
+    color: black;
+    margin-left: 7%;
+}
+
+.company-info .company-name {
+    font-size: 18px;
     font-weight: 500;
-    margin-left: 5%;
+    margin-top: 8px;
 }
+
+.invoice-details {
+    text-align: right;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+}
+
 .invoice-number {
-    font-size: 204%;
-    font-weight: bold;
-    color: #007bff;
-    margin: 0px 0;
+    font-size: 42px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: black;
+    justify-self: right;
+    margin-top: -10%;
     text-align: right;
-    margin-top: -58px;
-    border-bottom: outset;
-}
-.promote-note {
-    font-size: 100%;
-    color: #198580;
-    margin: 12px 0px;
-    text-align: left;
-    margin-top: -84px;
-    padding-left: 8%;
-    text-transform: capitalize;
-    font-style: italic;
-}
-.invoice-date {
-    font-size: 20px;
-    color: #555;
-    text-align: right;
-    margin-top: -53px;
+    border-right: double;
+    padding-right: 1%;
     font-family: monospace;
-    text-transform: uppercase;
-    MARGIN-TOP: -9%;
+}
+
+.invoice-note {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 4px;
+}
+
+.invoice-date {
+    font-size: 27px;
+    font-weight: 400;
+    opacity: 0.9;
+    color: #000000;
+    justify-self: right;
+    font-style: italic;
+    font-family: monospace;
+}
+
+.promote-note {
+    font-size: 107%;
+    color: #1a3332;
+    text-align: left;
+    margin-top: -139px;
+    font-style: italic;
+    font-family: revert-layer;
+    margin-left: 7%;
+    margin-bottom: 7%;
+    text-transform: capitalize;
+    padding-left: 1%;
 }
         
 
@@ -1467,20 +1504,16 @@ details[open] summary {
     width: 60px; /* Sesuaikan lebar tombol aksi */
 }
 
-.invoice-number {
-    position: relative;
-    margin: -52px 0;
-    margin-left: 5%;
-    font-family: monospace;
-}
+
 
 .invoice-note {
-    font-size: 32%;
-    color: #666;
+    font-size: 36%;
+    color: #8f0c0c;
     font-style: italic;
-    margin-top: 5px;
+    margin-top: -9px;
     padding-top: 3px;
     TEXT-TRANSFORM: LOWERCASE;
+    justify-content: right;
 }
 
 .dateline-section {
@@ -1814,6 +1847,7 @@ details[open] summary {
     visibility: visible;
     opacity: 1;
 }
+
 
 
 </style>
