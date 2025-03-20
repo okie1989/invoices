@@ -1,6 +1,8 @@
 
 
 
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -2633,56 +2635,85 @@ window.onclick = function(event) {
             button.closest('tr').remove();
             calculateTotal();
 }
+function removeEmptyRows() {
+    const rows = document.querySelectorAll('#itemsTable tbody tr');
+    rows.forEach(row => {
+        const itemName = row.querySelector('.itemName').value.trim();
+        if (!itemName) {
+            row.remove(); // Hapus baris tanpa nama item
+        }
+    });
+}
 function saveInvoice() {
     const customerName = document.getElementById('customerName').value;
-    if(!customerName) {
+    if (!customerName) {
         alert('Harap isi nama pelanggan!');
         return;
     }
 
     const items = document.querySelectorAll('#itemsTable tbody tr');
-    if(items.length === 0) {
+    if (items.length === 0) {
         alert('Harap tambahkan minimal 1 item!');
         return;
     }
 
-    // Ambil dan format dateline
-    const rawDateline = document.getElementById('dateline').value;
-    const formattedDateline = rawDateline ? formatDateline(rawDateline) : '';
-
     const invoiceData = {
         customerName: customerName,
         invoiceNumber: document.getElementById('invoiceNumberDisplay').textContent,
-        orderName: document.getElementById('orderName').value,
+        orderName: document.getElementById('orderName').value || '-',
         items: [],
         totalQty: document.getElementById('totalQty').textContent,
         totalPrice: document.getElementById('totalPrice').textContent,
-        amountPaid: document.getElementById('amountPaid').value,
-        discount: document.getElementById('discount').value,
+        amountPaid: document.getElementById('amountPaid').value || '0',
+        discount: document.getElementById('discount').value || '0',
         amountDue: document.getElementById('amountDue').textContent,
         lunas: document.getElementById('lunasText').style.display === 'block',
         date: document.getElementById('invoiceDateDisplay').textContent,
         imageUrl: document.getElementById('imageUrl').value || '',
-        rawDateline: rawDateline, // Simpan versi original
-        dateline: formattedDateline // Simpan versi yang diformat
+        rawDateline: document.getElementById('dateline').value || '',
+        dateline: formatDateline(document.getElementById('dateline').value) || ''
     };
 
+    // Validasi dan simpan item
     document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
-        const itemName = row.querySelector('.itemName');
-        const itemSize = row.querySelector('.itemSize');
-        const itemQty = row.querySelector('.itemQty');
-        const itemPrice = row.querySelector('.itemPrice');
-        const itemTotal = row.querySelector('.itemTotal');
+        const itemNameInput = row.querySelector('.itemName');
+        const itemSizeInput = row.querySelector('.itemSize');
+        const itemQtyInput = row.querySelector('.itemQty');
+        const itemPriceInput = row.querySelector('.itemPrice');
+        const itemTotalInput = row.querySelector('.itemTotal');
 
+        // Pastikan elemen input ada
+        if (!itemNameInput || !itemSizeInput || !itemQtyInput || !itemPriceInput || !itemTotalInput) {
+            console.error('Elemen input tidak ditemukan pada baris:', row);
+            return; // Lewati baris ini
+        }
+
+        const itemName = itemNameInput.value.trim();
+        const itemSize = itemSizeInput.value.trim();
+        const itemQty = itemQtyInput.value.trim();
+        const itemPrice = itemPriceInput.value.trim();
+        const itemTotal = itemTotalInput.value.trim();
+
+        // Skip baris tanpa nama item
+        if (!itemName) return;
+
+        // Pastikan semua nilai valid
         invoiceData.items.push({
-            name: itemName ? itemName.value : '',
-            size: itemSize ? itemSize.value : '',
-            qty: itemQty ? itemQty.value : 0,
-            price: itemPrice ? itemPrice.value.replace(/\./g, '') : 0,
-            total: itemTotal ? itemTotal.value : 0
+            name: itemName || '-',
+            size: itemSize || '-',
+            qty: itemQty ? parseFloat(itemQty) : 0,
+            price: itemPrice ? parseFloat(itemPrice.replace(/\./g, '')) : 0,
+            total: itemTotal ? parseFloat(itemTotal.replace(/\./g, '')) : 0
         });
     });
 
+    // Validasi setidaknya ada 1 item
+    if (invoiceData.items.length === 0) {
+        alert('Harap tambahkan minimal 1 item dengan nama yang valid!');
+        return;
+    }
+
+    // Simpan ke Firebase
     database.ref('invoices/' + invoiceData.invoiceNumber).set(invoiceData)
         .then(() => {
             alert('Nota berhasil disimpan!');
@@ -2690,6 +2721,7 @@ function saveInvoice() {
         })
         .catch((error) => {
             console.error('Error saving invoice: ', error);
+            alert('Gagal menyimpan nota: ' + error.message);
         });
 }
         function showSavedInvoices() {
@@ -2797,33 +2829,37 @@ function updateInvoiceList() {
 function loadInvoice(invoiceNumber) {
     database.ref('invoices/' + invoiceNumber).once('value', (snapshot) => {
         const invoiceData = snapshot.val();
+
+        // Set default values jika data tidak ada
         const datelineDisplay = document.getElementById('datelineDisplay');
-        if(datelineDisplay) {
+        if (datelineDisplay) {
             datelineDisplay.textContent = invoiceData.dateline || '';
         }
 
         document.getElementById('customerName').value = invoiceData.customerName || '';
-        document.getElementById('invoiceNumberDisplay').textContent = invoiceData.invoiceNumber;
+        document.getElementById('invoiceNumberDisplay').textContent = invoiceData.invoiceNumber || '';
         document.getElementById('orderName').value = invoiceData.orderName || '';
-        document.getElementById('amountPaid').value = invoiceData.amountPaid || '';
+        document.getElementById('amountPaid').value = invoiceData.amountPaid || '0';
         document.getElementById('discount').value = invoiceData.discount || '0';
         document.getElementById('invoiceDateDisplay').textContent = invoiceData.date || '';
         document.getElementById('imageUrl').value = invoiceData.imageUrl || '';
-        
-        // Handle dateline
         document.getElementById('dateline').value = invoiceData.rawDateline || '';
         document.getElementById('datelineDisplay').textContent = invoiceData.dateline || '';
 
+        // Load items
         const tbody = document.querySelector('#itemsTable tbody');
         tbody.innerHTML = '';
         invoiceData.items.forEach(item => {
+            // Skip item tanpa nama
+            if (!item.name) return;
+
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td><input type="text" class="itemName" value="${item.name}"></td>
-                <td><input type="text" class="itemSize" value="${item.size}"></td>
-                <td><input type="number" class="itemQty" value="${item.qty}"></td>
-                <td><input type="text" class="itemPrice" value="${formatRupiahInput(String(item.price))}"></td>
-                <td><input type="text" class="itemTotal" readonly value="${item.total}"></td>
+                <td><input type="text" class="itemName" value="${item.name || '-'}"></td>
+                <td><input type="text" class="itemSize" value="${item.size || '-'}"></td>
+                <td><input type="number" class="itemQty" value="${item.qty || 0}"></td>
+                <td><input type="text" class="itemPrice" value="${formatRupiahInput(String(item.price || 0))}"></td>
+                <td><input type="text" class="itemTotal" readonly value="${formatRupiahInput(String(item.total || 0))}"></td>
                 <td class="delete-btn-cell"><button class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
             `;
             tbody.appendChild(row);
