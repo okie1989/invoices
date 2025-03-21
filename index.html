@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -2023,6 +2019,22 @@ button.nota-keluar-btn {
     color: #333;
     margin-bottom: 15px;
 }
+
+/* Warna untuk baris pemasukan */
+.transaction-table .income-row {
+    background-color: #eef5cf; /* Hijau muda */
+}
+
+/* Warna untuk baris pengeluaran */
+.transaction-table .expense-row {
+    background-color: #f1c7cd; /* Merah muda */
+}
+
+/* Efek hover untuk baris */
+.transaction-table tr:hover {
+    background-color: #f5f5f5 !important; /* Warna hover */
+}
+
 </style>
 <style>
         .disabled-form input:disabled,
@@ -2231,9 +2243,18 @@ button.nota-keluar-btn {
 				<label>Nama Supplier:</label>
 				<input type="text" id="expensesupplier" required></div>
                 <div class="form-group">
-                    <label>Nama Pengeluaran:</label>
-                    <input type="text" id="expenseName" required 
-                           placeholder="Contoh: Bayar Listrik, Beli Bahan Baku">
+                    <input type="text" id="expenseName" list="expenseTypes">
+<datalist id="expenseTypes">
+        <option value="Bayar Listrik">
+        <option value="Bayar Wifi">
+        <option value="Beli Kain">
+        <option value="Beli Bahan Sablon">
+        <option value="Beli Kaos Polos">
+        <option value="Cetak DTF">
+        <option value="Gaji">
+        <option value="Bayar Ongkir">
+
+</datalist>
                 </div>
 			<div class="form-group">
 				<label>Tanggal:</label>
@@ -3439,16 +3460,16 @@ async function generateFinancialReport() {
 
         // Update tabel transaksi
         const transactionDetailsBody = document.querySelector('#transactionDetailsBody');
-        transactionDetailsBody.innerHTML = allTransactions.map(t => `
-            <tr>
-                <td>${t.data.tanggal}</td>
-                <td>${t.data.pelanggan}</td>
-                <td>${t.data.supplier}</td>
-                <td>${t.data.pemasukan ? formatRupiah(t.data.pemasukan) : '-'}</td>
-                <td>${t.data.pengeluaran ? formatRupiah(t.data.pengeluaran) : '-'}</td>
-                <td>${t.data.deskripsi}</td>
-            </tr>
-        `).join('');
+transactionDetailsBody.innerHTML = allTransactions.map(t => `
+    <tr class="${t.data.pemasukan > 0 ? 'income-row' : 'expense-row'}">
+        <td>${t.data.tanggal}</td>
+        <td>${t.data.pelanggan}</td>
+        <td>${t.data.supplier}</td>
+        <td>${t.data.pemasukan ? formatRupiah(t.data.pemasukan) : '-'}</td>
+        <td>${t.data.pengeluaran ? formatRupiah(t.data.pengeluaran) : '-'}</td>
+        <td>${t.data.deskripsi}</td>
+    </tr>
+`).join('');
 
         // Update ringkasan
         const totalProfit = totalIncome - totalexpenses;
