@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -11,7 +13,7 @@
 <style>
 body {
     font-family: 'Roboto', sans-serif;
-    margin: 20px;
+    margin: 1%;
     text-transform: uppercase;
     display: block;
 }
@@ -19,7 +21,7 @@ body {
     width: 85%;
     max-width: -webkit-fill-available;
     margin: 0 auto;
-    padding: 16px;
+    padding: 1%;
     box-sizing: border-box;
     border: groove;
     background: linear-gradient(260deg, #dbdbdb, #e0e0e0);
@@ -28,43 +30,22 @@ body {
 }
 .header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: -79px;
-    padding: 9px;
     background: linear-gradient(359deg, #E0E0E0, #23ebff);
-    border-radius: 12px;
-    color: white;
-    border-bottom: inherit;
+    color: #b1b1b1;
+    PADDING: 1%;
+    border-bottom: solid;
 }
 
 .logo img {
-    width: 148px;
+    width: 111%;
     height: auto;
-    border-radius: 8px;
-    margin-top: -22%;
+    margin-top: 4%;
+    MARGIN-LEFT: 8%;
 }
 
 .company-info {
     flex: 1;
     margin-left: 20px;
-}
-
-.company-info h2 {
-    font-size: 61px;
-    MARGIN-BOTTOM: 9PX;
-    letter-spacing: 13px;
-    color: black;
-    margin-left: 7%;
-}
-
-.company-info p {
-    margin: 4px 0;
-    font-size: 14px;
-    font-weight: 400;
-    opacity: 0.9;
-    color: black;
-    margin-left: 7%;
 }
 
 .company-info .company-name {
@@ -82,14 +63,12 @@ body {
 }
 
 .invoice-number {
-    font-size: 32px;
+    font-size: 261%;
     font-weight: 600;
-    margin-bottom: 8px;
     color: #4b8dad;
     justify-self: right;
     margin-top: -12%;
     text-align: right;
-    padding-right: 1%;
     font-family: monospace;
 }
 
@@ -100,7 +79,7 @@ body {
 }
 
 .invoice-date {
-    font-size: 20px;
+    font-size: 151%;
     font-weight: 400;
     opacity: 0.9;
     color: #000000;
@@ -110,15 +89,12 @@ body {
 }
 
 .promote-note {
-    font-size: 106%;
+    font-size: 90%;
     color: #1a3332;
     text-align: left;
     font-style: italic;
-    margin-left: 5%;
     margin-bottom: 0%;
     text-transform: capitalize;
-    padding-left: 2%;
-    margin-top: 0;
 }
         
 
@@ -605,14 +581,15 @@ button {
 }
 /* Adjust company info for mobile */
 .company-info h2 {
-    font-size: 68px;
+    font-size: 250%;
     MARGIN-BOTTOM: 8PX;
     letter-spacing: 17px;
-    MARGIN-TOP: -1%;
+    MARGIN-TOP: 1%;
     COLOR: darkcyan;
 }
 .company-info p {
-    font-size: 19px;
+    font-size: 112%;
+    COLOR: #181212;
 }
 /* Ensure table headers are readable */
 th {
@@ -839,21 +816,7 @@ th {
     background: #555;
 }
 /* Tombol Laporan */
-.report-btn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  margin: 5px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+
 .report-btn:hover {
   background-color: #45a049;
   transform: translateY(-2px);
@@ -1294,7 +1257,7 @@ details[open] summary {
 .input-with-checkmark {
     position: relative;
     display: inline-block;
-    width: 200px; /* Sesuaikan lebar sesuai kebutuhan */
+    width: 100%;
 }
 
 /* Input field */
@@ -1496,16 +1459,6 @@ details[open] summary {
 
 
 
-.invoice-note {
-    font-size: 31%;
-    color: #8f0c0c;
-    font-style: italic;
-    margin-top: -9px;
-    padding-top: 3px;
-    TEXT-TRANSFORM: LOWERCASE;
-    justify-content: right;
-}
-
 .dateline-section {
     margin: 0px 0;
     DISPLAY: inline-block;
@@ -1600,73 +1553,83 @@ details[open] summary {
 }
 
 /* Payment Info Section */
+/* Payment Info Group Container */
 .payment-info-group {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(2%, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 15px;
-    margin: 20px 0;
-    padding: 14px;
-    background: linear-gradient(145deg, #324b65, #e9ecef);
+    padding: 15px;
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
     transition: all 0.3s ease;
 }
+
 .payment-info-group:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
 }
 
+/* Payment Info Item */
 .payment-info-item {
-    position: relative;
     padding: 15px;
-    background: white;
+    background: #f9f9f9;
     border-radius: 8px;
     border-left: 4px solid #007bff;
+    transition: all 0.3s ease;
 }
 
+.payment-info-item:hover {
+    background: #f1f1f1;
+    transform: translateY(-3px);
+}
+
+/* Label Style */
 .payment-info-item label {
     display: block;
-    font-size: 14px;
-    color: #6c757d;
-    margin-bottom: 8px;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
     font-weight: 500;
+    text-transform: uppercase;
 }
 
-.payment-info-item .input-with-checkmark {
-    margin-top: 8px;
-}
-
+/* Input Style */
 .payment-info-item input {
     width: 100%;
-    padding: 10px;
-    border: 2px solid #dee2e6;
-    border-radius: 6px;
-    font-size: 16px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    background: #fff;
     transition: all 0.3s ease;
 }
 
 .payment-info-item input:focus {
     border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
+/* Amount Display Style */
 .payment-info-item span {
     display: block;
-    font-size: 18px;
-    color: #212529;
+    font-size: 16px;
     font-weight: 600;
-    margin-top: 8px;
+    color: #333;
+    margin-top: 5px;
 }
 
-/* Animasi khusus untuk Kekurangan */
+/* Khusus untuk Kekurangan (Amount Due) */
 #amountDue {
     color: #dc3545;
+    font-weight: 700;
     animation: pulseWarning 1.5s infinite;
 }
 
 @keyframes pulseWarning {
     0% { opacity: 1; }
-    50% { opacity: 0.5; }
+    50% { opacity: 0.7; }
     100% { opacity: 1; }
 }
 
@@ -1674,15 +1637,33 @@ details[open] summary {
 @media (max-width: 768px) {
     .payment-info-group {
         grid-template-columns: 1fr;
-        padding: 15px;
+        padding: 10px;
     }
-    
+
     .payment-info-item {
-        padding: 12px;
+        padding: 10px;
     }
-    
+
     .payment-info-item span {
-        font-size: 16px;
+        font-size: 14px;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .action-buttons {
+        justify-content: center;
+    }
+
+    .action-buttons button {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+
+    .action-buttons button::after {
+        font-size: 10px;
+        bottom: -25px;
     }
 }
 
@@ -1696,31 +1677,33 @@ details[open] summary {
 
 /* Action Buttons Container */
 .action-buttons {
-    margin: 3px 0;
-    justify-items: center;
-    white-space: nowrap;
     display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: baseline;
 }
-
 /* Base Button Style */
 .action-buttons button {
     position: relative;
-    padding: 15px 25px;
+    padding: 15px;
     border: none;
     border-radius: 12px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 15px;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 16px;
+    transition: all 0.3s ease;
     overflow: hidden;
     background-size: 200% auto;
     color: white;
     text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transform: translateY(0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* Ukuran tetap untuk tombol */
+    height: 50px; /* Ukuran tetap untuk tombol */
 }
 
 /* Hover Effects */
@@ -1738,24 +1721,24 @@ details[open] summary {
 
 /* Button Shine Effect */
 .action-buttons button::after {
-    content: '';
+    content: attr(data-tooltip);
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        45deg,
-        transparent,
-        rgba(255,255,255,0.2),
-        transparent
-    );
-    transform: rotate(45deg);
-    transition: 0.5s;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
 }
 
+
 .action-buttons button:hover::after {
-    animation: shine 1.5s;
+    opacity: 1;
 }
 
 @keyframes shine {
@@ -1786,24 +1769,16 @@ details[open] summary {
 
 /* Button Icons */
 .action-buttons button i {
-    margin-right: 10px;
+    margin-right: 0;
     transition: transform 0.3s ease;
+    font-size: 202%;
 }
 
 .action-buttons button:hover i {
     transform: scale(1.2);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .action-buttons {
-        grid-template-columns: 1fr;
-    }
-    
-    .action-buttons button {
-        width: 100%;
-    }
-}
+
 .duplicate-item {
     background-color: #fff3cd !important;
     border-color: #ffdf7e !important;
@@ -1898,6 +1873,17 @@ button.nota-keluar-btn {
     opacity: 0.5;
     pointer-events: none;
 }
+/* Animasi Modal */
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
 
 </style>
 <style>
@@ -1931,7 +1917,6 @@ button.nota-keluar-btn {
 			</p>
 			<div class="invoice-number">
 				 <span id="invoiceNumberDisplay"></span>
-    <div class="invoice-note">Anda bisa gunakan no. invoice ini untuk melacak proses pesanan</div>
 </div>
 
 			<div class="invoice-date">
@@ -1955,7 +1940,7 @@ button.nota-keluar-btn {
             <input type="text" id="orderName" placeholder="Masukkan nama pesanan">
         </div>
         <div class="form-group">
-            <label for="dateline">Dateline:</label>
+            <label for="dateline">PERKIRAAN JADI :</label>
             <input type="date" id="dateline">
             <span id="datelineDisplay" class="formatted-date"></span> <!-- Pastikan ini ada -->
         </div>
@@ -1968,25 +1953,25 @@ button.nota-keluar-btn {
 	<div class="action-buttons">
         <!-- Tombol yang sudah ada -->
         <button class="save-btn" onclick="saveInvoice()">
-            <i class="fas fa-save"></i> SIMPAN
+            <i class="fas fa-save"></i>
         </button>
         <button class="load-btn" onclick="showSavedInvoices()">
-            <i class="fas fa-folder-open"></i> BUKA
+            <i class="fas fa-folder-open"></i>
         </button>
         <button class="print-thermal-btn" onclick="printThermalInvoice()">
-            <i class="fas fa-print"></i> PRINT
+            <i class="fas fa-print"></i>
         </button>
         <button class="preview-btn" onclick="showPreview()">
-            <i class="fas fa-eye"></i> LIHAT
+            <i class="fas fa-eye"></i>
         </button>
         <button class="report-btn" onclick="openexpensesModal()">
-            <i class="fas fa-money-bill-wave"></i> TAMBAH PENGELUARAN
+            <i class="fas fa-money-bill-wave"></i>
         </button>
         <button onclick="showNotaKeluar()">
-            <i class="fa fa-file-invoice"></i> Nota Keluar
+            <i class="fa fa-file-invoice"></i>
         </button>
         <button class="report-btn" onclick="showFinancialReport()">
-            <i class="fas fa-chart-line"></i> LAPORAN
+            <i class="fas fa-chart-line"></i>
         </button>
     </div>
     
@@ -2091,6 +2076,9 @@ button.nota-keluar-btn {
 		<p>
 			 3. Pastikan sudah mengecek detail pesanan, kelalaian pelanggan bukan tanggung jawab kami.
 		</p>
+        <p>
+             4. Anda bisa melacak proses pesanan di https://lacakorderku.netlify.app/ dengan memasukkan no. invoice ini, (hanya untuk pesanan kaos sablon manual).
+       </p>
 	</div>
 </div>
 <div id="expensesModal" class="modal">
@@ -2256,19 +2244,30 @@ button.nota-keluar-btn {
 
 async function downloadJPG() {
     try {
-        const canvas = await capturePreview();
+        // Ambil elemen previewContent
+        const previewContent = document.getElementById('previewContent');
         
-        // Handle gambar yang diblokir
-        const images = canvas.querySelectorAll('img');
+        // Gunakan html2canvas untuk mengambil gambar dari previewContent
+        const canvas = await html2canvas(previewContent, {
+            scale: 2, // Tingkatkan skala untuk kualitas gambar yang lebih baik
+            useCORS: true, // Izinkan gambar dari sumber eksternal (jika ada)
+            logging: true, // Aktifkan logging untuk debugging
+            allowTaint: true, // Izinkan gambar yang "tainted" (jika diperlukan)
+            backgroundColor: null // Hapus latar belakang putih
+        });
+
+        // Handle gambar yang gagal dimuat
+        const images = previewContent.querySelectorAll('img');
         images.forEach(img => {
-            if(img.naturalWidth === 0) {
+            if (img.naturalWidth === 0) {
                 console.warn('Gambar gagal dimuat:', img.src);
             }
         });
 
+        // Buat link untuk mengunduh gambar
         const link = document.createElement('a');
         link.download = `INVOICE-${document.getElementById('invoiceNumberDisplay').textContent}.jpg`;
-        link.href = canvas.toDataURL('image/jpeg', 0.9);
+        link.href = canvas.toDataURL('image/jpeg', 0.9); // Format JPEG dengan kualitas 90%
         link.click();
     } catch (error) {
         console.error('Download gagal:', error);
@@ -3021,27 +3020,7 @@ function updateDatalistForColumn(selector, datalistId, currentInput) {
     const datalist = document.getElementById(datalistId);
     datalist.innerHTML = uniqueValues.map(value => `<option value="${value}">`).join('');
 }
-// Fungsi untuk menyimpan sebagai JPG
-function saveAsJPG() {
-            // Ambil elemen preview content
-            const previewContent = document.getElementById('previewContent');
-            // Sembunyikan elemen yang tidak diinginkan di dalam preview
-            const elementsToHide = previewContent.querySelectorAll('.close, .save-jpg-btn');
-            elementsToHide.forEach(el => el.style.display = 'none');
-            // Ambil screenshot
-            html2canvas(previewContent, {
-                scale: 2, // Kualitas gambar 2x
-                logging: false // Nonaktifkan logging
-            }).then(canvas => {
-                // Kembalikan tampilan elemen yang disembunyikan
-                elementsToHide.forEach(el => el.style.display = '');
-                // Konversi ke JPG dan download
-                const link = document.createElement('a');
-                link.download = `invoice-${Date.now()}.jpg`;
-                link.href = canvas.toDataURL('image/jpeg', 0.9);
-                link.click();
-            });
-        }
+
 function printThermalInvoice() {
     const invoiceElement = document.querySelector('.invoice');
     const printClone = invoiceElement.cloneNode(true);
@@ -3877,6 +3856,108 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Variabel global untuk menyimpan indeks baris yang sedang diedit
+let currentEditIndex = null;
+
+// Fungsi untuk membuka modal
+function openInputModal(index = null) {
+    const modal = document.getElementById("inputModal");
+    modal.style.display = "block";
+
+    // Jika index diberikan, artinya sedang mengedit baris
+    if (index !== null) {
+        currentEditIndex = index;
+        const row = document.querySelectorAll("#itemsTable tbody tr")[index];
+        document.getElementById("modalItemName").value = row.querySelector(".itemName").value;
+        document.getElementById("modalItemSize").value = row.querySelector(".itemSize").value;
+        document.getElementById("modalItemQty").value = row.querySelector(".itemQty").value;
+        document.getElementById("modalItemPrice").value = row.querySelector(".itemPrice").value;
+    } else {
+        currentEditIndex = null;
+        document.getElementById("inputForm").reset();
+    }
+}
+
+// Fungsi untuk menutup modal
+function closeInputModal() {
+    const modal = document.getElementById("inputModal");
+    modal.style.display = "none";
+}
+
+// Fungsi untuk menyimpan data dari modal ke tabel
+function saveModalData() {
+    const itemName = document.getElementById("modalItemName").value;
+    const itemSize = document.getElementById("modalItemSize").value;
+    const itemQty = document.getElementById("modalItemQty").value;
+    const itemPrice = document.getElementById("modalItemPrice").value;
+
+    if (!itemName || !itemQty || !itemPrice) {
+        alert("Nama barang, qty, dan harga wajib diisi!");
+        return;
+    }
+
+    const tableBody = document.querySelector("#itemsTable tbody");
+
+    if (currentEditIndex !== null) {
+        // Edit baris yang sudah ada
+        const row = tableBody.querySelectorAll("tr")[currentEditIndex];
+        row.querySelector(".itemName").value = itemName;
+        row.querySelector(".itemSize").value = itemSize;
+        row.querySelector(".itemQty").value = itemQty;
+        row.querySelector(".itemPrice").value = itemPrice;
+        updateRowTotal(row);
+    } else {
+        // Tambahkan baris baru
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td><input type="text" class="itemName" value="${itemName}" readonly></td>
+            <td><input type="text" class="itemSize" value="${itemSize}" readonly></td>
+            <td><input type="number" class="itemQty" value="${itemQty}" readonly></td>
+            <td><input type="text" class="itemPrice" value="${itemPrice}" readonly></td>
+            <td><input type="text" class="itemTotal" readonly></td>
+            <td>
+                <button class="delete-btn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button>
+                <button class="edit-btn" onclick="openInputModal(${tableBody.querySelectorAll('tr').length})"><i class="fa fa-edit"></i></button>
+            </td>
+        `;
+        tableBody.appendChild(newRow);
+        updateRowTotal(newRow);
+    }
+
+    closeInputModal();
+    updateTotals();
+}
+
+// Fungsi untuk menghapus baris
+function deleteRow(button) {
+    const row = button.closest("tr");
+    row.remove();
+    updateTotals();
+}
+
+// Fungsi untuk mengupdate total per baris
+function updateRowTotal(row) {
+    const qty = parseFloat(row.querySelector(".itemQty").value) || 0;
+    const price = parseFloat(row.querySelector(".itemPrice").value.replace(/[^0-9]/g, "")) || 0;
+    const total = qty * price;
+    row.querySelector(".itemTotal").value = total.toLocaleString("id-ID");
+}
+
+// Fungsi untuk mengupdate total keseluruhan
+function updateTotals() {
+    const rows = document.querySelectorAll("#itemsTable tbody tr");
+    let totalQty = 0;
+    let totalPrice = 0;
+
+    rows.forEach(row => {
+        totalQty += parseFloat(row.querySelector(".itemQty").value) || 0;
+        totalPrice += parseFloat(row.querySelector(".itemTotal").value.replace(/[^0-9]/g, "")) || 0;
+    });
+
+    document.getElementById("totalQty").textContent = totalQty;
+    document.getElementById("totalPrice").textContent = totalPrice.toLocaleString("id-ID");
+}
 
 </script>
 </body>
