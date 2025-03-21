@@ -1,8 +1,3 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -27,7 +22,7 @@ body {
     padding: 16px;
     box-sizing: border-box;
     border: groove;
-    background: linear-gradient(260deg, #adff99, #e0e0e0);
+    background: linear-gradient(260deg, #dbdbdb, #e0e0e0);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
@@ -37,10 +32,10 @@ body {
     align-items: flex-start;
     margin-bottom: -79px;
     padding: 9px;
-    background: linear-gradient(322deg, #E0E0E0, #adff99);
+    background: linear-gradient(359deg, #E0E0E0, #23ebff);
     border-radius: 12px;
     color: white;
-    border-bottom: groove;
+    border-bottom: inherit;
 }
 
 .logo img {
@@ -1030,86 +1025,110 @@ th {
   opacity: 0.9;
   transform: translateY(-2px);
 }
-/* Responsif */
+
+
+/* Responsive Styles */
 @media (max-width: 768px) {
-  #reportModal .modal-content {
-    width: 120%;
-    margin: 10% auto;
-    padding: 20px;
-  }
-  .filter-container {
-    grid-template-columns: 1fr;
-  }
-  .report-summary {
-    grid-template-columns: 1fr;
-  }
-}
-.report-modal .modal-content {
-  max-width: 800px;
-}
-.filter-container {
-  margin: 20px 0;
-  display: flex;
-  gap: 10px;
-}
-.report-summary {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0;
-}
-.debt-list {
-  margin-top: 20px;
-  border-top: 1px solid #ccc;
-  padding-top: 15px;
-}
-.debt-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px;
-  border-bottom: 1px solid #eee;
-}
-/* CSS untuk tabel laporan keuangan */
-.table-container {
-    width: 100%;
-    overflow-x: auto; /* Tambahkan scroll horizontal jika tabel terlalu lebar */
-    margin-top: 20px;
-}
-#transactionDetails {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0 auto;
-    font-size: 14px;
-    text-align: center;
-}
-#transactionDetails th,
-#transactionDetails td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-#transactionDetails th {
-    background-color: #4dcbdd;
-    color: #333;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-#transactionDetails tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-#transactionDetails tbody tr:hover {
-    background-color: #f1f1f1;
-}
-/* Responsif untuk tampilan mobile */
-@media (max-width: 768px) {
-    #transactionDetails {
+    .invoice {
+        width: 95%;
+        padding: 10px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .company-info h2 {
+        font-size: 36px;
+        letter-spacing: 5px;
+        margin-left: 0;
+    }
+
+    .company-info p {
+        font-size: 12px;
+        margin-left: 0;
+    }
+
+    .invoice-number {
+        font-size: 24px;
+        margin-top: 0;
+        text-align: center;
+    }
+
+    .invoice-date {
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .form-group-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .action-buttons button {
+        width: 100%;
+    }
+
+    table {
         font-size: 12px;
     }
-    #transactionDetails th,
-    #transactionDetails td {
-        padding: 8px;
+
+    th, td {
+        padding: 5px;
     }
-    .table-container {
-        overflow-x: scroll; /* Pastikan tabel bisa di-scroll horizontal di mobile */
+
+    .payment-info-group {
+        grid-template-columns: 1fr;
+    }
+
+    .bank-info, .additional-info {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .company-info h2 {
+        font-size: 24px;
+        letter-spacing: 3px;
+    }
+
+    .invoice-number {
+        font-size: 20px;
+    }
+
+    .invoice-date {
+        font-size: 14px;
+    }
+
+    .promote-note {
+        font-size: 12px;
+    }
+
+    .total {
+        column-count: 1;
+    }
+
+    .payment-info-item {
+        padding: 10px;
+    }
+
+    .payment-info-item span {
+        font-size: 16px;
+    }
+
+    .bank-info, .additional-info {
+        font-size: 10px;
     }
 }
 /* Modal Pengeluaran */
@@ -1874,6 +1893,11 @@ button.nota-keluar-btn {
             border: 1px solid #ffcccc;
             margin: 10px 0;
         }
+
+        .disabled-form {
+    opacity: 0.5;
+    pointer-events: none;
+}
 
 </style>
 <style>
@@ -3819,6 +3843,40 @@ function deleteNotaKeluar(id) {
             });
     }
 }
+document.addEventListener('DOMContentLoaded', function() {
+    const expensesDateInput = document.getElementById('expensesDate');
+    const expensesForm = document.getElementById('expensesForm');
+    const formElements = expensesForm.querySelectorAll('input, select, button');
+
+    // Nonaktifkan form lainnya secara default
+    formElements.forEach(element => {
+        if (element !== expensesDateInput) {
+            element.disabled = true;
+            element.classList.add('disabled-form');
+        }
+    });
+
+    // Event listener untuk input tanggal
+    expensesDateInput.addEventListener('input', function() {
+        if (this.value) {
+            // Aktifkan form lainnya jika tanggal diisi
+            formElements.forEach(element => {
+                if (element !== expensesDateInput) {
+                    element.disabled = false;
+                    element.classList.remove('disabled-form');
+                }
+            });
+        } else {
+            // Nonaktifkan form lainnya jika tanggal kosong
+            formElements.forEach(element => {
+                if (element !== expensesDateInput) {
+                    element.disabled = true;
+                    element.classList.add('disabled-form');
+                }
+            });
+        }
+    });
+});
 
 </script>
 </body>
