@@ -1,5 +1,7 @@
 
 
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -1116,6 +1118,9 @@ th {
     border-radius: 4px;
     font-size: 14px;
 }
+#expenseName {
+    text-transform: capitalize;
+}
 /* Tabel Pengeluaran */
 #expensesTable {
     width: 100%;
@@ -1906,32 +1911,32 @@ button.nota-keluar-btn {
 /* Atur lebar kolom untuk Tabel Detail Transaksi */
 .transaction-table th:nth-child(1),
 .transaction-table td:nth-child(1) {
-    width: 5%; /* Tanggal */
+    width: 10%; /* Tanggal */
 }
 
 .transaction-table th:nth-child(2),
 .transaction-table td:nth-child(2) {
-    width: 5%; /* Pelanggan */
+    width: 15%; /* Pelanggan */
 }
 
 .transaction-table th:nth-child(3),
 .transaction-table td:nth-child(3) {
-    width: 5%; /* Supplier */
+    width: 15%; /* Supplier */
 }
 
 .transaction-table th:nth-child(4),
 .transaction-table td:nth-child(4) {
-    width: 10%; /* Pemasukan */
+    width: 15%; /* Pemasukan */
 }
 
 .transaction-table th:nth-child(5),
 .transaction-table td:nth-child(5) {
-    width: 10%; /* Pengeluaran */
+    width: 15%; /* Pengeluaran */
 }
 
 .transaction-table th:nth-child(6),
 .transaction-table td:nth-child(6) {
-    width: 65%; /* Deskripsi */
+    width: 30%; /* Deskripsi */
 }
 
 .transaction-table th {
@@ -2225,6 +2230,11 @@ button.nota-keluar-btn {
 			<div class="form-group">
 				<label>Nama Supplier:</label>
 				<input type="text" id="expensesupplier" required></div>
+                <div class="form-group">
+                    <label>Nama Pengeluaran:</label>
+                    <input type="text" id="expenseName" required 
+                           placeholder="Contoh: Bayar Listrik, Beli Bahan Baku">
+                </div>
 			<div class="form-group">
 				<label>Tanggal:</label>
 				<input type="date" id="expensesDate" required></div>
@@ -3403,8 +3413,8 @@ async function generateFinancialReport() {
                     const total = expense.grandTotal || 0;
                     totalexpenses += total;
 
-                    // Deskripsi pengeluaran = Nama Barang (gabungkan semua nama barang)
-                    const deskripsi = expense.items.map(item => item.name).join(', ') || '-';
+                    // Deskripsi pengeluaran = Nama Pengeluaran
+                    const deskripsi = expense.expenseName || '-';
 
                     // Simpan transaksi pengeluaran
                     allTransactions.push({
@@ -3415,7 +3425,7 @@ async function generateFinancialReport() {
                             supplier: expense.supplier || '-', // Kolom Supplier
                             pemasukan: 0, // Tidak ada pemasukan untuk pengeluaran
                             pengeluaran: total, // Nilai pengeluaran
-                            deskripsi: deskripsi // Deskripsi = Nama Barang
+                            deskripsi: deskripsi // Deskripsi = Nama Pengeluaran
                         }
                     });
                 }
@@ -3526,6 +3536,7 @@ function saveexpenses() {
     const expensesData = {
         expensesNumber: document.getElementById('expensesNumber').value,
         supplier: document.getElementById('expensesupplier').value,
+        expenseName: document.getElementById('expenseName').value,
         date: document.getElementById('expensesDate').value,
         description: document.getElementById('expensesDescription').value,
         items: [], // Array untuk menyimpan semua barang
@@ -3640,6 +3651,7 @@ function loadexpenses() {
                         <tr>
                             <td>${expense.expensesNumber}</td>
                             <td>${expense.supplier}</td>
+                            <td>${expense.expenseName}</td>
                             <td>${formatRupiah(expense.grandTotal)}</td>
                             <td>${expense.date.split('-').reverse().join('/')}</td>
                             <td>
@@ -3672,6 +3684,7 @@ function editexpenses(id) {
         // Isi data utama
         document.getElementById('expensesNumber').value = expense.expensesNumber;
         document.getElementById('expensesupplier').value = expense.supplier || '';
+        document.getElementById('expenseName').value = expense.expenseName || '';
         document.getElementById('expensesDate').value = expense.date;
         document.getElementById('expensesDescription').value = expense.description || '';
         // Kosongkan tabel barang sebelum mengisi
@@ -3849,44 +3862,6 @@ function editexpenses(id) {
     });
 }
 
-// Update fungsi saveexpenses untuk handle edit
-function saveexpenses() {
-    const expensesData = {
-        expensesNumber: document.getElementById("expensesNumber").value,
-        supplier: document.getElementById("expensesupplier").value,
-        date: document.getElementById("expensesDate").value,
-        description: document.getElementById("expensesDescription").value,
-        items: [],
-        grandTotal: parseFloat(document.getElementById("expensesGrandTotal").textContent.replace(/\./g, '')) || 0
-    };
-
-    // Ambil items
-    document.querySelectorAll("#expensesItemsTable tbody tr").forEach(row => {
-        const item = {
-            name: row.querySelector(".expensesItemName").value,
-            qty: parseFloat(row.querySelector(".expensesQty").value) || 0,
-            unitPrice: parseFloat(row.querySelector(".expensesUnitPrice").value.replace(/\./g, '')) || 0,
-            total: parseFloat(row.querySelector(".expensesItemTotal").value.replace(/\./g, '')) || 0
-        };
-        expensesData.items.push(item);
-    });
-
-    // Tentukan path database (create or update)
-    const expenseRef = currentexpensesId ? 
-        database.ref(`expenses/${currentexpensesId}`) : 
-        database.ref("expenses").push();
-
-    expenseRef.set(expensesData)
-        .then(() => {
-            alert("Data berhasil disimpan!");
-            clearexpensesForm();
-            showNotaKeluar(); // Refresh tampilan nota keluar
-            closeexpensesModal();
-        })
-        .catch((error) => {
-            console.error("Gagal menyimpan:", error);
-        });
-}
 
 // Fungsi untuk menutup modal Nota Keluar
 function closeNotaKeluarModal() {
