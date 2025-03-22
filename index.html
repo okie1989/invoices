@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -154,7 +157,7 @@ th {
         width: 15%;
     }
     td:nth-child(5), th:nth-child(5) {
-        width: 15%;
+        width: 5%;
     }
     input, select {
         width: 100%;
@@ -1114,9 +1117,6 @@ th {
     border-radius: 4px;
     font-size: 14px;
 }
-#expenseName {
-    text-transform: capitalize;
-}
 /* Tabel Pengeluaran */
 #expensesTable {
     width: 100%;
@@ -1885,155 +1885,6 @@ button.nota-keluar-btn {
         opacity: 1;
     }
 }
-/* CSS untuk Tabel Detail Transaksi */
-.transaction-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 14px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.transaction-table th,
-.transaction-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-/* Atur lebar kolom untuk Tabel Detail Transaksi */
-.transaction-table th:nth-child(1),
-.transaction-table td:nth-child(1) {
-    width: 10%; /* Tanggal */
-}
-
-.transaction-table th:nth-child(2),
-.transaction-table td:nth-child(2) {
-    width: 15%; /* Pelanggan */
-}
-
-.transaction-table th:nth-child(3),
-.transaction-table td:nth-child(3) {
-    width: 15%; /* Supplier */
-}
-
-.transaction-table th:nth-child(4),
-.transaction-table td:nth-child(4) {
-    width: 15%; /* Pemasukan */
-}
-
-.transaction-table th:nth-child(5),
-.transaction-table td:nth-child(5) {
-    width: 15%; /* Pengeluaran */
-}
-
-.transaction-table th:nth-child(6),
-.transaction-table td:nth-child(6) {
-    width: 30%; /* Deskripsi */
-}
-
-.transaction-table th {
-    background-color: #4dcbdd; /* Warna header */
-    color: #333;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 12px;
-}
-
-.transaction-table tr:hover {
-    background-color: #f9f9f9; /* Efek hover pada baris */
-}
-
-.transaction-table tr:last-child td {
-    border-bottom: none; /* Hilangkan border bawah pada baris terakhir */
-}
-
-/* CSS untuk Tabel Detail Piutang */
-.receivable-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 14px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.receivable-table th,
-.receivable-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-/* Atur lebar kolom untuk Tabel Detail Piutang */
-.receivable-table th:nth-child(1),
-.receivable-table td:nth-child(1) {
-    width: 30%; /* Nama Pelanggan */
-}
-
-.receivable-table th:nth-child(2),
-.receivable-table td:nth-child(2) {
-    width: 25%; /* No. Invoice */
-}
-
-.receivable-table th:nth-child(3),
-.receivable-table td:nth-child(3) {
-    width: 20%; /* Tanggal */
-}
-
-.receivable-table th:nth-child(4),
-.receivable-table td:nth-child(4) {
-    width: 25%; /* Jumlah Piutang */
-}
-
-.receivable-table th {
-    background-color: #f8d7da; /* Warna header */
-    color: #721c24;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 12px;
-}
-
-.receivable-table tr:hover {
-    background-color: #f9f9f9; /* Efek hover pada baris */
-}
-
-.receivable-table tr:last-child td {
-    border-bottom: none; /* Hilangkan border bawah pada baris terakhir */
-}
-
-/* CSS untuk Container Tabel */
-.table-container {
-    overflow-x: auto; /* Tambahkan scroll horizontal jika tabel terlalu lebar */
-}
-
-/* CSS untuk Judul Tabel */
-.detail-table h3 {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-/* Warna untuk baris pemasukan */
-.transaction-table .income-row {
-    background-color: #eef5cf; /* Hijau muda */
-}
-
-/* Warna untuk baris pengeluaran */
-.transaction-table .expense-row {
-    background-color: #f1c7cd; /* Merah muda */
-}
-
-/* Efek hover untuk baris */
-.transaction-table tr:hover {
-    background-color: #f5f5f5 !important; /* Warna hover */
-}
 
 </style>
 <style>
@@ -2242,20 +2093,6 @@ button.nota-keluar-btn {
 			<div class="form-group">
 				<label>Nama Supplier:</label>
 				<input type="text" id="expensesupplier" required></div>
-                <div class="form-group">
-                    <input type="text" id="expenseName" list="expenseTypes">
-<datalist id="expenseTypes">
-        <option value="Bayar Listrik">
-        <option value="Bayar Wifi">
-        <option value="Beli Kain">
-        <option value="Beli Bahan Sablon">
-        <option value="Beli Kaos Polos">
-        <option value="Cetak DTF">
-        <option value="Gaji">
-        <option value="Bayar Ongkir">
-
-</datalist>
-                </div>
 			<div class="form-group">
 				<label>Tanggal:</label>
 				<input type="date" id="expensesDate" required></div>
@@ -2312,46 +2149,48 @@ button.nota-keluar-btn {
 			<button onclick="toggleDetail('receivableDetails')" class="detail-btn">
 			<i class="fas fa-file-invoice-dollar"></i> Lihat Detail Piutang </button>
 		</div>
-<!-- Tabel Detail Transaksi (Awalnya Disembunyikan) -->
-<div id="transactionDetails" class="detail-table" style="display: none;">
-    <h3>Detail Transaksi</h3>
-    <div class="table-container">
-        <table class="transaction-table">
-            <thead>
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Pelanggan</th>
-                    <th>Supplier</th>
-                    <th>Pemasukan</th>
-                    <th>Pengeluaran</th>
-                    <th>Deskripsi</th>
-                </tr>
-            </thead>
-            <tbody id="transactionDetailsBody">
-                <!-- Data akan diisi oleh JavaScript -->
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Tabel Detail Piutang (Awalnya Disembunyikan) -->
-<div id="receivableDetails" class="detail-table" style="display: none;">
-    <h3>Detail Piutang</h3>
-    <div class="table-container">
-        <table class="receivable-table">
-            <thead>
-                <tr>
-                    <th>Nama Pelanggan</th>
-                    <th>No. Invoice</th>
-                    <th>Tanggal</th>
-                    <th>Jumlah Piutang</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data piutang akan diisi oleh JavaScript -->
-            </tbody>
-        </table>
-    </div>
+		<!-- Tabel Detail Transaksi (Awalnya Disembunyikan) -->
+		<div id="transactionDetails" class="detail-table" style="display: none;">
+            <h3>Detail Transaksi</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>No Nota</th>
+                            <th>Nama Order</th>
+                            <th>Jenis Nota</th>
+                            <th>Pelanggan</th>
+                            <th>Supplier</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionDetailsBody">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+		<!-- Tabel Detail Piutang (Awalnya Disembunyikan) -->
+		<div id="receivableDetails" class="detail-table" style="display: none;">
+			<h3>Detail Piutang</h3>
+			<div class="table-container">
+				<table>
+				<thead>
+				<tr>
+					<th>Nama Pelanggan</th>
+					<th>No. Invoice</th>
+					<th>Tanggal</th>
+					<th>Jumlah Piutang</th>
+				</tr>
+				</thead>
+				<tbody>
+				<!-- Data piutang akan diisi oleh JavaScript --></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
 <!-- Bagian tabel dan tombol aksi lainnya -->
 <!-- ... --></div>
@@ -3382,7 +3221,7 @@ async function generateFinancialReport() {
             throw new Error('Pilih bulan dan tahun terlebih dahulu');
         }
 
-        // Proses data invoice (pemasukan)
+        // Proses data invoice
         Object.values(invoices).forEach(invoice => {
             try {
                 const invoiceDate = new Date(invoice.date);
@@ -3391,21 +3230,23 @@ async function generateFinancialReport() {
                     const total = parseInt(invoice.totalPrice?.replace(/[^0-9]/g, '')) || 0;
                     const paid = parseInt(invoice.amountPaid?.replace(/[^0-9]/g, '')) || 0;
                     const discount = parseInt(invoice.discount?.replace(/[^0-9]/g, '')) || 0;
-
-                    // Update total pemasukan
+                    
+                    // Update total
                     totalIncome += paid - discount;
                     const dueAmount = total - paid - discount;
-
-                    // Simpan transaksi pemasukan
+                    
+                    // Simpan transaksi
                     allTransactions.push({
                         date: invoiceDate,
                         data: {
-                            tanggal: invoiceDate.toLocaleDateString('id-ID'),
-                            pelanggan: invoice.customerName || '-', // Kolom Pelanggan
-                            supplier: '-', // Kolom Supplier (tidak ada untuk pemasukan)
-                            pemasukan: paid - discount, // Nilai pemasukan
-                            pengeluaran: 0, // Tidak ada pengeluaran untuk pemasukan
-                            deskripsi: invoice.orderName || 'Tanpa Nama Order' // Deskripsi = Nama Pesanan
+                            tanggal: invoiceDate,
+                            noNota: invoice.invoiceNumber,
+                            namaOrder: invoice.orderName || 'Tanpa Nama Order',
+                            jenis: 'PEMASUKAN',
+                            pelanggan: invoice.customerName || '-',
+                            supplier: '-',
+                            total: total,
+                            status: invoice.lunas ? 'LUNAS' : 'BELUM LUNAS'
                         }
                     });
 
@@ -3434,19 +3275,18 @@ async function generateFinancialReport() {
                     const total = expense.grandTotal || 0;
                     totalexpenses += total;
 
-                    // Deskripsi pengeluaran = Nama Pengeluaran
-                    const deskripsi = expense.expenseName || '-';
-
-                    // Simpan transaksi pengeluaran
+                    // Simpan transaksi
                     allTransactions.push({
                         date: expenseDate,
                         data: {
-                            tanggal: expenseDate.toLocaleDateString('id-ID'),
-                            pelanggan: '-', // Tidak ada pelanggan untuk pengeluaran
-                            supplier: expense.supplier || '-', // Kolom Supplier
-                            pemasukan: 0, // Tidak ada pemasukan untuk pengeluaran
-                            pengeluaran: total, // Nilai pengeluaran
-                            deskripsi: deskripsi // Deskripsi = Nama Pengeluaran
+                            tanggal: expenseDate,
+                            noNota: expense.expensesNumber,
+                            namaOrder: expense.description || '-',
+                            jenis: 'PENGELUARAN',
+                            pelanggan: '-',
+                            supplier: expense.supplier || '-',
+                            total: total,
+                            status: 'LUNAS'
                         }
                     });
                 }
@@ -3460,16 +3300,18 @@ async function generateFinancialReport() {
 
         // Update tabel transaksi
         const transactionDetailsBody = document.querySelector('#transactionDetailsBody');
-transactionDetailsBody.innerHTML = allTransactions.map(t => `
-    <tr class="${t.data.pemasukan > 0 ? 'income-row' : 'expense-row'}">
-        <td>${t.data.tanggal}</td>
-        <td>${t.data.pelanggan}</td>
-        <td>${t.data.supplier}</td>
-        <td>${t.data.pemasukan ? formatRupiah(t.data.pemasukan) : '-'}</td>
-        <td>${t.data.pengeluaran ? formatRupiah(t.data.pengeluaran) : '-'}</td>
-        <td>${t.data.deskripsi}</td>
-    </tr>
-`).join('');
+        transactionDetailsBody.innerHTML = allTransactions.map(t => `
+            <tr>
+                <td>${t.data.tanggal.toLocaleDateString('id-ID')}</td>
+                <td>${t.data.noNota}</td>
+                <td>${t.data.namaOrder}</td>
+                <td>${t.data.jenis}</td>
+                <td>${t.data.pelanggan}</td>
+                <td>${t.data.supplier}</td>
+                <td>${formatRupiah(t.data.total)}</td>
+                <td>${t.data.status}</td>
+            </tr>
+        `).join('');
 
         // Update ringkasan
         const totalProfit = totalIncome - totalexpenses;
@@ -3557,7 +3399,6 @@ function saveexpenses() {
     const expensesData = {
         expensesNumber: document.getElementById('expensesNumber').value,
         supplier: document.getElementById('expensesupplier').value,
-        expenseName: document.getElementById('expenseName').value,
         date: document.getElementById('expensesDate').value,
         description: document.getElementById('expensesDescription').value,
         items: [], // Array untuk menyimpan semua barang
@@ -3672,7 +3513,6 @@ function loadexpenses() {
                         <tr>
                             <td>${expense.expensesNumber}</td>
                             <td>${expense.supplier}</td>
-                            <td>${expense.expenseName}</td>
                             <td>${formatRupiah(expense.grandTotal)}</td>
                             <td>${expense.date.split('-').reverse().join('/')}</td>
                             <td>
@@ -3705,7 +3545,6 @@ function editexpenses(id) {
         // Isi data utama
         document.getElementById('expensesNumber').value = expense.expensesNumber;
         document.getElementById('expensesupplier').value = expense.supplier || '';
-        document.getElementById('expenseName').value = expense.expenseName || '';
         document.getElementById('expensesDate').value = expense.date;
         document.getElementById('expensesDescription').value = expense.description || '';
         // Kosongkan tabel barang sebelum mengisi
@@ -3883,6 +3722,44 @@ function editexpenses(id) {
     });
 }
 
+// Update fungsi saveexpenses untuk handle edit
+function saveexpenses() {
+    const expensesData = {
+        expensesNumber: document.getElementById("expensesNumber").value,
+        supplier: document.getElementById("expensesupplier").value,
+        date: document.getElementById("expensesDate").value,
+        description: document.getElementById("expensesDescription").value,
+        items: [],
+        grandTotal: parseFloat(document.getElementById("expensesGrandTotal").textContent.replace(/\./g, '')) || 0
+    };
+
+    // Ambil items
+    document.querySelectorAll("#expensesItemsTable tbody tr").forEach(row => {
+        const item = {
+            name: row.querySelector(".expensesItemName").value,
+            qty: parseFloat(row.querySelector(".expensesQty").value) || 0,
+            unitPrice: parseFloat(row.querySelector(".expensesUnitPrice").value.replace(/\./g, '')) || 0,
+            total: parseFloat(row.querySelector(".expensesItemTotal").value.replace(/\./g, '')) || 0
+        };
+        expensesData.items.push(item);
+    });
+
+    // Tentukan path database (create or update)
+    const expenseRef = currentexpensesId ? 
+        database.ref(`expenses/${currentexpensesId}`) : 
+        database.ref("expenses").push();
+
+    expenseRef.set(expensesData)
+        .then(() => {
+            alert("Data berhasil disimpan!");
+            clearexpensesForm();
+            showNotaKeluar(); // Refresh tampilan nota keluar
+            closeexpensesModal();
+        })
+        .catch((error) => {
+            console.error("Gagal menyimpan:", error);
+        });
+}
 
 // Fungsi untuk menutup modal Nota Keluar
 function closeNotaKeluarModal() {
