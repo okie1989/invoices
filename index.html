@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -214,10 +210,10 @@ th {
     }
     #lunasText {
     position: fixed;
-    top: 100%;
+    top: 200%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(-15deg);
-    font-size: 4000%;
+    font-size: 250px;
     color: #050505;
     text-shadow: 3px 3px 5px rgba(59, 59, 59, 0.2);
     opacity: 0.06;
@@ -567,7 +563,7 @@ input, select, button {
 }
 /* Disable zoom on input focus */
 input, select, textarea {
-    font-size: 16px;
+    font-size: 125%;
 }
 /* Ensure buttons are easily tappable */
 button {
@@ -829,15 +825,25 @@ th {
 }
 /* Modal Laporan */
 #reportModal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);
-  z-index: 1000;
-  animation: fadeIn 0.3s ease-in-out;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Z-index untuk modal laporan keuangan */
+}
+/* Modal Edit Pengeluaran */
+#expensesModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1001; /* Z-index lebih tinggi dari modal laporan keuangan */
 }
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -847,7 +853,7 @@ th {
     background-color: #fff;
     margin: 5% auto;
     padding: 30px;
-    max-width: 70%;
+    max-width: 90%;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     transform: translateY(-50px);
@@ -1046,8 +1052,9 @@ th {
     }
 
     table {
-        font-size: 12px;
-    }
+    font-size: 12px;
+    width: auto;
+}
 
     th, td {
         padding: 5px;
@@ -1886,6 +1893,121 @@ button.nota-keluar-btn {
         opacity: 1;
     }
 }
+#expenseCategory {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+#customExpenseCategory {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-top: 10px;
+}
+#transactionDetails table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#transactionDetails th, #transactionDetails td {
+    padding: 1px;
+    border: 1px solid #000000;
+    text-align: center;
+    width: auto;
+}
+
+#transactionDetails th {
+    background-color: #10535d;
+    color: #ffffff;
+    font-weight: 200;
+}
+
+
+
+.edit-btn, .delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+}
+
+.edit-btn {
+    color: #1f4772;
+}
+
+.delete-btn {
+    color: #dc3545;
+}
+
+
+/* Container Tabel */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Tabel Utama */
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+/* Header Tabel */
+.transaction-table th {
+    background-color: #4dcbdd; /* Warna header */
+    color: #333;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Baris Tabel */
+.transaction-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Warna Pembeda untuk Pemasukan dan Pengeluaran */
+.transaction-table .pemasukan {
+    background-color: #81e689; /* Hijau muda untuk pemasukan */
+}
+
+.transaction-table .pengeluaran {
+    background-color: #e49999; /* Merah muda untuk pengeluaran */
+}
+
+/* Atur lebar kolom menggunakan class + element selector */
+td:first-child, th.col-tanggal {
+    width: 5%;
+}
+td:first-child, th.col-no-nota {
+    width: 15%;
+}
+td:first-child, th.col-deskripsi {
+    width: 55%;
+}
+td:first-child, th.col-masuk {
+    width: 10%;
+}
+td:first-child, th.col-keluar {
+    width: 10%;
+}
+td:first-child, th.col-oleh {
+    width: 10%;
+}
+td:first-child, th.col-aksi {
+    width: 10%;
+}
 
 </style>
 <style>
@@ -1895,6 +2017,8 @@ button.nota-keluar-btn {
             cursor: not-allowed;
             opacity: 0.7;
         }
+
+
 </style>
 <!-- Add Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -2094,6 +2218,22 @@ button.nota-keluar-btn {
 			<div class="form-group">
 				<label>Nama Supplier:</label>
 				<input type="text" id="expensesupplier" required></div>
+                <div class="form-group">
+                    <label>Nama Pengeluaran:</label>
+                    <select id="expenseCategory" onchange="handleExpenseCategoryChange()">
+                        <option value="">Pilih Kategori</option>
+                        <option value="Iuran Wajib">Iuran Wajib</option>
+                        <option value="Bayar Gaji">Bayar Gaji</option>
+                        <option value="Belanja Bahan Kain">Belanja Bahan Kain</option>
+                        <option value="Belanja Kaos Polos">Belanja Kaos Polos</option>
+                        <option value="Belanja Bahan Sablon">Belanja Bahan Sablon</option>
+                        <option value="Bayar Ongkir">Bayar Ongkir</option>
+                        <option value="Bayar Jahit">Bayar Jahit</option>
+                        <option value="Bayar Cetak DTF">Bayar Cetak DTF</option>
+                        <option value="Lain-lain">Lain-lain (Custom)</option>
+                    </select>
+                    <input type="text" id="customExpenseCategory" style="display: none;" placeholder="Masukkan Nama Pengeluaran">
+                </div>
 			<div class="form-group">
 				<label>Tanggal:</label>
 				<input type="date" id="expensesDate" required></div>
@@ -2154,17 +2294,16 @@ button.nota-keluar-btn {
 		<div id="transactionDetails" class="detail-table" style="display: none;">
             <h3>Detail Transaksi</h3>
             <div class="table-container">
-                <table>
+                <table class="transaction-table">
                     <thead>
                         <tr>
-                            <th>Tanggal</th>
-                            <th>No Nota</th>
-                            <th>Nama Order</th>
-                            <th>Jenis Nota</th>
-                            <th>Pelanggan</th>
-                            <th>Supplier</th>
-                            <th>Total</th>
-                            <th>Status</th>
+                            <th class="col-tanggal">Tanggal</th>
+                            <th class="col-no-nota">No Nota</th>
+                            <th class="col-deskripsi">Deskripsi</th>
+                            <th class="col-masuk">Masuk</th>
+                            <th class="col-keluar">Keluar</th>
+                            <th class="col-oleh">Oleh</th>
+                            <th class="col-aksi">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="transactionDetailsBody">
@@ -3222,7 +3361,7 @@ async function generateFinancialReport() {
             throw new Error('Pilih bulan dan tahun terlebih dahulu');
         }
 
-        // Proses data invoice
+        // Proses data invoice (pemasukan)
         Object.values(invoices).forEach(invoice => {
             try {
                 const invoiceDate = new Date(invoice.date);
@@ -3231,27 +3370,13 @@ async function generateFinancialReport() {
                     const total = parseInt(invoice.totalPrice?.replace(/[^0-9]/g, '')) || 0;
                     const paid = parseInt(invoice.amountPaid?.replace(/[^0-9]/g, '')) || 0;
                     const discount = parseInt(invoice.discount?.replace(/[^0-9]/g, '')) || 0;
-                    
-                    // Update total
-                    totalIncome += paid - discount;
-                    const dueAmount = total - paid - discount;
-                    
-                    // Simpan transaksi
-                    allTransactions.push({
-                        date: invoiceDate,
-                        data: {
-                            tanggal: invoiceDate,
-                            noNota: invoice.invoiceNumber,
-                            namaOrder: invoice.orderName || 'Tanpa Nama Order',
-                            jenis: 'PEMASUKAN',
-                            pelanggan: invoice.customerName || '-',
-                            supplier: '-',
-                            total: total,
-                            status: invoice.lunas ? 'LUNAS' : 'BELUM LUNAS'
-                        }
-                    });
+                    const netIncome = paid - discount;
+
+                    // Update total pemasukan
+                    totalIncome += netIncome;
 
                     // Hitung piutang
+                    const dueAmount = total - paid - discount;
                     if (!invoice.lunas && dueAmount > 0) {
                         totalReceivable += dueAmount;
                         receivableDetails.push({
@@ -3261,6 +3386,18 @@ async function generateFinancialReport() {
                             amount: dueAmount
                         });
                     }
+
+                    // Tambahkan data ke tabel transaksi
+                    allTransactions.push({
+                        date: invoiceDate,
+                        noNota: invoice.invoiceNumber,
+                        deskripsi: invoice.orderName || 'Tanpa Nama Pesanan',
+                        masuk: netIncome,
+                        keluar: 0, // Tidak ada pengeluaran untuk pemasukan
+                        oleh: invoice.customerName || 'Tanpa Nama Pelanggan',
+                        jenis: 'PEMASUKAN',
+                        id: invoice.invoiceNumber // Untuk aksi edit/hapus
+                    });
                 }
             } catch (error) {
                 console.error('Error processing invoice:', error);
@@ -3268,33 +3405,30 @@ async function generateFinancialReport() {
         });
 
         // Proses data pengeluaran
-        Object.values(expenses).forEach(expense => {
+        Object.entries(expenses).forEach(([firebaseKey, expense]) => {
             try {
-                const expenseDate = new Date(expense.date);
-                if (expenseDate.getMonth() + 1 == selectedMonth && expenseDate.getFullYear() == selectedYear) {
-                    // Hitung nilai
-                    const total = expense.grandTotal || 0;
-                    totalexpenses += total;
+        const expenseDate = new Date(expense.date);
+        if (expenseDate.getMonth() + 1 == selectedMonth && expenseDate.getFullYear() == selectedYear) {
+            // Hitung nilai
+            const total = expense.grandTotal || 0;
+            totalexpenses += total;
 
-                    // Simpan transaksi
-                    allTransactions.push({
-                        date: expenseDate,
-                        data: {
-                            tanggal: expenseDate,
-                            noNota: expense.expensesNumber,
-                            namaOrder: expense.description || '-',
-                            jenis: 'PENGELUARAN',
-                            pelanggan: '-',
-                            supplier: expense.supplier || '-',
-                            total: total,
-                            status: 'LUNAS'
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Error processing expense:', error);
-            }
-        });
+            // Tambahkan data ke tabel transaksi
+            allTransactions.push({
+                date: expenseDate,
+                noNota: expense.expensesNumber,
+                deskripsi: expense.expenseCategory || 'Tanpa Kategori',
+                masuk: 0,
+                keluar: total,
+                oleh: expense.supplier || 'Tanpa Supplier',
+                jenis: 'PENGELUARAN',
+                firebaseKey: firebaseKey // Simpan key Firebase untuk aksi
+            });
+        }
+    } catch (error) {
+        console.error('Error processing expense:', error);
+    }
+});
 
         // Urutkan transaksi dari TERBARU ke TERLAMA
         allTransactions.sort((a, b) => b.date - a.date);
@@ -3302,17 +3436,23 @@ async function generateFinancialReport() {
         // Update tabel transaksi
         const transactionDetailsBody = document.querySelector('#transactionDetailsBody');
         transactionDetailsBody.innerHTML = allTransactions.map(t => `
-            <tr>
-                <td>${t.data.tanggal.toLocaleDateString('id-ID')}</td>
-                <td>${t.data.noNota}</td>
-                <td>${t.data.namaOrder}</td>
-                <td>${t.data.jenis}</td>
-                <td>${t.data.pelanggan}</td>
-                <td>${t.data.supplier}</td>
-                <td>${formatRupiah(t.data.total)}</td>
-                <td>${t.data.status}</td>
-            </tr>
-        `).join('');
+    <tr class="${t.jenis === 'PEMASUKAN' ? 'pemasukan' : 'pengeluaran'}">
+        <td>${t.date.toLocaleDateString('id-ID')}</td>
+        <td>${t.noNota}</td>
+        <td>${t.deskripsi}</td>
+        <td>${t.masuk > 0 ? formatRupiah(t.masuk) : '-'}</td>
+        <td>${t.keluar > 0 ? formatRupiah(t.keluar) : '-'}</td>
+        <td>${t.oleh}</td>
+        <td>
+            <button onclick="${t.jenis === 'PEMASUKAN' ? `editPemasukan('${t.noNota}')` : `editexpenses('${t.firebaseKey}')`}" class="edit-btn">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="${t.jenis === 'PEMASUKAN' ? `deletePemasukan('${t.noNota}')` : `deleteExpense('${t.firebaseKey}')`}" class="delete-btn">
+                <i class="fas fa-trash"></i>
+            </button>
+        </td>
+    </tr>
+`).join('');
 
         // Update ringkasan
         const totalProfit = totalIncome - totalexpenses;
@@ -3340,6 +3480,88 @@ async function generateFinancialReport() {
     }
 }
 
+function editPemasukan(invoiceNumber) {
+    // Panggil fungsi loadInvoice untuk memuat data pemasukan
+    loadInvoice(invoiceNumber);
+    // Tutup modal laporan keuangan
+    closeReportModal();
+}
+
+function deletePemasukan(invoiceNumber) {
+    if (confirm("Apakah Anda yakin ingin menghapus pemasukan ini?")) {
+        database.ref(`invoices/${invoiceNumber}`).remove()
+            .then(() => {
+                alert("Pemasukan berhasil dihapus!");
+                generateFinancialReport(); // Refresh laporan
+            })
+            .catch((error) => {
+                console.error("Gagal menghapus pemasukan:", error);
+            });
+    }
+}
+
+function editexpenses(firebaseKey) {
+    database.ref(`expenses/${firebaseKey}`).once('value').then((snapshot) => {
+        const expense = snapshot.val();
+        // Buka modal edit pengeluaran
+        openexpensesModal(false);
+        // Isi data ke form
+        document.getElementById('expensesNumber').value = expense.expensesNumber;
+        document.getElementById('expensesupplier').value = expense.supplier || '';
+        document.getElementById('expenseCategory').value = expense.expenseCategory || '';
+        document.getElementById('expensesDate').value = expense.date;
+        document.getElementById('expensesDescription').value = expense.description || '';
+        // Isi tabel barang
+        const tbody = document.querySelector('#expensesItemsTable tbody');
+        tbody.innerHTML = '';
+        if (expense.items && expense.items.length > 0) {
+            expense.items.forEach(item => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td><input type="text" class="expensesItemName" value="${item.name}"></td>
+                    <td><input type="number" class="expensesQty" min="1" value="${item.qty}"></td>
+                    <td><input type="text" class="expensesUnitPrice" value="${formatRupiah(item.unitPrice)}"></td>
+                    <td><input type="text" class="expensesItemTotal" readonly value="${formatRupiah(item.total)}"></td>
+                    <td><button type="button" onclick="removeexpensesItemRow(this)" class="delete-btn">
+                        <i class="fas fa-trash"></i>
+                    </button></td>
+                `;
+                tbody.appendChild(newRow);
+                // Tambahkan event listener untuk hitung total otomatis
+                newRow.querySelector('.expensesQty').addEventListener('input', calculateexpensesItemTotal);
+                newRow.querySelector('.expensesUnitPrice').addEventListener('input', calculateexpensesItemTotal);
+            });
+        } else {
+            // Jika tidak ada data barang, tambahkan baris kosong
+            addexpensesItemRow();
+        }
+        // Isi total keseluruhan
+        document.getElementById('expensesGrandTotal').textContent = formatRupiah(expense.grandTotal || 0);
+        // Set ID yang sedang diedit
+        currentexpensesId = firebaseKey;
+        document.getElementById('expensesModalTitle').textContent = 'Edit Pengeluaran';
+    }).catch((error) => {
+        console.error("Gagal memuat pengeluaran:", error);
+        alert("Terjadi kesalahan saat memuat data pengeluaran!");
+    });
+}
+
+
+function deleteExpense(firebaseKey) {
+    if (confirm("Apakah Anda yakin ingin menghapus pengeluaran ini?")) {
+        database.ref(`expenses/${firebaseKey}`).remove()
+            .then(() => {
+                alert("Pengeluaran berhasil dihapus!");
+                generateFinancialReport(); // Refresh laporan
+            })
+            .catch((error) => {
+                console.error("Gagal menghapus pengeluaran:", error);
+            });
+    }
+}
+
+
+
 function closeReportModal() {
     document.getElementById('reportModal').style.display = 'none';
 }
@@ -3350,10 +3572,11 @@ function openexpensesModal() {
 }
 // Fungsi clear form
 function clearexpensesForm() {
-    document.getElementById('expensesForm').reset();
-    document.getElementById('expensesNumber').value = generateexpensesNumber();
-    document.querySelector('#expensesItemsTable tbody').innerHTML = ''; // Kosongkan tabel barang
-    document.getElementById('expensesGrandTotal').textContent = '0';
+    document.getElementById("expensesForm").reset();
+    document.getElementById("expensesNumber").value = generateexpensesNumber();
+    document.querySelector("#expensesItemsTable tbody").innerHTML = ''; // Kosongkan tabel barang
+    document.getElementById("expensesGrandTotal").textContent = '0';
+    document.getElementById("customExpenseCategory").style.display = "none"; // Sembunyikan input custom
     currentexpensesId = null;
     addexpensesItemRow(); // Tambahkan baris pertama secara otomatis
 }
@@ -3398,23 +3621,32 @@ function addexpenses() {
 }
 function saveexpenses() {
     const expensesData = {
-        expensesNumber: document.getElementById('expensesNumber').value,
-        supplier: document.getElementById('expensesupplier').value,
-        date: document.getElementById('expensesDate').value,
-        description: document.getElementById('expensesDescription').value,
+        expensesNumber: document.getElementById("expensesNumber").value,
+        supplier: document.getElementById("expensesupplier").value,
+        expenseCategory: document.getElementById("expenseCategory").value,
+        customExpenseCategory: document.getElementById("customExpenseCategory").value,
+        date: document.getElementById("expensesDate").value,
+        description: document.getElementById("expensesDescription").value,
         items: [], // Array untuk menyimpan semua barang
-        grandTotal: parseFloat(document.getElementById('expensesGrandTotal').textContent.replace(/\./g, '')) || 0
+        grandTotal: parseFloat(document.getElementById("expensesGrandTotal").textContent.replace(/\./g, '')) || 0
     };
+
+    // Jika kategori "Lain-lain" dipilih, gunakan nilai dari input custom
+    if (expensesData.expenseCategory === "Lain-lain") {
+        expensesData.expenseCategory = expensesData.customExpenseCategory;
+    }
+
     // Ambil data semua barang
-    document.querySelectorAll('#expensesItemsTable tbody tr').forEach(row => {
+    document.querySelectorAll("#expensesItemsTable tbody tr").forEach(row => {
         const item = {
-            name: row.querySelector('.expensesItemName').value,
-            qty: parseFloat(row.querySelector('.expensesQty').value) || 0,
-            unitPrice: parseFloat(row.querySelector('.expensesUnitPrice').value.replace(/\./g, '')) || 0,
-            total: parseFloat(row.querySelector('.expensesItemTotal').value.replace(/\./g, '')) || 0
+            name: row.querySelector(".expensesItemName").value,
+            qty: parseFloat(row.querySelector(".expensesQty").value) || 0,
+            unitPrice: parseFloat(row.querySelector(".expensesUnitPrice").value.replace(/\./g, '')) || 0,
+            total: parseFloat(row.querySelector(".expensesItemTotal").value.replace(/\./g, '')) || 0
         };
         expensesData.items.push(item);
     });
+
     // Simpan ke Firebase
     const expenseRef = currentexpensesId ? 
         database.ref('expenses/' + currentexpensesId) : 
@@ -3468,6 +3700,19 @@ function calculateGrandTotal() {
     });
     document.getElementById('expensesGrandTotal').textContent = formatRupiah(grandTotal);
 }
+function handleExpenseCategoryChange() {
+    const expenseCategory = document.getElementById("expenseCategory");
+    const customExpenseCategory = document.getElementById("customExpenseCategory");
+
+    if (expenseCategory.value === "Lain-lain") {
+        customExpenseCategory.style.display = "block";
+        customExpenseCategory.required = true;
+    } else {
+        customExpenseCategory.style.display = "none";
+        customExpenseCategory.required = false;
+    }
+}
+
 // Panggil fungsi ini saat halaman dimuat
 document.addEventListener('DOMContentLoaded', function() {
     loadexpenses();
@@ -3536,60 +3781,15 @@ function loadexpenses() {
         alert("Gagal memuat data pengeluaran!");
     });
 }
-// Edit pengeluaran
-function editexpenses(id) {
-    database.ref(`expenses/${id}`).once('value').then((snapshot) => {
-        const expense = snapshot.val();
-        console.log("Data dari Firebase:", expense); // Debugging
-        // Buka modal tanpa reset form
-        openexpensesModal(false);
-        // Isi data utama
-        document.getElementById('expensesNumber').value = expense.expensesNumber;
-        document.getElementById('expensesupplier').value = expense.supplier || '';
-        document.getElementById('expensesDate').value = expense.date;
-        document.getElementById('expensesDescription').value = expense.description || '';
-        // Kosongkan tabel barang sebelum mengisi
-        const tbody = document.querySelector('#expensesItemsTable tbody');
-        tbody.innerHTML = '';
-        // Isi data barang
-        if (expense.items && expense.items.length > 0) {
-            expense.items.forEach(item => {
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td><input type="text" class="expensesItemName" value="${item.name}"></td>
-                    <td><input type="number" class="expensesQty" min="1" value="${item.qty}"></td>
-                    <td><input type="text" class="expensesUnitPrice" value="${formatRupiah(item.unitPrice)}"></td>
-                    <td><input type="text" class="expensesItemTotal" readonly value="${formatRupiah(item.total)}"></td>
-                    <td><button type="button" onclick="removeexpensesItemRow(this)" class="delete-btn">
-                        <i class="fas fa-trash"></i>
-                    </button></td>
-                `;
-                tbody.appendChild(newRow);
-                // Tambahkan event listener untuk hitung total otomatis
-                newRow.querySelector('.expensesQty').addEventListener('input', calculateexpensesItemTotal);
-                newRow.querySelector('.expensesUnitPrice').addEventListener('input', calculateexpensesItemTotal);
-            });
-        } else {
-            // Jika tidak ada data barang, tambahkan baris kosong
-            addexpensesItemRow();
-        }
-        // Isi total keseluruhan
-        document.getElementById('expensesGrandTotal').textContent = formatRupiah(expense.grandTotal || 0);
-        // Set ID yang sedang diedit
-        currentexpensesId = id;
-        document.getElementById('expensesModalTitle').textContent = 'Edit Pengeluaran';
-    }).catch((error) => {
-        console.error("Gagal memuat pengeluaran:", error);
-        alert("Terjadi kesalahan saat memuat data pengeluaran!");
-    });
-}
+
 // Modifikasi fungsi openexpensesModal
 function openexpensesModal(isNew = true) {
-    const modal = document.getElementById('expensesModal');
-    if(isNew) {
+    const modal = document.getElementById("expensesModal");
+    if (isNew) {
         clearexpensesForm(); // Hanya reset form untuk data baru
     }
-    modal.style.display = 'block';
+    modal.style.display = "block";
+    handleExpenseCategoryChange(); // Atur tampilan input custom
 }
 // Hapus pengeluaran
 function deleteexpenses(id) {
@@ -3723,44 +3923,6 @@ function editexpenses(id) {
     });
 }
 
-// Update fungsi saveexpenses untuk handle edit
-function saveexpenses() {
-    const expensesData = {
-        expensesNumber: document.getElementById("expensesNumber").value,
-        supplier: document.getElementById("expensesupplier").value,
-        date: document.getElementById("expensesDate").value,
-        description: document.getElementById("expensesDescription").value,
-        items: [],
-        grandTotal: parseFloat(document.getElementById("expensesGrandTotal").textContent.replace(/\./g, '')) || 0
-    };
-
-    // Ambil items
-    document.querySelectorAll("#expensesItemsTable tbody tr").forEach(row => {
-        const item = {
-            name: row.querySelector(".expensesItemName").value,
-            qty: parseFloat(row.querySelector(".expensesQty").value) || 0,
-            unitPrice: parseFloat(row.querySelector(".expensesUnitPrice").value.replace(/\./g, '')) || 0,
-            total: parseFloat(row.querySelector(".expensesItemTotal").value.replace(/\./g, '')) || 0
-        };
-        expensesData.items.push(item);
-    });
-
-    // Tentukan path database (create or update)
-    const expenseRef = currentexpensesId ? 
-        database.ref(`expenses/${currentexpensesId}`) : 
-        database.ref("expenses").push();
-
-    expenseRef.set(expensesData)
-        .then(() => {
-            alert("Data berhasil disimpan!");
-            clearexpensesForm();
-            showNotaKeluar(); // Refresh tampilan nota keluar
-            closeexpensesModal();
-        })
-        .catch((error) => {
-            console.error("Gagal menyimpan:", error);
-        });
-}
 
 // Fungsi untuk menutup modal Nota Keluar
 function closeNotaKeluarModal() {
