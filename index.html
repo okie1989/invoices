@@ -2143,7 +2143,44 @@ td:first-child, th.col-aksi {
     --legend-bg: rgba(255, 255, 255, 0.9);
 }
 
+.search-container {
+    margin: 15px 0;
+    display: flex;
+    gap: 10px;
+}
 
+.search-container input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.search-container button {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #45a049;
+}
+
+#transactionDetailsBody td:last-child,
+#receivableDetails td:last-child {
+    white-space: nowrap;
+    text-align: center;
+}
+
+.highlight {
+    background-color: #FFEB3B;
+    color: #000;
+    padding: 2px 0;
+    border-radius: 3px;
+}
 </style>
 <style>
         .disabled-form input:disabled,
@@ -2430,6 +2467,11 @@ td:first-child, th.col-aksi {
                 <canvas class="chart-canvas" id="expenseChart"></canvas>
                 <div class="no-data" id="expenseNoData" style="display: none;">Tidak ada data pengeluaran</div>
             </div>
+        </div>
+        <div class="search-container">
+            <input type="text" id="reportSearchInput" placeholder="Cari (pelanggan/supplier/pesanan/pengeluaran)...">
+            <button onclick="searchFinancialReport()"><i class="fa fa-search"></i></button>
+            <button onclick="clearFinancialReportSearch()"><i class="fa fa-times"></i> Reset</button>
         </div>
 		<!-- Tombol Lihat Detail -->
 		<div class="detail-buttons">
@@ -3640,6 +3682,14 @@ async function generateFinancialReport() {
             </tr>
         `).join('');
 
+        allTransactions.map(t => `
+    <tr class="${t.jenis === 'PEMASUKAN' ? 'pemasukan' : 'pengeluaran'}" 
+        data-customer="${t.oleh}" 
+        data-deskripsi="${t.deskripsi}">
+        ...
+    </tr>
+`).join('')
+
         // Update ringkasan
         const totalProfit = totalIncome - totalexpenses;
         totalIncomeElem.textContent = formatRupiah(totalIncome);
@@ -4456,6 +4506,106 @@ function updateTotals() {
 
     document.getElementById("totalQty").textContent = totalQty;
     document.getElementById("totalPrice").textContent = totalPrice.toLocaleString("id-ID");
+}
+function searchFinancialReport() {
+    const searchQuery = document.getElementById('reportSearchInput').value.toLowerCase().trim();
+    if (!searchQuery) return;
+    
+    let anyFound = false;
+    
+    // Search in transaction details
+    const transactionRows = document.querySelectorAll('#transactionDetailsBody tr');
+    transactionRows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        const isMatch = rowText.includes(searchQuery);
+        
+        if (isMatch) {
+            anyFound = true;
+            row.style.display = '';
+            // Show action buttons
+            const actionCell = row.querySelector('td:last-child');
+            if (actionCell) actionCell.style.display = 'table-cell';
+            
+            // Highlight matches
+            Array.from(row.cells).forEach((cell, index) => {
+                // Skip highlighting for action cell
+                if (index === row.cells.length - 1) return;
+                
+                const cellText = cell.textContent.toLowerCase();
+                if (cellText.includes(searchQuery)) {
+                    cell.innerHTML = cell.textContent.replace(
+                        new RegExp(searchQuery, 'gi'),
+                        match => `<span class="highlight">${match}</span>`
+                    );
+                }
+            });
+        } else {
+            row.style.display = 'none';
+            // Hide action buttons for non-matching rows
+            const actionCell = row.querySelector('td:last-child');
+            if (actionCell) actionCell.style.display = 'none';
+        }
+    });
+    
+    // Search in receivable details
+    const receivableRows = document.querySelectorAll('#receivableDetails tbody tr');
+    receivableRows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        const isMatch = rowText.includes(searchQuery);
+        
+        if (isMatch) {
+            anyFound = true;
+            row.style.display = '';
+            // Show action buttons (assuming last cell is actions)
+            const actionCell = row.querySelector('td:last-child');
+            if (actionCell) actionCell.style.display = 'table-cell';
+            
+            Array.from(row.cells).forEach((cell, index) => {
+                // Skip highlighting for action cell
+                if (index === row.cells.length - 1) return;
+                
+                const cellText = cell.textContent.toLowerCase();
+                if (cellText.includes(searchQuery)) {
+                    cell.innerHTML = cell.textContent.replace(
+                        new RegExp(searchQuery, 'gi'),
+                        match => `<span class="highlight">${match}</span>`
+                    );
+                }
+            });
+        } else {
+            row.style.display = 'none';
+            // Hide action buttons for non-matching rows
+            const actionCell = row.querySelector('td:last-child');
+            if (actionCell) actionCell.style.display = 'none';
+        }
+    });
+    
+    // Update no results message
+    const noResultsMsg = document.getElementById('noResultsMessage');
+    if (noResultsMsg) {
+        noResultsMsg.style.display = anyFound ? 'none' : 'block';
+    }
+}
+
+// Update the clearFinancialReportSearch function
+function clearFinancialReportSearch() {
+    document.getElementById('reportSearchInput').value = '';
+    
+    // Show all rows and action buttons
+    document.querySelectorAll('#transactionDetailsBody tr, #receivableDetails tbody tr').forEach(row => {
+        row.style.display = '';
+        const actionCell = row.querySelector('td:last-child');
+        if (actionCell) actionCell.style.display = 'table-cell';
+        
+        // Remove highlights
+        Array.from(row.cells).forEach(cell => {
+            cell.innerHTML = cell.textContent;
+        });
+    });
+    
+    // Hide no results message
+    const noResultsMsg = document.getElementById('noResultsMessage');
+    if (noResultsMsg) noResultsMsg.style.display = 'none';
 }
 
 </script>
