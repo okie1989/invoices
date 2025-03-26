@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -18,7 +17,7 @@ body {
     display: block;
 }
 .invoice {
-    width: 85%;
+    width: 100%;
     max-width: -webkit-fill-available;
     margin: 0 auto;
     padding: 1%;
@@ -63,13 +62,11 @@ body {
 }
 
 .invoice-number {
-    font-size: 261%;
-    font-weight: 600;
     color: #4b8dad;
     justify-self: right;
-    margin-top: -12%;
     text-align: right;
     font-family: monospace;
+    font-size: 186%;
 }
 
 .invoice-note {
@@ -79,7 +76,7 @@ body {
 }
 
 .invoice-date {
-    font-size: 151%;
+    font-size: 122%;
     font-weight: 400;
     opacity: 0.9;
     color: #000000;
@@ -584,7 +581,7 @@ button {
     font-size: 250%;
     MARGIN-BOTTOM: 8PX;
     letter-spacing: 17px;
-    MARGIN-TOP: 1%;
+    MARGIN-TOP: -6%;
     COLOR: darkcyan;
 }
 .company-info p {
@@ -2206,6 +2203,13 @@ td:first-child, th.col-aksi {
 			<img src="https://i.imgur.com/75tlt7m.png"/>
 		</div>
 		<div class="company-info">
+            <div class="invoice-number">
+                <span id="invoiceNumberDisplay"></span>
+</div>
+
+           <div class="invoice-date">
+                Blitar : <span id="invoiceDateDisplay"></span>
+           </div>
 			<h2>INVOICE</h2>
 			<p>
 				 KANVAS MERCHANDISE
@@ -2213,13 +2217,7 @@ td:first-child, th.col-aksi {
 			<p>
 				 Jl.Riau Barat No.21 Kota Blitar
 			</p>
-			<div class="invoice-number">
-				 <span id="invoiceNumberDisplay"></span>
-</div>
-
-			<div class="invoice-date">
-				 Blitar : <span id="invoiceDateDisplay"></span>
-			</div>
+			
 		</div>
 	</div>
 
