@@ -9,6 +9,7 @@
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
 <style>
 body {
     font-family: 'Roboto', sans-serif;
@@ -559,6 +560,7 @@ input, select, button {
     padding: 10px;
     font-size: 16px;
     text-align-last: center;
+    COLOR: antiquewhite;
 }
 /* Disable zoom on input focus */
 input, select, textarea {
@@ -566,10 +568,9 @@ input, select, textarea {
 }
 /* Ensure buttons are easily tappable */
 button {
-    background: linear-gradient(222deg, #647863 0%, #a4dda7 100%);
-    border: hidden;
+    background: linear-gradient(154deg, #3894c9 0%, #4eb953 100%);
     text-transform: uppercase;
-    BORDER-RADIUS: 20%;
+    FONT-WEIGHT: 600;
 }
 /* Adjust logo size for mobile */
 .logo {
@@ -2385,6 +2386,13 @@ td:first-child, th.col-aksi {
         justify-content: center;
     }
 }
+/* Tambahkan gaya untuk tombol export */
+..export-btn {
+    background: LINEAR-GRADIENT;
+}
+.export-btn:hover { 
+    background: #165a34 !important; 
+}
 
 </style>
 <style>
@@ -2708,6 +2716,13 @@ td:first-child, th.col-aksi {
                     <span id="totalReceivable" class="summary-value">Rp 0</span>
                 </div>
             </div>
+        </div>
+        <div class="tooltip">
+            <button class="export-btn" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i>
+                <span id="export-btn" class=>SIMPAN KE EXCELL</span>
+            </button>
+            <span class="tooltiptext">Export ke Excel</span>
         </div>
         
         <!-- Pencarian -->
@@ -5021,6 +5036,132 @@ async function showFinancialReport() {
     
     generateFinancialReport();
     document.getElementById('reportModal').style.display = 'block';
+}
+function exportToExcel() {
+    try {
+        // Ambil data dari tabel
+        const table = document.querySelector('.transaction-table');
+        const rows = table.querySelectorAll('tbody tr');
+        
+        // Ambil bulan dan tahun yang dipilih
+        const monthSelect = document.getElementById('reportMonth');
+        const yearSelect = document.getElementById('reportYear');
+        const month = monthSelect.options[monthSelect.selectedIndex].text.toUpperCase();
+        const year = yearSelect.value;
+        
+        // Hitung total masuk dan keluar
+        let totalMasuk = 0;
+        let totalKeluar = 0;
+        
+        rows.forEach(row => {
+            const masukCell = row.cells[3].textContent;
+            const keluarCell = row.cells[4].textContent;
+            
+            if (masukCell !== '-') {
+                totalMasuk += parseCurrency(masukCell);
+            }
+            if (keluarCell !== '-') {
+                totalKeluar += parseCurrency(keluarCell);
+            }
+        });
+        
+        const profit = totalMasuk - totalKeluar;
+        
+        // Buat array untuk data Excel
+        const excelData = [
+            [`LAPORAN KEUANGAN BULAN ${month} TAHUN ${year}`.toUpperCase()],
+            [], // Baris kosong
+            ['TANGGAL', 'NO NOTA', 'DESKRIPSI', 'MASUK', 'KELUAR', 'OLEH'].map(h => h.toUpperCase()),
+            ...Array.from(rows).map(row => [
+                row.cells[0].textContent.trim().toUpperCase(),
+                row.cells[1].textContent.toUpperCase(),
+                row.cells[2].textContent.toUpperCase(),
+                row.cells[3].textContent !== '-' ? parseCurrency(row.cells[3].textContent) : 0,
+                row.cells[4].textContent !== '-' ? parseCurrency(row.cells[4].textContent) : 0,
+                row.cells[5].textContent.toUpperCase()
+            ]),
+            [], // Baris kosong
+            ['', '', '', '----------------------------', '----------------------------', ''].map(h => h.toUpperCase()),
+            ['', '', 'TOTAL'.toUpperCase(), totalMasuk, totalKeluar, ''],
+            [], // Baris kosong
+            ['PROFIT = ' + profit]
+        ];
+        
+        // Buat worksheet
+        const ws = XLSX.utils.aoa_to_sheet(excelData);
+        
+        // Atur lebar kolom
+        ws['!cols'] = [
+            { wch: 15 }, // Tanggal
+            { wch: 15 }, // No Nota
+            { wch: 30 }, // Deskripsi
+            { wch: 15 }, // Masuk
+            { wch: 15 }, // Keluar
+            { wch: 20 }  // Oleh
+        ];
+        
+        // Format angka sebagai currency tanpa simbol (decimal places = 0)
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let R = 3; R <= range.e.r; ++R) {
+            // Format kolom Masuk (D) dan Keluar (E)
+            ['D', 'E'].forEach(col => {
+                const cell = ws[col + R];
+                if (cell && cell.t === 'n') {
+                    cell.z = '#,##0;[Red]-#,##0'; // Format number dengan pemisah ribuan
+                }
+            });
+        }
+        
+        // Format total dan profit
+        const totalRow = range.e.r - 2;
+        const profitRow = range.e.r;
+        
+        // Format total masuk (D) dan keluar (E)
+        ['D', 'E'].forEach(col => {
+            const cell = ws[col + totalRow];
+            if (cell) {
+                cell.z = '#,##0;[Red]-#,##0';
+                cell.s = { font: { bold: true } }; // Tebalkan total
+            }
+        });
+        
+        // Format profit
+        const profitCell = ws['D' + profitRow];
+        if (profitCell) {
+            profitCell.z = '#,##0;[Red]-#,##0';
+            profitCell.s = { font: { bold: true, color: { rgb: "0000FF" } } }; // Biru dan tebal
+        }
+        
+        // Buat semua teks uppercase dan font Arial
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cell = ws[XLSX.utils.encode_cell({r:R,c:C})];
+                if (cell && cell.t === 's') { // Hanya untuk teks
+                    cell.v = cell.v.toUpperCase();
+                    if (!cell.s) cell.s = {};
+                    cell.s.font = cell.s.font || {};
+                    cell.s.font.name = 'Arial';
+                }
+            }
+        }
+        
+        // Buat workbook
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "LAPORAN");
+        
+        // Export ke file Excel
+        const fileName = `LAPORAN KEUANGAN ${month} ${year}.xlsx`;
+        XLSX.writeFile(wb, fileName);
+        
+    } catch (error) {
+        console.error("Gagal export ke Excel:", error);
+        alert("Terjadi kesalahan saat export ke Excel");
+    }
+}
+
+// Fungsi untuk parse currency ke number
+function parseCurrency(currencyString) {
+    return parseInt(currencyString.replace(/[^0-9]/g, '')) || 0;
 }
 
 </script>
