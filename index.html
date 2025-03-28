@@ -2737,21 +2737,55 @@ async function downloadJPG() {
 }
 
 async function shareToWhatsApp() {
-    const canvas = await capturePreview();
-    canvas.toBlob(blob => {
-        const file = new File([blob], 'invoice.jpg', { type: 'image/jpeg' });
+    try {
+        // Ambil elemen previewContent
+        const previewContent = document.getElementById('previewContent');
         
-        if(navigator.share) {
-            navigator.share({
-                files: [file],
-                title: 'Invoice Pembayaran',
-                text: `Pelanggan: ${document.getElementById('customerName').value}\nTotal: Rp ${document.getElementById('totalPrice').textContent}`
-            });
-        } else {
-            const url = URL.createObjectURL(blob);
-            window.open(`https://web.whatsapp.com/send?text=${encodeURIComponent('Invoice Pembayaran: ' + url)}`, '_blank');
-        }
-    }, 'image/jpeg');
+        // Gunakan html2canvas untuk mengambil gambar dari previewContent
+        const canvas = await html2canvas(previewContent, {
+            scale: 2,
+            useCORS: true,
+            logging: true,
+            allowTaint: true,
+            backgroundColor: null
+        });
+
+        // Konversi canvas ke blob
+        canvas.toBlob(async function(blob) {
+            try {
+                // Buat file dari blob
+                const file = new File([blob], 'invoice.jpg', { type: 'image/jpeg' });
+                
+                // Cek apakah Web Share API didukung
+                if (navigator.share && navigator.canShare({ files: [file] })) {
+                    // Share via Web Share API (untuk mobile)
+                    await navigator.share({
+                        files: [file],
+                        title: 'Invoice Pembayaran',
+                        text: `Invoice: ${document.getElementById('invoiceNumberDisplay').textContent}\nPelanggan: ${document.getElementById('customerName').value}\nTotal: Rp ${document.getElementById('totalPrice').textContent}`
+                    });
+                } else {
+                    // Fallback untuk desktop atau browser yang tidak mendukung
+                    const url = canvas.toDataURL('image/jpeg');
+                    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
+                        `Invoice Pembayaran\n` +
+                        `No. Invoice: ${document.getElementById('invoiceNumberDisplay').textContent}\n` +
+                        `Pelanggan: ${document.getElementById('customerName').value}\n` +
+                        `Total: Rp ${document.getElementById('totalPrice').textContent}\n` +
+                        `Lihat Invoice: ${url}`
+                    )}`;
+                    
+                    window.open(whatsappUrl, '_blank');
+                }
+            } catch (error) {
+                console.error('Error sharing:', error);
+                alert('Gagal membuka WhatsApp. Pastikan aplikasi WhatsApp terinstall.');
+            }
+        }, 'image/jpeg', 0.9);
+    } catch (error) {
+        console.error('Error generating image:', error);
+        alert('Gagal membuat gambar invoice. Silakan coba lagi.');
+    }
 }
     </script>
 <!-- Tambahkan Font Awesome untuk ikon -->
