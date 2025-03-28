@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -2706,33 +2707,58 @@ td:first-child, th.col-aksi {
 
 async function downloadJPG() {
     try {
-        // Ambil elemen previewContent
         const previewContent = document.getElementById('previewContent');
+        const customerName = document.getElementById('customerName').value.replace(/\s+/g, '_');
+        const invoiceNumber = document.getElementById('invoiceNumberDisplay').textContent.replace(/\s+/g, '_');
         
-        // Gunakan html2canvas untuk mengambil gambar dari previewContent
+        // Gunakan html2canvas dengan timeout lebih panjang
         const canvas = await html2canvas(previewContent, {
-            scale: 2, // Tingkatkan skala untuk kualitas gambar yang lebih baik
-            useCORS: true, // Izinkan gambar dari sumber eksternal (jika ada)
-            logging: true, // Aktifkan logging untuk debugging
-            allowTaint: true, // Izinkan gambar yang "tainted" (jika diperlukan)
-            backgroundColor: null // Hapus latar belakang putih
-        });
-
-        // Handle gambar yang gagal dimuat
-        const images = previewContent.querySelectorAll('img');
-        images.forEach(img => {
-            if (img.naturalWidth === 0) {
-                console.warn('Gambar gagal dimuat:', img.src);
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            logging: true,
+            backgroundColor: '#ffffff',
+            imageTimeout: 30000, // 30 detik timeout untuk gambar
+            onclone: (clonedDoc) => {
+                // Handle gambar yang gagal load
+                clonedDoc.querySelectorAll('img').forEach(img => {
+                    if (!img.complete || img.naturalWidth === 0) {
+                        img.style.display = 'none';
+                    }
+                });
             }
         });
 
-        // Buat link untuk mengunduh gambar
-        const link = document.createElement('a');
-        link.download = `INVOICE-${document.getElementById('invoiceNumberDisplay').textContent}.jpg`;
-        link.href = canvas.toDataURL('image/jpeg', 0.9); // Format JPEG dengan kualitas 90%
-        link.click();
+        // Buat nama file yang lebih baik
+        const fileName = `Invoice_${customerName || 'Tanpa_Nama'}_${invoiceNumber || 'Tanpa_No'}.jpg`;
+        
+        // Konversi ke blob untuk handling yang lebih baik
+        canvas.toBlob(function(blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = url;
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            
+            // Cleanup
+            setTimeout(() => {
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }, 100);
+        }, 'image/jpeg', 0.92); // Kualitas 92%
+
     } catch (error) {
-        console.error('Download gagal:', error);
+        console.error('Download error:', error);
+        
+        // Fallback jika html2canvas gagal
+        if (error.message.includes('timed out')) {
+            alert('Gagal memuat gambar. Silakan cek URL gambar atau coba lagi.');
+        } else {
+            alert('Gagal mengunduh invoice: ' + error.message);
+        }
     }
 }
 
