@@ -2178,6 +2178,121 @@ td:first-child, th.col-aksi {
     padding: 2px 0;
     border-radius: 3px;
 }
+/* Collapsible Chart Styles */
+.chart-details {
+  margin-bottom: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.chart-details[open] {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.chart-details:not([open]) .chart-wrapper {
+  display: none;
+}
+
+.chart-summary {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  position: relative;
+  padding-left: 30px;
+}
+
+.chart-summary:hover {
+  background-color: #f1f1f1;
+}
+
+/* Hilangkan default arrow di Firefox */
+.chart-summary::-webkit-details-marker {
+  display: none;
+}
+
+.collapse-icon {
+  margin-left: auto;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  transition: all 0.3s ease;
+}
+
+.collapse-icon::before,
+.collapse-icon::after {
+  content: '';
+  position: absolute;
+  background-color: #666;
+  transition: transform 0.3s ease;
+}
+
+.collapse-icon::before {
+    width: 100%;
+  height: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.chart-details[open] .collapse-icon::after {
+  transform: translateX(-50%) rotate(90deg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chart-details {
+    margin-bottom: 0.5rem;
+  }
+  
+  .chart-summary {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+.collapse-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background-color: #666;
+  transform: translateX(-50%);
+  transition: transform 0.3s ease;
+}
+
+.chart-details[open] .collapse-icon::after {
+  transform: translateX(-50%) rotate(90deg);
+}
+
+/* Style tambahan untuk indikator collapse */
+.chart-summary {
+  font-weight: 600;
+  color: #333;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.chart-summary:hover {
+  background-color: #eee;
+}
+
+.chart-details {
+  margin-bottom: 15px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
 </style>
 <style>
         .disabled-form input:disabled,
@@ -2454,18 +2569,34 @@ td:first-child, th.col-aksi {
 			<h3>Total Piutang: <span id="totalReceivable">Rp 0</span></h3>
 		</div>
         <div class="chart-container">
-            <div class="chart-wrapper">
+            <!-- Chart Pemasukan -->
+            <details class="chart-details">
+              <summary class="chart-summary">
+                <i class="fas fa-chart-pie"></i>
+                Grafik Pemasukan
+                <span class="collapse-icon"></span>
+              </summary>
+              <div class="chart-wrapper">
                 <h3 class="chart-title">Pemasukan</h3>
                 <canvas class="chart-canvas" id="incomeChart"></canvas>
-                <div class="no-data" id="incomeNoData" style="display: none;">Tidak ada data pemasukan</div>
-            </div>
-            
-            <div class="chart-wrapper">
+                <div class="no-data" id="incomeNoData">Tidak ada data pemasukan</div>
+              </div>
+            </details>
+          
+            <!-- Chart Pengeluaran -->
+            <details class="chart-details">
+              <summary class="chart-summary">
+                <i class="fas fa-chart-bar"></i>
+                Grafik Pengeluaran
+                <span class="collapse-icon"></span>
+              </summary>
+              <div class="chart-wrapper">
                 <h3 class="chart-title">Pengeluaran</h3>
                 <canvas class="chart-canvas" id="expenseChart"></canvas>
-                <div class="no-data" id="expenseNoData" style="display: none;">Tidak ada data pengeluaran</div>
-            </div>
-        </div>
+                <div class="no-data" id="expenseNoData">Tidak ada data pengeluaran</div>
+              </div>
+            </details>
+          </div>
         <div class="search-container">
             <input type="text" id="reportSearchInput" placeholder="Cari (pelanggan/supplier/pesanan/pengeluaran)...">
             <button onclick="searchFinancialReport()"><i class="fa fa-search"></i></button>
@@ -3860,8 +3991,23 @@ function generateCharts(incomeData, expenseData) {
                 cutout: '60%'
             }
         });
-    }
+  // Handle chart resize ketika di-expand
+  document.querySelectorAll('.chart-details').forEach(details => {
+    details.addEventListener('toggle', function() {
+      if (this.open) {
+        setTimeout(() => {
+          const chartId = this.querySelector('canvas')?.id;
+          if (chartId === 'incomeChart' && incomeChart) {
+            incomeChart.resize();
+          } else if (chartId === 'expenseChart' && expenseChart) {
+            expenseChart.resize();
+          }
+        }, 10);
+      }
+    });
+  });
 }
+    }
 
 function editPemasukan(invoiceNumber) {
     // Panggil fungsi loadInvoice untuk memuat data pemasukan
