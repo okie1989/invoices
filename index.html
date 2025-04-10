@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -19,7 +20,7 @@ body {
     display: block;
 }
 .invoice {
-    width: 100%;
+    width: 906px;
     max-width: -webkit-fill-available;
     margin: 0 auto;
     padding: 1%;
@@ -380,7 +381,7 @@ input:focus, select:focus {
 }
 /* Style untuk modal preview */
 #previewModal .modal-content {
-    max-width: 90%;
+    max-width: 906px;
     background: #fff;
     border-radius: 15px;
     overflow: hidden;
@@ -389,8 +390,7 @@ input:focus, select:focus {
     transform: scale(0.98);
     transition: transform 0.3s;
     display: inline-block;
-    margin-left: 8%;
-    margin-right: 8%;
+    margin-left: 19%;
 }
 #previewContent:hover {
     transform: scale(1);
@@ -2395,6 +2395,29 @@ td:first-child, th.col-aksi {
     background: #165a34 !important; 
 }
 
+.closepreview {
+    position: absolute;
+    color: #d5d5d5;
+    float: right;
+    font-size: 55px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    left: 1000px;
+}
+
+.closepreview:hover {
+    position: absolute;
+    color: #e63636;
+    float: right;
+    font-size: 60px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.5s ease;
+    left: 1000px;
+}
+
+
 </style>
 <style>
         .disabled-form input:disabled,
@@ -2795,7 +2818,7 @@ td:first-child, th.col-aksi {
 <!-- Modal untuk Preview -->
 <div id="previewModal" class="modal">
 <div class="modal-content">
-	<span class="close" onclick="closePreviewModal()">&times;</span>
+	<span class="closepreview" onclick="closePreviewModal()">&times;</span>
 	<div class="share-buttons">
 		<button class="share-btn whatsapp" onclick="shareToWhatsApp()">
 		<i class="fab fa-whatsapp"></i> Share ke WA </button>
