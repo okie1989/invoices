@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -3296,11 +3297,17 @@ window.onclick = function(event) {
             previewClone.insertBefore(saveBtn, previewClone.firstChild);
         }
         function displayDate() {
-            const now = new Date();
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            const formattedDate = now.toLocaleDateString('id-ID', options);
-            document.getElementById('invoiceDateDisplay').textContent = formattedDate;
-        }
+    const now = new Date();
+    // Simpan tanggal sebagai ISO string di atribut data
+    document.getElementById('invoiceDateDisplay').dataset.isoDate = now.toISOString();
+    // Tampilan tetap menggunakan format lokal
+    document.getElementById('invoiceDateDisplay').textContent = now.toLocaleDateString('id-ID', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+}
         // Fungsi calculateTotal yang diperbarui
         function calculateTotal() {
             let totalQty = 0, totalPrice = 0;
@@ -3392,8 +3399,7 @@ function saveInvoice() {
         discount: document.getElementById('discount').value || '0',
         amountDue: document.getElementById('amountDue').textContent,
         lunas: document.getElementById('lunasText').style.display === 'block',
-        date: document.getElementById('invoiceDateDisplay').textContent,
-        imageUrl: document.getElementById('imageUrl').value || '',
+        date: document.getElementById('invoiceDateDisplay').dataset.isoDate,
         rawDateline: document.getElementById('dateline').value || '',
         dateline: formatDateline(document.getElementById('dateline').value) || ''
     };
@@ -4265,6 +4271,8 @@ function handleExpenseCategoryChange() {
     }
 }
 
+
+
 // Panggil fungsi ini saat halaman dimuat
 document.addEventListener('DOMContentLoaded', function() {
     loadexpenses();
@@ -4833,7 +4841,10 @@ async function prepareChartData() {
             if (!dailyData[dateKey]) {
                 dailyData[dateKey] = { income: 0, expense: 0 };
             }
-            
+            // Validasi tanggal
+            if (isNaN(date.getTime())) {
+                throw new Error('Invalid date in invoice: ' + invoice.date);
+            }
             const total = parseInt(invoice.totalPrice?.replace(/[^0-9]/g, '')) || 0;
             const paid = parseInt(invoice.amountPaid?.replace(/[^0-9]/g, '')) || 0;
             const discount = parseInt(invoice.discount?.replace(/[^0-9]/g, '')) || 0;
