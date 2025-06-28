@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>INVOICE</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 72'%3E%3Ctext y='58' font-size='60'%3E%F0%9F%93%92%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Exo+2:400,600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Search Bar -->
+    <div
+      id="search-bar-container"
+      style="
+        position: relative;
+        display: flex;
+        justify-content: center;
+        padding: 18px 0 0 0;
+        z-index: 500;
+      "
+    >
+      <input
+        type="text"
+        id="search-bar"
+        placeholder="Cari invoice, pelanggan, pesanan, pengeluaran..."
+        style="
+          width: 100%;
+          max-width: 600px;
+          padding: 1px 14px;
+          font-size: 1.08em;
+          border: 1.5px solid #111;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        "
+      />
+      <div
+        id="search-results"
+        style="
+          background: #ececec;
+          border: 1.5px solid #111;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          margin-top: 2px;
+          max-width: 800px;
+          display: none;
+          position: absolute;
+          left: 60%;
+          transform: translateX(-50%);
+          z-index: 10000;
+        "
+      ></div>
+    </div>
+
+    <!-- Animated Navbar -->
+    <nav class="sidebar-navbar">
+      <ul>
+        <li>
+          <button id="bookkeeping" title="Pembukuan">
+            <span>📒</span> Pembukuan
+          </button>
+        </li>
+        <li>
+          <button id="expense-btn" title="Catat Pengeluaran">
+            <span>💸</span> Pengeluaran
+          </button>
+        </li>
+        <li>
+          <button id="statistic-btn" title="Statistik Keuangan">
+            <span>📈</span> Statistik
+          </button>
+        </li>
+        <li>
+          <button id="utang-piutang-btn" title="Utang Piutang">
+            <span>💰</span> Utang Piutang
+          </button>
+        </li>
+        <li>
+          <button id="rekap-btn" title="Rekap Penjualan Item">
+            <span>🗂️</span> Rekap Item
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="invoice-main-content">
+      <div class="invoice-container">
+        <!-- Invoice action buttons (icon-only) -->
+        <div
+          class="invoice-actions"
+          style="
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-bottom: 8px;
+          "
+        >
+          <button
+            id="save-invoice"
+            title="Simpan Nota"
+            style="
+              background: none;
+              border: none;
+              cursor: pointer;
+              font-size: 1.5em;
+            "
+          >
+            <span>💾</span>
+          </button>
+          <button
+            id="view-invoice"
+            title="Lihat Nota"
+            style="
+              background: none;
+              border: none;
+              cursor: pointer;
+              font-size: 1.5em;
+            "
+          >
+            <span>👁️</span>
+          </button>
+          <button
+            id="print-invoice"
+            title="Print Struk"
+            style="
+              background: none;
+              border: none;
+              cursor: pointer;
+              font-size: 1.5em;
+              text-transform: uppercase;
+            "
+          >
+            <span>🖨️</span>
+          </button>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+          <div class="logo-section">
+            <img
+              src="https://i.imgur.com/75tlt7m.png"
+              alt="Logo"
+              class="logo"
+            />
+            <span class="business-name">
+              KANVAS MERCHANDISE
+              <div class="business-address">
+                Jl.Riau Barat No.21 Kec. Sananwetan Kota Blitar<br />
+                Telp. 082257423324
+              </div>
+            </span>
+          </div>
+          <div class="invoice-info">
+            <div>
+              <label>Tanggal Nota:</label>
+              <input type="date" id="invoice-date" />
+            </div>
+            <div>
+              <label>Nomor Nota:</label>
+              <input
+                type="text"
+                id="invoice-number"
+                readonly
+                placeholder="Otomatis"
+              />
+            </div>
+          </div>
+          <h1>INVOICE</h1>
+        </div>
+
+        <!-- Header 2 -->
+        <div class="header2">
+          <div>
+            <label>Nama Pelanggan:</label>
+            <input type="text" id="customer-name" />
+          </div>
+          <div>
+            <label>Nama Pesanan:</label>
+            <select id="order-name-select" style="min-width: 140px">
+              <option value="">--Pilih--</option>
+              <option value="KAOS CUSTOM">KAOS CUSTOM</option>
+              <option value="KAOS POLOS">KAOS POLOS</option>
+              <option value="DESAIN">DESAIN</option>
+              <option value="KAS MASUK">KAS MASUK</option>
+              <option value="CETAK BANNER">CETAK BANNER</option>
+              <option value="CETAK STIKER">CETAK STIKER</option>
+              <option value="LAINNYA">Lainnya (Isi Manual)</option>
+            </select>
+            <input
+              type="text"
+              id="order-name"
+              placeholder="Isi manual..."
+              style="display: none; margin-top: 4px"
+            />
+          </div>
+          <div>
+            <label>Dateline:</label>
+            <input type="date" id="dateline" />
+          </div>
+          <div>
+            <label>Mockup:</label>
+            <input type="file" id="mockup" accept="image/*" />
+            <div style="margin-top: 4px">
+              <img
+                id="mockup-preview"
+                style="
+                  display: none;
+                  max-width: 120px;
+                  max-height: 120px;
+                  margin-top: 4px;
+                  border: 1.5px solid #ccc;
+                  border-radius: 6px;
+                "
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Table -->
+        <table id="order-table">
+          <thead>
+            <tr>
+              <th>Nama Barang</th>
+              <th>Size</th>
+              <th>Qty</th>
+              <th>Satuan</th>
+              <th>Harga Satuan</th>
+              <th>Jumlah Harga</th>
+              <th>Hapus</th>
+            </tr>
+          </thead>
+          <tbody id="order-items">
+            <!-- Items will be added here -->
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3"><button id="add-item">Tambah Barang</button></td>
+              <td id="total-qty">0</td>
+              <td>Total</td>
+              <td id="total-price">0</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Payment Description -->
+        <div class="payment-section">
+          <div>
+            <label>Jumlah Terbayar:</label>
+            <input type="text" id="paid-amount" value="0" />
+            <button
+              id="paid-full-btn"
+              title="Lunasi otomatis"
+              style="
+                margin-left: 4px;
+                background: #2ecc40;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                padding: 2px 8px;
+                cursor: pointer;
+                font-size: 1.1em;
+              "
+            >
+              ✔️
+            </button>
+          </div>
+          <div>
+            <label>Diskon:</label>
+            <input type="number" id="discount" value="0" />
+          </div>
+          <div>
+            <label>Belum Terbayar:</label>
+            <span id="unpaid-amount">0</span>
+          </div>
+          <div>
+            <label>Kembalian:</label>
+            <span id="change-amount">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Load/View/Bookkeeping/Pengeluaran/Statistik -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span id="close-modal" class="close">&times;</span>
+        <div id="modal-body">
+          <!-- For bookkeeping/statistik, add a placeholder for export/import actions -->
+          <div
+            id="bookkeeping-actions"
+            style="
+              display: none;
+              justify-content: flex-end;
+              gap: 10px;
+              margin-bottom: 10px;
+            "
+          ></div>
+          <!-- Statistik chart will be injected here -->
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase scripts must come BEFORE script.js and WITHOUT type="module" -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-database-compat.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
