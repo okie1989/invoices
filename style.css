@@ -2,12 +2,25 @@
 
 body {
   font-family: "Exo 2", Arial, sans-serif;
-  background: #f5f5f5;
+  background: url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80') center center/cover no-repeat fixed;
   margin: 0;
   padding: 0;
   color: #111;
   transition: background 0.3s;
   text-transform: uppercase;
+  position: relative;
+}
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -2;
+  background: url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80') center center/cover no-repeat fixed;
+  opacity: 0.2;
+  pointer-events: none;
 }
 body::before {
   content: "";
@@ -22,31 +35,36 @@ body::before {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  city: 0.7;
-  transition: city 0.5s;
+  /* city: 0.7; */
+  /* transition: city 0.5s; */
 }
 .invoice-container {
   background: #fff;
-  max-width: 900px;
-  width: 95vw;
-  margin: 32px auto;
-  padding: 18px 18px 18px 18px;
-  border-radius: 18px;
-  border: 1.5px solid #222; /* lebih tegas */
-  box-shadow: 0 4px 24px rgba(34,34,34,0.07), 0 0 0 2px #e0e0e0;
+  max-width: 1200px;
+  width: 99vw;
+  margin: 48px auto 40px auto;
+  padding: 36px 36px 32px 36px;
+  border-radius: 28px;
+  border: 2.5px solid #111;
+  box-shadow: 0 8px 40px rgba(34,34,34,0.13), 0 0 0 3px #e0e0e0;
   position: relative;
-  overflow: hidden;
-  margin-bottom: 32px;
+  overflow: visible;
+  margin-bottom: 48px;
   animation: fadeInUp 0.7s cubic-bezier(0.23, 1.01, 0.32, 1) both;
+  transition: box-shadow 0.25s, border 0.25s;
+}
+.invoice-container:hover, .invoice-container:focus-within {
+  box-shadow: 0 16px 64px rgba(34,34,34,0.18), 0 0 0 3px #0077ff44;
+  border-color: #0077ff;
 }
 @keyframes fadeInUp {
   from {
-    city: 0;
-    transform: translateY(40px);
+    transform: translateY(40px) scale(0.98);
+    opacity: 0.7;
   }
   to {
-    city: 1;
     transform: none;
+    opacity: 1;
   }
 }
 .header,
@@ -134,11 +152,11 @@ table {
 }
 @keyframes fadeInTable {
   from {
-    city: 0;
+    /* city: 0; */
     transform: scale(0.98);
   }
   to {
-    city: 1;
+    /* city: 1; */
     transform: none;
   }
 }
@@ -285,14 +303,14 @@ input[type="file"] {
   background: rgba(0, 0, 0, 1); /* city 100% */
   font-family: "Exo 2", Arial, sans-serif;
   animation: none !important;
-  city: 1 !important;
+  /* city: 1 !important; */
 }
 @keyframes modalFadeIn {
   from {
-    city: 1;
+    /* city: 1; */
   }
   to {
-    city: 1;
+    /* city: 1; */
   }
 }
 .modal-content {
@@ -312,7 +330,6 @@ input[type="file"] {
   max-height: 95vh; /* lebih tinggi agar tidak mudah terpotong */
   overflow-y: auto;
   animation: none !important;
-  city: 1 !important;
   box-sizing: border-box;
   padding-right: 32px; /* beri ruang untuk scrollbar agar tidak menutupi konten */
 }
@@ -468,9 +485,9 @@ input[type="file"] {
   animation: fadeInUp 0.7s cubic-bezier(0.23, 1.01, 0.32, 1) both;
 }
 .invoice-view .header2 > div {
-  margin-bottom: 8px;
-  margin-right: 18px;
-  font-size: 1.08em;
+  margin-bottom: 16px;
+  margin-right: 32px;
+  font-size: 1.22em;
 }
 .invoice-view .payment-section > div {
   min-width: 140px;
@@ -506,6 +523,8 @@ input[type="file"] {
   min-width: 220px;
   font-size: 1.08em;
   flex: 1 1 220px;
+  border-right: 2.5px dashed #bbb;
+  padding-right: 24px;
 }
 .invoice-view-header2-right {
   display: flex;
@@ -514,11 +533,14 @@ input[type="file"] {
   flex: 0 0 auto;
   min-width: 160px;
   margin-left: 24px;
+  padding-left: 24px;
 }
 .invoice-view-header2-right .mockup-large {
   margin-left: 0;
   margin-top: 0;
   margin-bottom: 0;
+  border: 2.5px solid #bbb !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
 @media (max-width: 1200px) {
   .modal-content {
@@ -590,33 +612,70 @@ input[type="file"] {
   display: none;
 }
 
-/* Sidebar Navbar - Modern Black & White */
+/* Sidebar Navbar - Modern Black & White - Hidden by Default, Slide In on Hover */
 .sidebar-navbar {
   position: fixed;
   top: 0;
-  left: 0;
+  left: -120px; /* Hide most of the sidebar */
   height: 100vh;
   width: 140px;
-  background: #111;
-  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.1);
+  background: rgba(17, 17, 17, 0.82); /* lebih gelap */
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: 2px 0 24px rgba(0, 0, 0, 0.13);
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 100;
-  transition: width 0.3s;
-  animation: sidebarSlideIn 0.7s cubic-bezier(0.23, 1.01, 0.32, 1);
+  z-index: 200;
+  transition: left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1), box-shadow 0.3s, background 0.3s;
   font-size: small;
+  opacity: 0.98;
+  cursor: pointer;
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
+  overflow: visible;
 }
-@keyframes sidebarSlideIn {
-  from {
-    transform: translateX(-60px);
-    city: 0;
+
+.sidebar-navbar::before {
+  content: "";
+  position: absolute;
+  top: 40%;
+  right: -18px;
+  width: 18px;
+  height: 60px;
+  border-radius: 0 12px 12px 0;
+  z-index: 101;
+  opacity: 0.7;
+  pointer-events: none;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+}
+
+.sidebar-navbar:hover,
+.sidebar-navbar:focus-within,
+.sidebar-navbar:active {
+  left: 0;
+  box-shadow: 8px 0 32px rgba(0,0,0,0.18);
+  opacity: 1;
+  background: rgba(17, 17, 17, 0.95);
+  transition: left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1), box-shadow 0.3s, background 0.3s;
+}
+
+@media (max-width: 600px) {
+  .sidebar-navbar {
+    width: 48px;
+    min-width: 48px;
+    left: -36px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    transition: left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
   }
-  to {
-    transform: none;
-    city: 1;
+  .sidebar-navbar:hover,
+  .sidebar-navbar:focus-within,
+  .sidebar-navbar:active {
+    left: 0;
   }
 }
+
 .sidebar-navbar ul {
   list-style: none;
   padding: 0;
@@ -625,86 +684,160 @@ input[type="file"] {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  align-items: center;
 }
+
 .sidebar-navbar li {
   width: 100%;
   display: flex;
   justify-content: center;
 }
+
 .sidebar-navbar button {
-  width: 90%;
-  padding: 12px 10px;
+  width: 92%;
+  padding: 13px 0 13px 0;
   margin: 0;
-  background: #fff;
+  background: linear-gradient(90deg, #fff 80%, #f3f3f3 100%);
   color: #111;
   border: none;
-  border-radius: 8px;
-  font-size: 1em;
+  border-radius: 10px;
+  font-size: 1.08em;
   font-family: "Exo 2", Arial, sans-serif;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
-  transition: background 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s;
+  gap: 12px;
+  transition: 
+    background 0.22s cubic-bezier(.4,2,.6,1),
+    color 0.18s,
+    transform 0.22s cubic-bezier(.4,2,.6,1),
+    box-shadow 0.18s;
   outline: none;
   position: relative;
   overflow: hidden;
-  border: 1.5px solid #222;
-  animation: btnPopIn 0.5s cubic-bezier(0.23, 1.01, 0.32, 1);
+  border: 2px solid #222;
+  animation: btnPopIn 0.6s cubic-bezier(0.23, 1.01, 0.32, 1);
+  opacity: 0.98;
+  letter-spacing: 0.5px;
+  will-change: transform, box-shadow;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 0 0 2px #e0e0e0;
 }
+
 @keyframes btnPopIn {
   0% {
-    transform: scale(0.95);
+    transform: scale(0.85) translateY(18px);
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+  60% {
+    transform: scale(1.08) translateY(-4px);
+    opacity: 1;
+    filter: blur(0.5px);
   }
   100% {
-    transform: scale(1);
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    filter: none;
   }
 }
+
 .sidebar-navbar button span {
-  font-size: 1.2em;
-  transition: transform 0.2s;
+  font-size: 1.25em;
+  transition: transform 0.22s cubic-bezier(.4,2,.6,1), color 0.18s;
+  display: inline-block;
 }
+
+.sidebar-navbar button .btn-label {
+  transition: opacity 0.22s cubic-bezier(.4,2,.6,1), margin-left 0.22s;
+  margin-left: 8px;
+}
+
 .sidebar-navbar button:hover {
-  background: #111;
+  background: linear-gradient(90deg, #111 80%, #444 100%);
   color: #fff;
-  transform: translateX(6px) scale(1.04);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateX(10px) scale(1.06) rotate(-2deg);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  border-color: #0077ff;
 }
+
 .sidebar-navbar button:hover span {
-  transform: scale(1.2) rotate(-8deg);
-}
-.sidebar-navbar button:active {
-  background: #222;
+  transform: scale(1.22) rotate(-12deg);
   color: #fff;
 }
+
+.sidebar-navbar button:hover .btn-label {
+  opacity: 1;
+  margin-left: 14px;
+}
+
+.sidebar-navbar button:active {
+  background: linear-gradient(90deg, #222 80%, #111 100%);
+  color: #fff;
+  transform: scale(0.98) rotate(1deg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  border-color: #111;
+}
+
+.sidebar-navbar button:focus-visible {
+  outline: 2.5px solid #0077ff;
+  outline-offset: 2px;
+}
+
+.sidebar-navbar button::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 60% 40%, #0077ff22 0%, transparent 80%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s;
+  z-index: 1;
+}
+.sidebar-navbar button:active::after,
+.sidebar-navbar button:focus-visible::after {
+  opacity: 1;
+}
+
 @media (max-width: 600px) {
-  .sidebar-navbar {
-    width: 48px;
-    min-width: 48px;
-  }
   .sidebar-navbar button {
-    font-size: 0.9em;
+    font-size: 1em;
     padding: 10px 0;
     justify-content: center;
     gap: 0;
+    border-radius: 8px;
   }
-  .sidebar-navbar button span + span,
-  .sidebar-navbar button:not(:hover) {
+  .sidebar-navbar button .btn-label {
     font-size: 0;
+    opacity: 0;
+    margin-left: 0;
+    width: 0;
+    transition: none;
   }
   .sidebar-navbar button span {
     font-size: 1.3em;
   }
 }
+
 .invoice-main-content {
-  margin-left: 150px;
+  margin-left: 30px;
   padding: 0;
-  transition: margin-left 0.3s;
+  transition: margin-left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
+}
+.sidebar-navbar:hover ~ .invoice-main-content,
+.sidebar-navbar:focus-within ~ .invoice-main-content,
+.sidebar-navbar:active ~ .invoice-main-content {
+  margin-left: 150px;
+  transition: margin-left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
 }
 @media (max-width: 600px) {
   .invoice-main-content {
+    margin-left: 12px;
+  }
+  .sidebar-navbar:hover ~ .invoice-main-content,
+  .sidebar-navbar:focus-within ~ .invoice-main-content,
+  .sidebar-navbar:active ~ .invoice-main-content {
     margin-left: 54px;
   }
 }
@@ -832,11 +965,11 @@ form,
 }
 @keyframes fadeInSection {
   from {
-    city: 0;
+    /* city: 0; */
     transform: translateY(20px);
   }
   to {
-    city: 1;
+    /* city: 1; */
     transform: none;
   }
 }
@@ -1164,12 +1297,12 @@ form,
 /* Tambahkan di bagian CSS tombol */
 #share-wa {
   background: #25D366 !important;
-  transition: transform 0.2s, city 0.2s;
+  transition: transform 0.2s;
 }
 
 #share-wa:hover {
   transform: scale(1.05);
-  city: 0.9;
+  /* city: 0.9; */
 }
 
 .lunas-watermark {
