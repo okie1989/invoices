@@ -3185,7 +3185,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// === PANEL REKAP ITEM ===
+// === PANEL REKAP ITEM & PENGELUARAN ===
 const rekapBtn = document.getElementById("rekap-btn");
 
 if (rekapBtn) {
@@ -3194,49 +3194,119 @@ if (rekapBtn) {
     let invoices = (await getAllInvoices()).map(normalizeInvoice);
     let expenses = (await getAllExpenses()).map(normalizeExpense);
 
-    // Ambil daftar bulan-tahun unik dari invoice
+    // Ambil daftar bulan-tahun unik dari invoice & expense
     let allMonths = Array.from(
-      new Set(
-        invoices
-          .map((inv) => (inv.invoiceDate || "").slice(0, 7))
-          .filter(Boolean)
-      )
+      new Set([
+        ...invoices.map((inv) => (inv.invoiceDate || "").slice(0, 7)),
+        ...expenses.map((exp) => (exp.date || "").slice(0, 7)),
+      ].filter(Boolean))
     ).sort().reverse();
 
-    // Modal input nama barang + filter bulan/tahun
+    // Modal: tab Penjualan & Pengeluaran
     let html = `
-      <div style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
-        <label for="rekap-item-keyword"><b>Nama Barang/Keyword:</b></label>
-        <input type="text" id="rekap-item-keyword" style="width:180px;" placeholder="Contoh: Kaos Hitam">
-        <label for="rekap-item-month" style="margin-left:12px;"><b>Bulan:</b></label>
-        <select id="rekap-item-month" style="width:120px;">
-          <option value="">Semua</option>
-          ${allMonths
-            .map(
-              (m) =>
-                `<option value="${m}">${m.replace(
-                  /(\d{4})-(\d{2})/,
-                  "$2-$1"
-                )}</option>`
-            )
-            .join("")}
-        </select>
-        <button id="rekap-item-search" style="margin-left:8px;">Cari</button>
+      <div style="margin-bottom:16px;">
+        <button id="rekap-tab-penjualan" class="rekap-tab-btn" style="padding:6px 18px;border-radius:6px 6px 0 0;border:1.5px solid #007bff;background:#007bff;color:#fff;font-weight:bold;">Penjualan</button>
+        <button id="rekap-tab-pengeluaran" class="rekap-tab-btn" style="padding:6px 18px;border-radius:6px 6px 0 0;border:1.5px solid #e67e22;background:#e67e22;color:#fff;font-weight:bold;margin-left:2px;">Pengeluaran</button>
       </div>
-      <div id="rekap-item-result" style="margin-top:18px;"></div>
+      <div id="rekap-panel-penjualan">
+        <div style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+          <label for="rekap-item-keyword"><b>Kata Kunci:</b></label>
+          <input type="text" id="rekap-item-keyword" style="width:180px;" placeholder="Contoh: Kaos Hitam">
+          <label for="rekap-item-type" style="margin-left:12px;"><b>Cari Berdasarkan:</b></label>
+          <select id="rekap-item-type" style="width:140px;">
+            <option value="item">Nama Item</option>
+            <option value="customer">Nama Pelanggan</option>
+            <option value="order">Nama Pesanan</option>
+          </select>
+          <label for="rekap-item-month" style="margin-left:12px;"><b>Bulan:</b></label>
+          <select id="rekap-item-month" style="width:120px;">
+            <option value="">Semua</option>
+            ${allMonths
+              .map(
+                (m) =>
+                  `<option value="${m}">${m.replace(
+                    /(\d{4})-(\d{2})/,
+                    "$2-$1"
+                  )}</option>`
+              )
+              .join("")}
+          </select>
+          <button id="rekap-item-search" style="margin-left:8px;">Cari</button>
+        </div>
+        <div id="rekap-item-result" style="margin-top:18px;"></div>
+      </div>
+      <div id="rekap-panel-pengeluaran" style="display:none;">
+        <div style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+          <label for="rekap-expense-keyword"><b>Kata Kunci:</b></label>
+          <input type="text" id="rekap-expense-keyword" style="width:180px;" placeholder="Contoh: Kain Hitam">
+          <label for="rekap-expense-type" style="margin-left:12px;"><b>Cari Berdasarkan:</b></label>
+          <select id="rekap-expense-type" style="width:170px;">
+            <option value="jenis">Jenis Pengeluaran</option>
+            <option value="supplier">Nama Supplier</option>
+            <option value="item">Nama Barang</option>
+          </select>
+          <label for="rekap-expense-month" style="margin-left:12px;"><b>Bulan:</b></label>
+          <select id="rekap-expense-month" style="width:120px;">
+            <option value="">Semua</option>
+            ${allMonths
+              .map(
+                (m) =>
+                  `<option value="${m}">${m.replace(
+                    /(\d{4})-(\d{2})/,
+                    "$2-$1"
+                  )}</option>`
+              )
+              .join("")}
+          </select>
+          <button id="rekap-expense-search" style="margin-left:8px;">Cari</button>
+        </div>
+        <div id="rekap-expense-result" style="margin-top:18px;"></div>
+      </div>
+      <style>
+        .rekap-tab-btn.active {
+          background: #fff !important;
+          color: #007bff !important;
+          border-bottom: 2.5px solid #fff !important;
+        }
+        .rekap-tab-btn {
+          border-bottom: 2.5px solid #bbb !important;
+        }
+        #rekap-panel-penjualan, #rekap-panel-pengeluaran {
+          background: #fff;
+          border-radius: 0 0 8px 8px;
+          border: 1.5px solid #bbb;
+          border-top: none;
+          padding: 18px 12px 12px 12px;
+        }
+      </style>
     `;
-    showModal("Rekap Penjualan Item", html);
+    showModal("Rekap Penjualan & Pengeluaran", html);
 
-    // Event cari
+    // Tab switching
+    document.getElementById("rekap-tab-penjualan").onclick = function () {
+      document.getElementById("rekap-panel-penjualan").style.display = "";
+      document.getElementById("rekap-panel-pengeluaran").style.display = "none";
+      this.classList.add("active");
+      document.getElementById("rekap-tab-pengeluaran").classList.remove("active");
+    };
+    document.getElementById("rekap-tab-pengeluaran").onclick = function () {
+      document.getElementById("rekap-panel-penjualan").style.display = "none";
+      document.getElementById("rekap-panel-pengeluaran").style.display = "";
+      this.classList.add("active");
+      document.getElementById("rekap-tab-penjualan").classList.remove("active");
+    };
+
+    // --- PENJUALAN ---
     document.getElementById("rekap-item-search").onclick = async function () {
       const keyword = document
         .getElementById("rekap-item-keyword")
         .value.trim()
         .toLowerCase();
       const month = document.getElementById("rekap-item-month").value;
+      const type = document.getElementById("rekap-item-type").value;
       if (!keyword) {
         document.getElementById("rekap-item-result").innerHTML =
-          "<i>Masukkan nama barang atau keyword.</i>";
+          "<i>Masukkan kata kunci.</i>";
         return;
       }
 
@@ -3248,22 +3318,48 @@ if (rekapBtn) {
         );
       }
 
-      // Filter item yang mengandung keyword
       let matched = [];
-      filteredInvoices.forEach((inv) => {
-        (inv.items || []).forEach((item) => {
-          if ((item.name || "").toLowerCase().includes(keyword)) {
-            matched.push({
-              invoice: inv,
-              item,
+      if (type === "item") {
+        // Filter item yang mengandung keyword pada nama item
+        filteredInvoices.forEach((inv) => {
+          (inv.items || []).forEach((item) => {
+            if ((item.name || "").toLowerCase().includes(keyword)) {
+              matched.push({
+                invoice: inv,
+                item,
+              });
+            }
+          });
+        });
+      } else if (type === "customer") {
+        // Filter invoice berdasarkan nama pelanggan
+        filteredInvoices.forEach((inv) => {
+          if ((inv.customerName || "").toLowerCase().includes(keyword)) {
+            (inv.items || []).forEach((item) => {
+              matched.push({
+                invoice: inv,
+                item,
+              });
             });
           }
         });
-      });
+      } else if (type === "order") {
+        // Filter invoice berdasarkan nama pesanan
+        filteredInvoices.forEach((inv) => {
+          if ((inv.orderName || "").toLowerCase().includes(keyword)) {
+            (inv.items || []).forEach((item) => {
+              matched.push({
+                invoice: inv,
+                item,
+              });
+            });
+          }
+        });
+      }
 
       if (!matched.length) {
         document.getElementById("rekap-item-result").innerHTML =
-          "<i>Tidak ditemukan penjualan untuk item tersebut.</i>";
+          "<i>Tidak ditemukan penjualan untuk pencarian tersebut.</i>";
         return;
       }
 
@@ -3285,6 +3381,7 @@ if (rekapBtn) {
           <td>${invoice.invoiceDate || "-"}</td>
           <td>${invoice.invoiceNumber || "-"}</td>
           <td>${invoice.customerName || "-"}</td>
+          <td>${invoice.orderName || "-"}</td>
           <td>${item.name || "-"}</td>
           <td>${item.size || "-"}</td>
           <td style="text-align:right;">${formatNumber(item.qty)}</td>
@@ -3300,6 +3397,7 @@ if (rekapBtn) {
       document.getElementById("rekap-item-result").innerHTML = `
         <div style="margin-bottom:10px;">
           <b>Hasil untuk keyword:</b> <span style="color:#007bff">${keyword}</span>
+          <b style="margin-left:10px;">Berdasarkan:</b> <span style="color:#007bff">${type === "item" ? "Nama Item" : type === "customer" ? "Nama Pelanggan" : "Nama Pesanan"}</span>
           ${
             month
               ? `&nbsp;|&nbsp;<b>Bulan:</b> <span style="color:#007bff">${month.replace(
@@ -3321,6 +3419,7 @@ if (rekapBtn) {
               <th>Tanggal</th>
               <th>No. Nota</th>
               <th>Pelanggan</th>
+              <th>Pesanan</th>
               <th>Nama Barang</th>
               <th>Size</th>
               <th>Qty</th>
@@ -3335,7 +3434,154 @@ if (rekapBtn) {
         </div>
       `;
     };
+
+    // --- PENGELUARAN ---
+    document.getElementById("rekap-expense-search").onclick = async function () {
+      const keyword = document
+        .getElementById("rekap-expense-keyword")
+        .value.trim()
+        .toLowerCase();
+      const month = document.getElementById("rekap-expense-month").value;
+      const type = document.getElementById("rekap-expense-type").value;
+      if (!keyword) {
+        document.getElementById("rekap-expense-result").innerHTML =
+          "<i>Masukkan kata kunci.</i>";
+        return;
+      }
+
+      // Filter expense sesuai bulan
+      let filteredExpenses = expenses;
+      if (month) {
+        filteredExpenses = expenses.filter(
+          (exp) => (exp.date || "").slice(0, 7) === month
+        );
+      }
+
+      let matched = [];
+      if (type === "jenis") {
+        // Berdasarkan jenis pengeluaran
+        filteredExpenses.forEach((exp) => {
+          if ((exp.type || "").toLowerCase().includes(keyword)) {
+            (exp.items || []).forEach((item) => {
+              matched.push({
+                expense: exp,
+                item,
+              });
+            });
+          }
+        });
+      } else if (type === "supplier") {
+        // Berdasarkan nama supplier
+        filteredExpenses.forEach((exp) => {
+          if ((exp.supplier || "").toLowerCase().includes(keyword)) {
+            (exp.items || []).forEach((item) => {
+              matched.push({
+                expense: exp,
+                item,
+              });
+            });
+          }
+        });
+      } else if (type === "item") {
+        // Berdasarkan nama barang
+        filteredExpenses.forEach((exp) => {
+          (exp.items || []).forEach((item) => {
+            if ((item.name || "").toLowerCase().includes(keyword)) {
+              matched.push({
+                expense: exp,
+                item,
+              });
+            }
+          });
+        });
+      }
+
+      if (!matched.length) {
+        document.getElementById("rekap-expense-result").innerHTML =
+          "<i>Tidak ditemukan pengeluaran untuk pencarian tersebut.</i>";
+        return;
+      }
+
+      // Hitung total qty, total pengeluaran
+      let totalQty = 0,
+        totalExpense = 0;
+      let expenseDates = new Set();
+      matched.forEach(({ expense, item }) => {
+        totalQty += Number(item.qty) || 0;
+        totalExpense += Math.max((Number(item.qty) || 0) * (Number(item.price) || 0) - (Number(item.discount) || 0), 0);
+        expenseDates.add(expense.date + "|" + expense.supplier + "|" + expense.type);
+      });
+
+      // Tampilkan tabel detail
+      let rows = matched
+        .map(
+          ({ expense, item }) => `
+        <tr>
+          <td>${expense.date || "-"}</td>
+          <td>${expense.type || "-"}</td>
+          <td>${expense.supplier || "-"}</td>
+          <td>${item.name || "-"}</td>
+          <td style="text-align:right;">${formatNumber(item.qty)}</td>
+          <td>${item.unit || "-"}</td>
+          <td style="text-align:right;">${formatNumber(item.price)}</td>
+          <td style="text-align:right;">${formatNumber(item.discount || 0)}</td>
+          <td style="text-align:right;">${formatNumber(
+            Math.max((item.qty || 0) * (item.price || 0) - (item.discount || 0), 0)
+          )}</td>
+        </tr>
+      `
+        )
+        .join("");
+
+      document.getElementById("rekap-expense-result").innerHTML = `
+        <div style="margin-bottom:10px;">
+          <b>Hasil untuk keyword:</b> <span style="color:#e67e22">${keyword}</span>
+          <b style="margin-left:10px;">Berdasarkan:</b> <span style="color:#e67e22">${
+            type === "jenis"
+              ? "Jenis Pengeluaran"
+              : type === "supplier"
+              ? "Nama Supplier"
+              : "Nama Barang"
+          }</span>
+          ${
+            month
+              ? `&nbsp;|&nbsp;<b>Bulan:</b> <span style="color:#e67e22">${month.replace(
+                  /(\d{4})-(\d{2})/,
+                  "$2-$1"
+                )}</span>`
+              : ""
+          }
+        </div>
+        <div style="margin-bottom:10px;">
+          <b>Total Transaksi:</b> ${expenseDates.size} &nbsp; | &nbsp;
+          <b>Total Qty:</b> ${formatNumber(totalQty)} &nbsp; | &nbsp;
+          <b>Total Pengeluaran:</b> Rp ${formatNumber(totalExpense)}
+        </div>
+        <div style="max-height:320px;overflow:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:1em;">
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Jenis</th>
+              <th>Supplier</th>
+              <th>Nama Barang</th>
+              <th>Qty</th>
+              <th>Satuan</th>
+              <th>Harga</th>
+              <th>Diskon</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+        </div>
+      `;
+    };
   };
 }
+
+
 updateTotals();
 setMockupPreview();
