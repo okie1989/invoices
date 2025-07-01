@@ -1456,9 +1456,25 @@ bookkeepingBtn.onclick = async function () {
   if (!uniqueMonths.includes(defaultMonth) && uniqueMonths.length)
     defaultMonth = uniqueMonths[0];
 
-  // Tambahan: variabel untuk menyimpan ref item yang diedit
-  let lastEditedRef = null;
-  let lastEditedType = null;
+  // Fungsi untuk menghitung saldo akhir bulan sebelumnya
+  function getPreviousMonthSaldo(selectedMonth) {
+    if (!selectedMonth) return 0;
+    // Ambil semua transaksi sebelum bulan terpilih
+    let prevInvoices = invoices.filter(
+      (inv) => (inv.invoiceDate || "").slice(0, 7) < selectedMonth
+    );
+    let prevExpenses = expenses.filter(
+      (exp) => (exp.date || "").slice(0, 7) < selectedMonth
+    );
+    let saldo = 0;
+    prevInvoices.forEach((inv) => {
+      saldo += Number(inv.paidAmount) || 0;
+    });
+    prevExpenses.forEach((exp) => {
+      saldo -= Number(exp.amount) || 0;
+    });
+    return saldo;
+  }
 
   // Fungsi render ulang tabel sesuai filter
   async function renderBookkeepingTable(
@@ -1503,15 +1519,30 @@ bookkeepingBtn.onclick = async function () {
         raw: exp,
       });
     });
+    // Sort transaksi berdasarkan tanggal dan waktu (jika ada)
     transactions = transactions
       .filter((t) => t.date)
-      .sort((a, b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0));
+      .sort((a, b) => {
+        // Sort by date, then by type (INVOICE before EXPENSE if same date)
+        if (a.date < b.date) return -1;
+        if (a.date > b.date) return 1;
+        if (a.type === b.type) return 0;
+        return a.type === "INVOICE" ? -1 : 1;
+      });
 
-    // Hitung saldo berjalan
-    let saldo = 0;
+    // Hitung saldo awal dari bulan sebelumnya
+    let saldoAwal = getPreviousMonthSaldo(selectedMonth);
+
+    // Hitung saldo berjalan secara realtime dan aktual
+    let saldo = saldoAwal;
+    let saldoArr = [];
+    transactions.forEach((t, idx) => {
+      saldo += (Number(t.income) || 0) - (Number(t.expense) || 0);
+      saldoArr[idx] = saldo;
+    });
+
     let rows = transactions
       .map((t, idx) => {
-        saldo += t.income - t.expense;
         let deleteBtn = "";
         if (t.type === "INVOICE") {
           deleteBtn = `<button class="delete-bk-invoice" data-ref="${t.ref}" title="Hapus Invoice" style="background:#e74c3c;color:#fff;padding:2px 8px;font-size:0.9em;border-radius:3px;">Hapus</button>`;
@@ -1540,18 +1571,18 @@ bookkeepingBtn.onclick = async function () {
                 <td style="text-align:right;">${
                   t.expense ? formatNumber(t.expense) : ""
                 }</td>
-                <td style="text-align:right;">${formatNumber(saldo)}</td>
+                <td style="text-align:right;">${formatNumber(saldoArr[idx])}</td>
                 <td>${deleteBtn}</td>
             </tr>`;
       })
       .join("");
 
-    let totalIncome = transactions.reduce((sum, t) => sum + (t.income || 0), 0);
+    let totalIncome = transactions.reduce((sum, t) => sum + (Number(t.income) || 0), 0);
     let totalExpense = transactions.reduce(
-      (sum, t) => sum + (t.expense || 0),
+      (sum, t) => sum + (Number(t.expense) || 0),
       0
     );
-    let saldoAkhir = saldo;
+    let saldoAkhir = saldoArr.length ? saldoArr[saldoArr.length - 1] : saldoAwal;
 
     // --- Next/Prev Button Logic ---
     let currentIdx = uniqueMonths.indexOf(selectedMonth || "");
@@ -1609,6 +1640,15 @@ bookkeepingBtn.onclick = async function () {
                     </tr>
                 </thead>
                 <tbody>
+                    ${
+                      selectedMonth
+                        ? `<tr style="background:#f7f7f7;font-weight:bold;">
+                            <td colspan="5" style="text-align:right;">Saldo Awal</td>
+                            <td style="text-align:right;">${formatNumber(saldoAwal)}</td>
+                            <td></td>
+                          </tr>`
+                        : ""
+                    }
                     ${rows}
                 </tbody>
                 <tfoot>
@@ -1700,8 +1740,8 @@ bookkeepingBtn.onclick = async function () {
         let currentMonth = document.getElementById("bookkeeping-month")
           ? document.getElementById("bookkeeping-month").value
           : selectedMonth;
-        lastEditedRef = t.ref;
-        lastEditedType = t.type;
+        let lastEditedRef = t.ref;
+        let lastEditedType = t.type;
         if (t.type === "INVOICE") {
           // Edit invoice: isi form utama
           const inv = await getInvoiceByNumber(t.ref);
@@ -1850,7 +1890,7 @@ bookkeepingBtn.onclick = async function () {
               setTimeout(() => {
                 modal.querySelector(".modal-content").style.boxShadow = "";
               }, 1200);
- }
+            }
           }, 200);
         }
       });
@@ -3582,6 +3622,159 @@ if (rekapBtn) {
   };
 }
 
+// === EXPORT KE EXCEL ===
+// Tombol Export Laporan
+const exportBtn = document.getElementById("export-btn");
+
+if (exportBtn) {
+  exportBtn.onclick = async function () {
+    // Ambil semua invoice & expense untuk filter bulan/tahun
+    let invoices = (await getAllInvoices()).map(normalizeInvoice);
+    let expenses = (await getAllExpenses()).map(normalizeExpense);
+
+    // Ambil daftar bulan-tahun unik dari invoice & expense
+    let allMonths = Array.from(
+      new Set([
+        ...invoices.map((inv) => (inv.invoiceDate || "").slice(0, 7)),
+        ...expenses.map((exp) => (exp.date || "").slice(0, 7)),
+      ].filter(Boolean))
+    ).sort().reverse();
+
+    // Modal: Pilih bulan
+    let html = `
+      <div style="margin-bottom:16px;">
+        <label for="export-month"><b>Pilih Bulan:</b></label>
+        <select id="export-month" style="width:140px;">
+          ${allMonths
+            .map(
+              (m) =>
+                `<option value="${m}">${m.replace(
+                  /(\d{4})-(\d{2})/,
+                  "$2-$1"
+                )}</option>`
+            )
+            .join("")}
+        </select>
+        <button id="export-excel-btn" style="margin-left:12px;">Export ke Excel</button>
+      </div>
+      <div style="font-size:0.95em;color:#888;">
+        <i>Data yang diexport berupa ringkasan transaksi penjualan (invoice) dan pengeluaran pada bulan terpilih, sesuai tampilan tabel pembukuan.</i>
+      </div>
+    `;
+    showModal("Export Laporan ke Excel", html);
+
+    document.getElementById("export-excel-btn").onclick = async function () {
+      const month = document.getElementById("export-month").value;
+      if (!month) {
+        alert("Pilih bulan terlebih dahulu.");
+        return;
+      }
+      // Filter invoice & expense sesuai bulan
+      let filteredInvoices = invoices.filter(
+        (inv) => (inv.invoiceDate || "").slice(0, 7) === month
+      );
+      let filteredExpenses = expenses.filter(
+        (exp) => (exp.date || "").slice(0, 7) === month
+      );
+
+      // Sheet: Pembukuan (sesuai struktur tabel pembukuan)
+      let sheet = [
+        [
+          "Tanggal",
+          "Subjek",
+          "Keterangan",
+          "Masuk",
+          "Keluar",
+          "Saldo",
+        ],
+      ];
+
+      // Gabungkan transaksi
+      let transactions = [];
+      filteredInvoices.forEach((inv) => {
+        transactions.push({
+          date: inv.invoiceDate,
+          type: "INVOICE",
+          subjek: inv.customerName || "-",
+          keterangan: inv.orderName || "-",
+          income: inv.paidAmount || 0,
+          expense: 0,
+        });
+      });
+      filteredExpenses.forEach((exp) => {
+        const expenseCategory = exp.expenseCategory || exp.type || "-";
+        transactions.push({
+          date: exp.date,
+          type: "EXPENSE",
+          subjek: exp.supplier || "-",
+          keterangan: expenseCategory,
+          income: 0,
+          expense: exp.amount || 0,
+        });
+      });
+      // Sort transaksi berdasarkan tanggal dan tipe
+      transactions = transactions
+        .filter((t) => t.date)
+        .sort((a, b) => {
+          if (a.date < b.date) return -1;
+          if (a.date > b.date) return 1;
+          if (a.type === b.type) return 0;
+          return a.type === "INVOICE" ? -1 : 1;
+        });
+
+      // Hitung saldo awal dari bulan sebelumnya
+      function getPreviousMonthSaldo(selectedMonth) {
+        if (!selectedMonth) return 0;
+        let prevInvoices = invoices.filter(
+          (inv) => (inv.invoiceDate || "").slice(0, 7) < selectedMonth
+        );
+        let prevExpenses = expenses.filter(
+          (exp) => (exp.date || "").slice(0, 7) < selectedMonth
+        );
+        let saldo = 0;
+        prevInvoices.forEach((inv) => {
+          saldo += Number(inv.paidAmount) || 0;
+        });
+        prevExpenses.forEach((exp) => {
+          saldo -= Number(exp.amount) || 0;
+        });
+        return saldo;
+      }
+      let saldoAwal = getPreviousMonthSaldo(month);
+
+      // Saldo berjalan
+      let saldo = saldoAwal;
+      // Tambahkan saldo awal jika ada transaksi
+      if (transactions.length) {
+        sheet.push([
+          "", "", "Saldo Awal", "", "", saldoAwal
+        ]);
+      }
+      transactions.forEach((t) => {
+        saldo += (Number(t.income) || 0) - (Number(t.expense) || 0);
+        sheet.push([
+          t.date,
+          t.subjek,
+          t.keterangan,
+          t.income ? t.income : "",
+          t.expense ? t.expense : "",
+          saldo,
+        ]);
+      });
+
+      // Export ke Excel (pakai SheetJS/xlsx)
+      if (typeof XLSX === "undefined") {
+        alert("Library XLSX (SheetJS) belum dimuat. Silakan tambahkan di project Anda.");
+        return;
+      }
+      let wb = XLSX.utils.book_new();
+      let ws = XLSX.utils.aoa_to_sheet(sheet);
+      XLSX.utils.book_append_sheet(wb, ws, "Pembukuan");
+      XLSX.writeFile(wb, `Pembukuan_${month}.xlsx`);
+      closeModalFunc();
+    };
+  };
+}
 
 updateTotals();
 setMockupPreview();
