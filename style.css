@@ -612,14 +612,14 @@ input[type="file"] {
   display: none;
 }
 
-/* Sidebar Navbar - Modern Black & White - Hidden by Default, Slide In on Hover */
+/* Sidebar Navbar - Modern Black & White - Hidden by Default, Show Only Icons, Slide In on Hover */
 .sidebar-navbar {
   position: fixed;
   top: 0;
-  left: -120px; /* Hide most of the sidebar */
+  left: 0;
   height: 100vh;
-  width: 140px;
-  background: rgba(17, 17, 17, 0.82); /* lebih gelap */
+  width: 64px; /* Diperlebar dari 54px */
+  background: rgba(17, 17, 17, 0.82);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   box-shadow: 2px 0 24px rgba(0, 0, 0, 0.13);
@@ -627,7 +627,7 @@ input[type="file"] {
   flex-direction: column;
   align-items: center;
   z-index: 200;
-  transition: left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1), box-shadow 0.3s, background 0.3s;
+  transition: width 0.45s cubic-bezier(0.23, 1.01, 0.32, 1), box-shadow 0.3s, background 0.3s;
   font-size: small;
   opacity: 0.98;
   cursor: pointer;
@@ -636,43 +636,28 @@ input[type="file"] {
   overflow: visible;
 }
 
-.sidebar-navbar::before {
-  content: "";
-  position: absolute;
-  top: 40%;
-  right: -18px;
-  width: 18px;
-  height: 60px;
-  border-radius: 0 12px 12px 0;
-  z-index: 101;
-  opacity: 0.7;
-  pointer-events: none;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.08);
-}
-
 .sidebar-navbar:hover,
 .sidebar-navbar:focus-within,
 .sidebar-navbar:active {
-  left: 0;
+  width: 180px; /* Diperlebar dari 140px */
   box-shadow: 8px 0 32px rgba(0,0,0,0.18);
   opacity: 1;
   background: rgba(17, 17, 17, 0.95);
-  transition: left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1), box-shadow 0.3s, background 0.3s;
+  transition: width 0.45s cubic-bezier(0.23, 1.01, 0.32, 1), box-shadow 0.3s, background 0.3s;
 }
 
 @media (max-width: 600px) {
   .sidebar-navbar {
-    width: 48px;
-    min-width: 48px;
-    left: -36px;
+    width: 56px; /* Diperlebar dari 44px */
+    min-width: 56px;
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
-    transition: left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
+    transition: width 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
   }
   .sidebar-navbar:hover,
   .sidebar-navbar:focus-within,
   .sidebar-navbar:active {
-    left: 0;
+    width: 110px; /* Diperlebar dari 90px */
   }
 }
 
@@ -713,7 +698,8 @@ input[type="file"] {
     background 0.22s cubic-bezier(.4,2,.6,1),
     color 0.18s,
     transform 0.22s cubic-bezier(.4,2,.6,1),
-    box-shadow 0.18s;
+    box-shadow 0.18s,
+    width 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
   outline: none;
   position: relative;
   overflow: hidden;
@@ -743,15 +729,37 @@ input[type="file"] {
   }
 }
 
+/* ICON SIZE 2x LIPAT */
 .sidebar-navbar button span {
-  font-size: 1.25em;
+  font-size: 2.5em; /* 2x dari 1.25em */
   transition: transform 0.22s cubic-bezier(.4,2,.6,1), color 0.18s;
   display: inline-block;
 }
 
+/* Hide label by default, show only on hover/focus/active */
 .sidebar-navbar button .btn-label {
-  transition: opacity 0.22s cubic-bezier(.4,2,.6,1), margin-left 0.22s;
+  transition: 
+    opacity 0.22s cubic-bezier(.4,2,.6,1), 
+    margin-left 0.22s, 
+    width 0.22s;
   margin-left: 8px;
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.sidebar-navbar:hover button .btn-label,
+.sidebar-navbar:focus-within button .btn-label,
+.sidebar-navbar:active button .btn-label,
+.sidebar-navbar button:focus-visible .btn-label,
+.sidebar-navbar button:focus .btn-label,
+.sidebar-navbar button:hover .btn-label {
+  opacity: 1;
+  width: auto;
+  margin-left: 8px;
+  pointer-events: auto;
 }
 
 .sidebar-navbar button:hover {
@@ -770,6 +778,7 @@ input[type="file"] {
 .sidebar-navbar button:hover .btn-label {
   opacity: 1;
   margin-left: 14px;
+  width: auto;
 }
 
 .sidebar-navbar button:active {
@@ -814,31 +823,45 @@ input[type="file"] {
     margin-left: 0;
     width: 0;
     transition: none;
+    pointer-events: none;
+  }
+  .sidebar-navbar:hover button .btn-label,
+  .sidebar-navbar:focus-within button .btn-label,
+  .sidebar-navbar:active button .btn-label,
+  .sidebar-navbar button:focus-visible .btn-label,
+  .sidebar-navbar button:focus .btn-label,
+  .sidebar-navbar button:hover .btn-label {
+    font-size: 1em;
+    opacity: 1;
+    width: auto;
+    margin-left: 8px;
+    transition: opacity 0.22s, margin-left 0.22s, width 0.22s;
+    pointer-events: auto;
   }
   .sidebar-navbar button span {
-    font-size: 1.3em;
+    font-size: 2.6em; /* 2x dari 1.3em */
   }
 }
 
 .invoice-main-content {
-  margin-left: 30px;
+  margin-left: 72px; /* Diperlebar dari 54px */
   padding: 0;
   transition: margin-left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
 }
 .sidebar-navbar:hover ~ .invoice-main-content,
 .sidebar-navbar:focus-within ~ .invoice-main-content,
 .sidebar-navbar:active ~ .invoice-main-content {
-  margin-left: 150px;
+  margin-left: 180px; /* Diperlebar dari 140px */
   transition: margin-left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
 }
 @media (max-width: 600px) {
   .invoice-main-content {
-    margin-left: 12px;
+    margin-left: 56px; /* Diperlebar dari 44px */
   }
   .sidebar-navbar:hover ~ .invoice-main-content,
   .sidebar-navbar:focus-within ~ .invoice-main-content,
   .sidebar-navbar:active ~ .invoice-main-content {
-    margin-left: 54px;
+    margin-left: 110px; /* Diperlebar dari 90px */
   }
 }
 
@@ -1256,14 +1279,21 @@ form,
     padding: 0 !important;
   }
   #search-bar {
-    font-size: 1em !important;
-    padding: 1px 8px !important;
-    max-width: 98vw !important;
+    font-size: 1.1em !important;
+    padding: 8px 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+    margin-bottom: 10px !important;
   }
   #search-results {
-    max-width: 98vw !important;
-    left: 1vw !important;
+    max-width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
     transform: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
   /* Scrollable table wrapper for overflow */
   .table-scroll-x {
