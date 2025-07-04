@@ -767,7 +767,7 @@ printBtn.onclick = function () {
       "<br>"
     );
     const address =
-      "Jl.Riau Barat No.21 Kec. Sananwetan Kota Blitar<br>Telp. 082257423324";
+      "Jl.Riau Barat No.21 Kec. Sananwetan Kota Blitar<br><span style='font-size:9px;'>Telp. 082257423324</span>";
     let showAddress = true;
     if (
       businessName.includes("Jl.Riau Barat No.21") ||
@@ -777,7 +777,6 @@ printBtn.onclick = function () {
     }
     // Group items by name, but keep order and allow same name with different price/qty
     let groupedRows = [];
-    let lastName = null;
     (data.items || []).forEach((item) => {
       if (!item.name) return;
       const qty = Number(item.qty) || 0;
@@ -791,6 +790,14 @@ printBtn.onclick = function () {
       });
     });
 
+    // Font angka gepeng: gunakan 'Arial Narrow', 'Roboto Condensed', 'Oswald', monospace
+    const numberFont = "'Arial Narrow', 'Roboto Condensed', 'Oswald', Arial, monospace";
+    // CSS untuk angka lebih gepeng (font-stretch)
+    const numberFontStyle = "font-family:" + numberFont + ";font-stretch:condensed;font-variation-settings:'wdth' 75;letter-spacing:0.01em;";
+
+    // Font size besar untuk angka penting
+    const bigNumberFontStyle = numberFontStyle + "font-size:1.25em;";
+
     // Prepare rows for printing: only show name if different from previous row
     let htmlRows = "";
     let prevName = null;
@@ -800,86 +807,95 @@ printBtn.onclick = function () {
       total += row.subtotal;
       totalQty += row.qty;
       htmlRows += `
-                <tr>
-                    <td style="text-align:left;word-break:break-all;">${
-                      row.name !== prevName ? row.name : ""
-                    }</td>
-                    <td style="text-align:right;">${row.qty}</td>
-                    <td style="text-align:right;">${formatNumber(
-                      row.price
-                    )}</td>
-                    <td style="text-align:right;">${formatNumber(
-                      row.subtotal
-                    )}</td>
-                </tr>
-            `;
+        <tr>
+          <td style="text-align:left;word-break:break-word;padding:2px 0 2px 0;">${row.name !== prevName ? row.name : ""}</td>
+          <td style="text-align:right;padding:2px 0;${numberFontStyle}">${row.qty}</td>
+          <td style="text-align:right;padding:2px 0;${numberFontStyle}">${formatNumber(row.price)}</td>
+          <td style="text-align:right;padding:2px 0;${numberFontStyle}">${formatNumber(row.subtotal)}</td>
+        </tr>
+      `;
       prevName = row.name;
     });
 
     let html = `
-        <div style="width:50mm;max-width:100vw;font-family:monospace,sans-serif;font-size:10px;line-height:1.3;background:#fff;color:#111;padding:0;margin:0;text-transform:uppercase;">
-            <div style="text-align:center;margin-bottom:2px;">
-                <img src="https://i.imgur.com/75tlt7m.png" alt="Logo" style="width:32px;height:46px;display:block;margin:0 auto 2px auto;" crossOrigin="anonymous" />
-            </div>
-            <div style="text-align:center;font-weight:bold;font-size:12px;margin-bottom:2px;">${businessName}</div>
-            ${
-              showAddress
-                ? `<div style="text-align:center;margin-bottom:2px;">${address}</div>`
-                : ""
-            }
-            <div style="border-top:1px dashed #222;margin:2px 0 4px 0;"></div>
-            <div style="display:flex;justify-content:space-between;">
-                <span>Tgl: ${formatDate(data.invoiceDate)}</span>
-                <span>No: ${data.invoiceNumber}</span>
-            </div>
-            <div>Pelanggan: ${data.customerName || "-"}</div>
-            <div>Pesanan: ${data.orderName || "-"}</div>
-            <div style="border-top:1px dashed #222;margin:2px 0 4px 0;"></div>
-            <table style="width:100%;border-collapse:collapse;font-size:10px;">
-                <thead>
-                    <tr>
-                        <th style="text-align:left;">Barang</th>
-                        <th style="text-align:left;">Qty</th>
-                        <th style="text-align:right;">Harga</th>
-                        <th style="text-align:right;">Jml</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${htmlRows}
-                </tbody>
-            </table>
-            <div style="border-top:1px dashed #222;margin:2px 0 4px 0;"></div>
-            <div style="display:flex;justify-content:space-between;">
-                <span>Total Qty:</span>
-                <span>${totalQty}</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;">
-                <span>Total:</span>
-                <span>${formatNumber(total)}</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;">
-                <span>Diskon:</span>
-                <span>${formatNumber(data.discount || 0)}</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;">
-                <span>Terbayar:</span>
-                <span>${formatNumber(data.paidAmount || 0)}</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;">
-                <span>Belum Lunas:</span>
-                <span>${formatNumber(data.unpaidAmount || 0)}</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;">
-                <span>Kembalian:</span>
-                <span>${formatNumber(data.changeAmount || 0)}</span>
-            </div>
-            <div style="border-top:1px dashed #222;margin:4px 0;"></div>
-            <div style="text-align:center;font-size:10px;margin-top:2px;">
-                Terima kasih<br>
-                Semoga Berkah dan Manfaat<br>
-            </div>
+      <div style="
+        width:45mm;
+        max-width:100vw;
+        font-family:'Segoe UI', Arial, sans-serif;
+        font-size:12px;
+        line-height:1.35;
+        background:#fff;
+        color:#222;
+        padding:0;
+        margin:0;
+        text-transform:uppercase;
+      ">
+        <div style="text-align:center;margin-bottom:2px;">
+          <img src="https://i.imgur.com/75tlt7m.png" alt="Logo" style="width:32px;height:44px;display:block;margin:0 auto 2px auto;" crossOrigin="anonymous" />
         </div>
-        `;
+        <div style="text-align:center;font-weight:700;font-size:10.5px;margin-bottom:1px;letter-spacing:0.5px;">${businessName}</div>
+        ${
+          showAddress
+            ? `<div style="text-align:center;margin-bottom:3px;font-size:8.5px;line-height:1.2;">${address}</div>`
+            : ""
+        }
+        <div style="border-top:1.2px dashed #222;margin:3px 0 5px 0;"></div>
+        <div style="display:flex;justify-content:space-between;font-size:9.5px;">
+          <span>Tgl: <span style="${numberFontStyle}">${formatDate(data.invoiceDate)}</span></span>
+          <span>No: <span style="${numberFontStyle}font-size:9.5px;">${data.invoiceNumber}</span></span>
+        </div>
+        <div style="font-size:9.5px;">Pelanggan: <b>${data.customerName || "-"}</b></div>
+        <div style="font-size:9.5px;">Pesanan: <b>${data.orderName || "-"}</b></div>
+        <div style="border-top:1.2px dashed #222;margin:4px 0 5px 0;"></div>
+        <table style="width:100%;border-collapse:collapse;font-size:10.5px;">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding-bottom:1px;">Barang</th>
+              <th style="text-align:right;padding-bottom:1px;">Qty</th>
+              <th style="text-align:right;padding-bottom:1px;">Harga</th>
+              <th style="text-align:right;padding-bottom:1px;">Jml</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${htmlRows}
+          </tbody>
+        </table>
+        <div style="border-top:1.2px dashed #222;margin:5px 0 5px 0;"></div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+          <span>Total Qty:</span>
+          <span style="${bigNumberFontStyle}"><b>${totalQty}</b></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+          <span>Total:</span>
+          <span style="${bigNumberFontStyle}"><b>${formatNumber(total)}</b></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+          <span>Diskon:</span>
+          <span style="${numberFontStyle}">${formatNumber(data.discount || 0)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+          <span>Terbayar:</span>
+          <span style="${bigNumberFontStyle}">${formatNumber(data.paidAmount || 0)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+          <span>Belum Lunas:</span>
+          <span style="${bigNumberFontStyle}">${formatNumber(data.unpaidAmount || 0)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+          <span>Kembalian:</span>
+          <span style="${numberFontStyle}">${formatNumber(data.changeAmount || 0)}</span>
+        </div>
+        <div style="border-top:1.2px dashed #222;margin:6px 0 0 0;"></div>
+        <div style="text-align:center;font-size:9.5px;margin-top:4px;line-height:1.2;font-weight:500;">
+          Terima kasih<br>
+          Semoga Berkah dan Manfaat
+        </div>
+      </div>
+      <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700&display=swap');
+        @import url('https://fonts.googleapis.com/css?family=Oswald:400,700&display=swap');
+      </style>
+    `;
     return html;
   }
 
