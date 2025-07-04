@@ -265,11 +265,25 @@ if (orderNameInput) {
 
 // Mockup image upload and preview
 let mockupDataUrl = "";
+
+// Tambahkan tombol hapus mockup
+let removeMockupBtn = document.createElement("button");
+removeMockupBtn.type = "button";
+removeMockupBtn.id = "remove-mockup-btn";
+removeMockupBtn.textContent = "Hapus Gambar";
+removeMockupBtn.style = "margin-left:8px;display:none;background:#e74c3c;color:#fff;padding:4px 10px;border-radius:5px;border:none;cursor:pointer;font-size:0.95em;";
+
+// Sisipkan tombol setelah mockupPreview
+if (mockupPreview && mockupPreview.parentNode) {
+  mockupPreview.parentNode.insertBefore(removeMockupBtn, mockupPreview.nextSibling);
+}
+
 mockupInput.addEventListener("change", function (e) {
   const file = e.target.files[0];
   if (!file) {
     mockupPreview.style.display = "none";
     mockupDataUrl = "";
+    removeMockupBtn.style.display = "none";
     return;
   }
   const reader = new FileReader();
@@ -277,9 +291,19 @@ mockupInput.addEventListener("change", function (e) {
     mockupDataUrl = evt.target.result; // <-- DataURL (Base64)
     mockupPreview.src = mockupDataUrl;
     mockupPreview.style.display = "block";
+    removeMockupBtn.style.display = "inline-block";
   };
   reader.readAsDataURL(file);
 });
+
+// Tombol hapus gambar mockup
+removeMockupBtn.onclick = function () {
+  mockupPreview.style.display = "none";
+  mockupPreview.src = "";
+  mockupInput.value = "";
+  mockupDataUrl = "";
+  removeMockupBtn.style.display = "none";
+};
 
 // When loading invoice, show mockup preview if exists
 function setMockupPreview(dataUrl) {
@@ -287,9 +311,12 @@ function setMockupPreview(dataUrl) {
     mockupPreview.src = dataUrl;
     mockupPreview.style.display = "block";
     mockupDataUrl = dataUrl;
+    removeMockupBtn.style.display = "inline-block";
   } else {
     mockupPreview.style.display = "none";
+    mockupPreview.src = "";
     mockupDataUrl = "";
+    removeMockupBtn.style.display = "none";
   }
 }
 
