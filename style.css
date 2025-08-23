@@ -5,7 +5,7 @@ body {
   background: url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80') center center/cover no-repeat fixed;
   margin: 0;
   padding: 0;
-  color: #111;
+  color: #0d0558;
   transition: background 0.3s;
   text-transform: uppercase;
   position: relative;
@@ -39,14 +39,14 @@ body::before {
   /* transition: city 0.5s; */
 }
 .invoice-container {
-  background: #fff;
+  background: #cecbd4; /* pastel lavender, minimalis */
   max-width: 1200px;
   width: 99vw;
   margin: 48px auto 40px auto;
   padding: 36px 36px 32px 36px;
-  border-radius: 28px;
-  border: 2.5px solid #111;
-  box-shadow: 0 8px 40px rgba(34,34,34,0.13), 0 0 0 3px #e0e0e0;
+  border-radius: 0.2px;
+  border: 0.2px solid #111;
+  box-shadow: 0 8px 40px rgba(34,34,34,0.13), 0 0 0 3px #d1c4e9;
   position: relative;
   overflow: visible;
   margin-bottom: 48px;
@@ -54,8 +54,8 @@ body::before {
   transition: box-shadow 0.25s, border 0.25s;
 }
 .invoice-container:hover, .invoice-container:focus-within {
-  box-shadow: 0 16px 64px rgba(34,34,34,0.18), 0 0 0 3px #0077ff44;
-  border-color: #0077ff;
+  box-shadow: 0 16px 64px rgba(34,34,34,0.18), 0 0 0 3px #b39ddb;
+  border-color: #b39ddb;
 }
 @keyframes fadeInUp {
   from {
@@ -75,7 +75,7 @@ body::before {
   margin-bottom: 14px;
   flex-wrap: wrap;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 0.2 px;
   border: 1.5px solid #222;
   box-shadow: 0 2px 10px rgba(34,34,34,0.06);
   padding: 10px 12px;
@@ -143,8 +143,8 @@ table {
   border-spacing: 0;
   margin-bottom: 16px;
   background: #fff;
-  border-radius: 10px;
-  border: 1.5px solid #222;
+  border-radius: 0.2px;
+  border: 0.2px solid #222;
   box-shadow: 0 2px 10px rgba(34,34,34,0.06);
   font-family: "Exo 2", Arial, sans-serif;
   overflow: hidden;
@@ -162,7 +162,7 @@ table {
 }
 th,
 td {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 0.2px solid #e5e5e5;
   padding: 7px 6px;
   text-align: center;
   font-size: 1em;
@@ -173,7 +173,7 @@ th {
   color: #111;
   font-weight: 700;
   letter-spacing: 0.5px;
-  border-bottom: 2.5px solid #222;
+  border-bottom: 0.2px solid #222;
 }
 tr {
   transition: background 0.18s;
@@ -198,7 +198,7 @@ tfoot td {
   background: #fafafa;
   color: #111;
   font-size: 1em;
-  border-top: 2.5px solid #222;
+  border-top: 0.2px solid #222;
 }
 .payment-section {
   display: flex;
@@ -206,8 +206,8 @@ tfoot td {
   gap: 10px;
   margin-bottom: 16px;
   background: #fff;
-  border-radius: 12px;
-  border: 1.5px solid #222;
+  border-radius: 0.2px;
+  border: 0.2px solid #222;
   box-shadow: 0 2px 10px rgba(34,34,34,0.06);
   padding: 10px 12px;
 }
@@ -225,7 +225,7 @@ tfoot td {
   padding: 7px 16px;
   font-size: 1em;
   border: none;
-  border-radius: 6px;
+  border-radius: 0.2px;
   background: #111;
   color: #fff;
   cursor: pointer;
@@ -242,8 +242,8 @@ input[type="text"],
 input[type="number"],
 input[type="date"] {
   padding: 4px 7px;
-  border: 1.5px solid #222;
-  border-radius: 8px;
+  border: 0.2px solid #222;
+  border-radius: 0.2px;
   width: 110px;
   font-size: 1em;
   font-family: "Exo 2", Arial, sans-serif;
@@ -258,7 +258,7 @@ input[type="number"],
 select {
   width: 100%;
   border: 1.5px solid #222;
-  border-radius: 8px;
+  border-radius: 0.2px;
   background: #fafafa;
   transition: border 0.18s, box-shadow 0.18s;
   color: #111;
@@ -266,7 +266,7 @@ select {
 input[type="text"]:focus,
 input[type="number"]:focus,
 input[type="date"]:focus {
-  border: 2px solid #0077ff;
+  border: 0.2px solid #0077ff;
   box-shadow: 0 0 0 2px #0077ff22;
   outline: none;
   background: #fff;
@@ -281,8 +281,8 @@ input[type="file"] {
 #mockup-preview {
   display: block;
   margin-top: 2px;
-  border: 1.5px solid #222;
-  border-radius: 10px;
+  border: 0.2px solid #222;
+  border-radius: 0.2px;
   max-width: 120px;
   max-height: 120px;
   background: #fff;
@@ -317,7 +317,7 @@ input[type="file"] {
   background: #fff;
   margin: 40px auto;
   padding: 18px 12px 12px 12px;
-  border-radius: 18px;
+  border-radius: 0.2px;
   width: 99%;
   max-width: 1100px; /* diperlebar dari 900px */
   min-width: 0;
@@ -336,12 +336,12 @@ input[type="file"] {
 .modal-content::-webkit-scrollbar {
   width: 14px;
   background: #f5f5f5;
-  border-radius: 10px;
+  border-radius: 0.2px;
 }
 .modal-content::-webkit-scrollbar-thumb {
   background: #bbb;
-  border-radius: 10px;
-  border: 3px solid #fff;
+  border-radius: 0.2px;
+  border: 0.2px solid #fff;
 }
 .modal-content {
   scrollbar-width: thin;
@@ -371,7 +371,7 @@ input[type="file"] {
   color: #111;
   background: #fafafa;
   padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: 0.2px;
   letter-spacing: 1px;
   margin-bottom: 4px;
   display: inline-block;
@@ -382,8 +382,8 @@ input[type="file"] {
 .invoice-view .header, .invoice-view .header2, .invoice-view .payment-section {
     margin-bottom: 10px !important;
     padding: 10px 18px !important;
-    border-radius: 12px !important;
-    border: 2.5px solid #222 !important;
+    border-radius: 0.2px !important;
+    border: 0.2px solid #222 !important;
     background: #ffeded !important;
 }
 .invoice-view .header {
@@ -454,15 +454,15 @@ input[type="file"] {
     margin-bottom: 12px !important;
     font-size: 1.12em !important;
     min-width: 900px;
-    border-radius: 10px !important;
-    border: 3.5px solid #222 !important;
+    border-radius: 0.2px !important;
+    border: 0.2px solid #222 !important;
 }
 .invoice-view th,
 .invoice-view th, .invoice-view td {
-    border-bottom: 2.5px solid #222 !important;
+    border-bottom: 0.2px solid #222 !important;
     padding: 8px 8px !important;
     font-size: 1.08em !important;
-    border-bottom: 2px solid #000000 !important;
+    border-bottom: 0.2px solid #000000 !important;
 }
 .invoice-view h1 {
   font-size: 1.35em !important;
@@ -471,7 +471,7 @@ input[type="file"] {
   text-align: center;
 }
 .invoice-view tfoot td {
-  border-top: 2.5px solid #222 !important;
+  border-top: 0.2px solid #222 !important;
 }
 .invoice-view .mockup-large {
   max-width: 520px;
@@ -479,8 +479,8 @@ input[type="file"] {
   background: #fff;
   display: inline-block;
   vertical-align: middle;
-  border-radius: 10px;
-  border: 1.5px solid #bbb;
+  border-radius: 0.2px;
+  border: 0.2px solid #bbb;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   animation: fadeInUp 0.7s cubic-bezier(0.23, 1.01, 0.32, 1) both;
 }
@@ -511,8 +511,8 @@ input[type="file"] {
   gap: 24px;
   padding: 10px 18px !important;
   margin-bottom: 10px !important;
-  border-radius: 10px !important;
-  border: 1.5px solid #111 !important;
+  border-radius: 0.2px !important;
+  border: 0.2px solid #111 !important;
   background: #fff !important;
   flex-wrap: wrap;
 }
@@ -523,7 +523,7 @@ input[type="file"] {
   min-width: 220px;
   font-size: 1.08em;
   flex: 1 1 220px;
-  border-right: 2.5px dashed #bbb;
+  border-right: 0.2px dashed #bbb;
   padding-right: 24px;
 }
 .invoice-view-header2-right {
@@ -539,7 +539,7 @@ input[type="file"] {
   margin-left: 0;
   margin-top: 0;
   margin-bottom: 0;
-  border: 2.5px solid #bbb !important;
+  border: 0.2px solid #bbb !important;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
 @media (max-width: 1200px) {
@@ -612,63 +612,41 @@ input[type="file"] {
   display: none;
 }
 
-/* Sidebar Navbar - Modern Black & White - Hidden by Default, Show Only Icons, Slide In on Hover */
+/* Sidebar Navbar - Simple & Attractive */
 .sidebar-navbar {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
-  width: 64px; /* Diperlebar dari 54px */
-  background: rgba(17, 17, 17, 0.82);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  box-shadow: 2px 0 24px rgba(0, 0, 0, 0.13);
+  width: 55px;
+  background: #111;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.10);
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 200;
-  transition: width 0.45s cubic-bezier(0.23, 1.01, 0.32, 1), box-shadow 0.3s, background 0.3s;
-  font-size: small;
-  opacity: 0.98;
+  transition: width 0.3s cubic-bezier(.4,2,.6,1), background 0.3s;
+  font-size: 1em;
   cursor: pointer;
-  border-top-right-radius: 18px;
-  border-bottom-right-radius: 18px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
   overflow: visible;
 }
 
 .sidebar-navbar:hover,
-.sidebar-navbar:focus-within,
-.sidebar-navbar:active {
-  width: 180px; /* Diperlebar dari 140px */
-  box-shadow: 8px 0 32px rgba(0,0,0,0.18);
-  opacity: 1;
-  background: rgba(17, 17, 17, 0.95);
-  transition: width 0.45s cubic-bezier(0.23, 1.01, 0.32, 1), box-shadow 0.3s, background 0.3s;
-}
-
-@media (max-width: 600px) {
-  .sidebar-navbar {
-    width: 56px; /* Diperlebar dari 44px */
-    min-width: 56px;
-    border-top-right-radius: 12px;
-    border-bottom-right-radius: 12px;
-    transition: width 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
-  }
-  .sidebar-navbar:hover,
-  .sidebar-navbar:focus-within,
-  .sidebar-navbar:active {
-    width: 110px; /* Diperlebar dari 90px */
-  }
+.sidebar-navbar:focus-within {
+  width: 220px; /* lebih lebar */
+  background: #222;
 }
 
 .sidebar-navbar ul {
   list-style: none;
   padding: 0;
-  margin: 60px 0 0 0;
+  margin: 48px 0 0 0;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   align-items: center;
 }
 
@@ -679,81 +657,44 @@ input[type="file"] {
 }
 
 .sidebar-navbar button {
-  width: 92%;
-  padding: 13px 0 13px 0;
-  margin: 0;
-  background: linear-gradient(90deg, #fff 80%, #f3f3f3 100%);
-  color: #111;
+  width: 90%;
+  padding: 10px 0;
+  background: none;
+  color: #fff;
   border: none;
-  border-radius: 10px;
-  font-size: 1.08em;
+  border-radius: 8px;
+  font-size: 1.1em;
   font-family: "Exo 2", Arial, sans-serif;
-  font-weight: 700;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
-  transition: 
-    background 0.22s cubic-bezier(.4,2,.6,1),
-    color 0.18s,
-    transform 0.22s cubic-bezier(.4,2,.6,1),
-    box-shadow 0.18s,
-    width 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
+  gap: 10px;
+  transition: background 0.18s, color 0.18s, transform 0.18s;
   outline: none;
   position: relative;
   overflow: hidden;
-  border: 2px solid #222;
-  animation: btnPopIn 0.6s cubic-bezier(0.23, 1.01, 0.32, 1);
-  opacity: 0.98;
-  letter-spacing: 0.5px;
-  will-change: transform, box-shadow;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 0 0 2px #e0e0e0;
+  margin-bottom: 2px;
 }
 
-@keyframes btnPopIn {
-  0% {
-    transform: scale(0.85) translateY(18px);
-    opacity: 0.3;
-    filter: blur(2px);
-  }
-  60% {
-    transform: scale(1.08) translateY(-4px);
-    opacity: 1;
-    filter: blur(0.5px);
-  }
-  100% {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-    filter: none;
-  }
-}
-
-/* ICON SIZE 2x LIPAT */
 .sidebar-navbar button span {
-  font-size: 2.5em; /* 2x dari 1.25em */
-  transition: transform 0.22s cubic-bezier(.4,2,.6,1), color 0.18s;
+  font-size: 2em;
   display: inline-block;
+  transition: transform 0.18s, color 0.18s;
 }
 
-/* Hide label by default, show only on hover/focus/active */
 .sidebar-navbar button .btn-label {
-  transition: 
-    opacity 0.22s cubic-bezier(.4,2,.6,1), 
-    margin-left 0.22s, 
-    width 0.22s;
-  margin-left: 8px;
   opacity: 0;
+  margin-left: 0;
   width: 0;
   overflow: hidden;
   white-space: nowrap;
   pointer-events: none;
+  transition: opacity 0.18s, margin-left 0.18s, width 0.18s;
 }
 
 .sidebar-navbar:hover button .btn-label,
 .sidebar-navbar:focus-within button .btn-label,
-.sidebar-navbar:active button .btn-label,
-.sidebar-navbar button:focus-visible .btn-label,
 .sidebar-navbar button:focus .btn-label,
 .sidebar-navbar button:hover .btn-label {
   opacity: 1;
@@ -762,183 +703,76 @@ input[type="file"] {
   pointer-events: auto;
 }
 
-.sidebar-navbar button:hover {
-  background: linear-gradient(90deg, #111 80%, #444 100%);
+.sidebar-navbar button:hover,
+.sidebar-navbar button:focus {
+  background: #0077ff;
   color: #fff;
-  transform: translateX(10px) scale(1.06) rotate(-2deg);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
-  border-color: #0077ff;
+  transform: scale(1.05);
 }
 
 .sidebar-navbar button:hover span {
-  transform: scale(1.22) rotate(-12deg);
   color: #fff;
-}
-
-.sidebar-navbar button:hover .btn-label {
-  opacity: 1;
-  margin-left: 14px;
-  width: auto;
+  transform: scale(1.15) rotate(-8deg);
 }
 
 .sidebar-navbar button:active {
-  background: linear-gradient(90deg, #222 80%, #111 100%);
+  background: #005bb5;
   color: #fff;
-  transform: scale(0.98) rotate(1deg);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.13);
-  border-color: #111;
+  transform: scale(0.98);
 }
 
 .sidebar-navbar button:focus-visible {
-  outline: 2.5px solid #0077ff;
+  outline: 2px solid #0077ff;
   outline-offset: 2px;
 }
 
-.sidebar-navbar button::after {
-  content: "";
-  position: absolute;
-  left: 0; top: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at 60% 40%, #0077ff22 0%, transparent 80%);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.22s;
-  z-index: 1;
+.invoice-main-content {
+  margin-left: 60px;
+  transition: margin-left 0.3s cubic-bezier(.4,2,.6,1);
 }
-.sidebar-navbar button:active::after,
-.sidebar-navbar button:focus-visible::after {
-  opacity: 1;
+.sidebar-navbar:hover ~ .invoice-main-content,
+.sidebar-navbar:focus-within ~ .invoice-main-content {
+  margin-left: 220px; /* sesuaikan dengan sidebar lebar */
 }
 
 @media (max-width: 600px) {
+  .sidebar-navbar {
+    width: 44px;
+    border-radius: 8px;
+  }
+  .sidebar-navbar:hover,
+  .sidebar-navbar:focus-within {
+    width: 120px; /* lebih lebar di mobile */
+  }
+  .invoice-main-content {
+    margin-left: 44px;
+  }
+  .sidebar-navbar:hover ~ .invoice-main-content,
+  .sidebar-navbar:focus-within ~ .invoice-main-content {
+    margin-left: 120px;
+  }
   .sidebar-navbar button {
     font-size: 1em;
-    padding: 10px 0;
-    justify-content: center;
+    padding: 8px 0;
     gap: 0;
     border-radius: 8px;
   }
-  .sidebar-navbar button .btn-label {
-    font-size: 0;
-    opacity: 0;
-    margin-left: 0;
-    width: 0;
-    transition: none;
-    pointer-events: none;
-  }
-  .sidebar-navbar:hover button .btn-label,
-  .sidebar-navbar:focus-within button .btn-label,
-  .sidebar-navbar:active button .btn-label,
-  .sidebar-navbar button:focus-visible .btn-label,
-  .sidebar-navbar button:focus .btn-label,
-  .sidebar-navbar button:hover .btn-label {
-    font-size: 1em;
-    opacity: 1;
-    width: auto;
-    margin-left: 8px;
-    transition: opacity 0.22s, margin-left 0.22s, width 0.22s;
-    pointer-events: auto;
-  }
   .sidebar-navbar button span {
-    font-size: 2.6em; /* 2x dari 1.3em */
+    font-size: 2em;
   }
-}
-
-.invoice-main-content {
-  margin-left: 72px; /* Diperlebar dari 54px */
-  padding: 0;
-  transition: margin-left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
-}
-.sidebar-navbar:hover ~ .invoice-main-content,
-.sidebar-navbar:focus-within ~ .invoice-main-content,
-.sidebar-navbar:active ~ .invoice-main-content {
-  margin-left: 180px; /* Diperlebar dari 140px */
-  transition: margin-left 0.45s cubic-bezier(0.23, 1.01, 0.32, 1);
-}
-@media (max-width: 600px) {
-  .invoice-main-content {
-    margin-left: 56px; /* Diperlebar dari 44px */
-  }
-  .sidebar-navbar:hover ~ .invoice-main-content,
-  .sidebar-navbar:focus-within ~ .invoice-main-content,
-  .sidebar-navbar:active ~ .invoice-main-content {
-    margin-left: 110px; /* Diperlebar dari 90px */
-  }
-}
-
-/* ===== Pengeluaran Table Style (Expense Table) ===== */
-#expense-list-section table {
-  background: #fff;
-  border-radius: 10px;
-  font-family: "Exo 2", Arial, sans-serif;
-  box-shadow: 0 2px 10px rgba(34,34,34,0.06);
-  border: 1.5px solid #222;
-  width: 100%;
-  border-collapse: separate;
-  margin-bottom: 12px;
-}
-#expense-list-section th,
-#expense-list-section td {
-  border-bottom: 1px solid #e5e5e5;
-  padding: 7px 6px;
-  text-align: center;
-  font-size: 1em;
-}
-#expense-list-section th {
-  background: #fafafa;
-  color: #111;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  border-bottom: 2.5px solid #222;
-}
-#expense-list-section tfoot td,
-#expense-list-section tr:last-child td {
-  font-weight: bold;
-  background: #fafafa;
-  color: #111;
-  font-size: 1em;
-  border-top: 2.5px solid #222;
-}
-@media (max-width: 700px) {
-  #expense-list-section table {
+  .sidebar-navbar button .btn-label {
     font-size: 0.95em;
   }
-  #expense-list-section th,
-  #expense-list-section td {
-    padding: 5px 3px;
-  }
-}
-
-/* Utang/Piutang Table Style */
-#utang-piutang-table th,
-#utang-piutang-table td {
-  border-bottom: 1px solid #e5e5e5;
-  padding: 7px 6px;
-  text-align: center;
-  font-size: 1em;
-}
-#utang-piutang-table th {
-  background: #fafafa;
-  color: #111;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  border-bottom: 2.5px solid #222;
-}
-#utang-piutang-table tfoot td {
-  font-weight: bold;
-  background: #fafafa;
-  color: #111;
-  font-size: 1em;
-  border-top: 2.5px solid #222;
 }
 
 /* Invoice action buttons (icon-only) */
 .invoice-actions button {
   background: #fff;
-  border: 1.5px solid #222;
+  border: 0.2px solid #222;
   cursor: pointer;
   font-size: 1.5em;
   padding: 4px 8px;
-  border-radius: 8px;
+  border-radius: 0.2px;
   transition: color 0.18s, transform 0.18s, background 0.18s;
   color: #111;
   margin-left: 4px;
@@ -1005,10 +839,10 @@ form,
   margin: 0 auto 12px auto;
   display: block;
   max-width: 100%;
-  width: 100% !important;
+  width: 150% !important;
   min-width: 0;
-  height: 340px !important;
-  max-height: 420px;
+  height: 510px !important;
+  max-height: 600px;
   aspect-ratio: 2.5 / 1;
   /* Pastikan chart tidak terpotong dan proporsional */
 }
@@ -1284,7 +1118,7 @@ form,
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    border-radius: 10px !important;
+    border-radius: 0.2px !important;
     margin-bottom: 10px !important;
   }
   #search-results {
