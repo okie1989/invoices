@@ -11,13 +11,6 @@ const satuanList = [
   "Cm",
   "Meter",
   "Lembar",
-  "Set",
-  "Box",
-  "Pack",
-  "Liter",
-  "Unit",
-  "Dus",
-  "Kodi",
   "Lainnya",
 ];
 
@@ -52,7 +45,17 @@ function createItemRow(item = {}) {
           item.price || 0
         }" min="0" step="any"></td>
         <td class="item-total">0</td>
-        <td><button class="remove-item" title="Hapus"><span aria-label="Hapus" role="img">🗑️</span></button></td>
+        <td>
+          <button class="remove-item" title="Hapus" style="background:none;border:none;cursor:pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
+              <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+              <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+              <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+              <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
+              <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+            </svg>
+          </button>
+        </td>
     `;
   return tr;
 }
@@ -1019,8 +1022,8 @@ function renderInvoiceView(data) {
 
     margin-top: 18px;
     padding: 8px 10px;
-    border: 1.5px dashed #888;
-    border-radius: 8px;
+    border: 0.2px dashed #888;
+    border-radius: 0.2px;
     background: #f9f9f9;
     font-size: 60%;
     max-width: 100%;
@@ -1123,46 +1126,46 @@ expenseBtn.onclick = function () {
 
 function showExpenseForm(expenseData = null, expenseKey = null) {
   const html = `
-        <h2>Catat Pengeluaran</h2>
         <form id="expense-form" ${
           expenseKey ? `data-expense-key="${expenseKey}"` : ""
-        }>
-            <div>
-                <label>Tanggal:</label>
+        } style="font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
+            <div style="margin-bottom:14px;">
+                <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">TANGGAL:</label>
                 <input type="date" id="expense-date" required value="${new Date()
                   .toISOString()
-                  .slice(0, 10)}">
+                  .slice(0, 10)}" style="text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
             </div>
-            <div>
-                <label>Jenis Pengeluaran:</label>
-                <select id="expense-type" required>
-                    <option value="">--Pilih--</option>
-                    <option value="Bahan Kain">Bahan Kain</option>
-                    <option value="Bahan Sablon">Bahan Sablon</option>
-                    <option value="Cetak">Cetak</option>
-                    <option value="Kebutuhan Toko">Kebutuhan Toko</option>
-                    <option value="Gaji">Gaji</option>
-                    <option value="Iuran Wajib">Iuran Wajib</option>
-                    <option value="Lain-lain">Lain-lain (Isi Manual)</option>
+            <div style="margin-bottom:14px;">
+                <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">JENIS PENGELUARAN:</label>
+                <select id="expense-type" required style="text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
+                    <option value="">--PILIH--</option>
+                    <option value="Bahan Kain">BAHAN KAIN</option>
+                    <option value="Bahan Sablon">BAHAN SABLON</option>
+                    <option value="Cetak">CETAK</option>
+                    <option value="Ongkos Jahit">ONGKOS JAHIT</option>
+                    <option value="Kebutuhan Toko">KEBUTUHAN TOKO</option>
+                    <option value="Gaji">GAJI</option>
+                    <option value="Iuran Wajib">IURAN WAJIB</option>
+                    <option value="Lain-lain">LAIN-LAIN (ISI MANUAL)</option>
                 </select>
-                <input type="text" id="expense-type-manual" placeholder="Isi jenis lain-lain" style="display:none;margin-top:4px;">
+                <input type="text" id="expense-type-manual" placeholder="ISI JENIS LAIN-LAIN" style="display:none;margin-top:4px;text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
             </div>
-            <div>
-                <label>Nama Supplier:</label>
-                <input type="text" id="expense-supplier" required>
+            <div style="margin-bottom:14px;">
+                <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">NAMA SUPPLIER:</label>
+                <input type="text" id="expense-supplier" required style="text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
             </div>
-            <div>
-                <label>Rincian Pembelian:</label>
-                <table id="expense-items-table" style="width:100%;margin-bottom:8px;">
-                    <thead>
-                        <tr>
-                            <th>Nama Barang</th>
-                            <th>Qty</th>
-                            <th>Satuan</th>
-                            <th>Harga Satuan</th>
-                            <th>Diskon</th>
-                            <th>Jumlah</th>
-                            <th>Hapus</th>
+            <div style="margin-bottom:14px;">
+                <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">RINCIAN PEMBELIAN:</label>
+                <table id="expense-items-table" style="width:100%;margin-bottom:8px;border-radius:8px;box-shadow:0 2px 12px 0 rgba(230,126,34,0.08);overflow:hidden;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
+                    <thead style="background:#e67e22;">
+                        <tr style="color:#fff;text-transform:uppercase;font-weight:bold;letter-spacing:0.07em;">
+                            <th>NAMA BARANG</th>
+                            <th>QTY</th>
+                            <th>SATUAN</th>
+                            <th>HARGA SATUAN</th>
+                            <th>DISKON</th>
+                            <th>JUMLAH</th>
+                            <th>HAPUS</th>
                         </tr>
                     </thead>
                     <tbody id="expense-items-body">
@@ -1170,19 +1173,66 @@ function showExpenseForm(expenseData = null, expenseKey = null) {
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7"><button type="button" id="add-expense-item">Tambah Barang</button></td>
+                            <td colspan="7" style="text-align:center;">
+                              <button type="button" id="add-expense-item" style="background:#e67e22;color:#fff;font-weight:bold;padding:7px 18px;border-radius:6px;border:none;cursor:pointer;text-transform:uppercase;box-shadow:0 1px 6px 0 rgba(230,126,34,0.10);font-family:'Exo', 'Segoe UI', Arial, sans-serif;">TAMBAH BARANG</button>
+                            </td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
-            <div>
-                <label>Total Pengeluaran (Rp):</label>
-                <input type="number" id="expense-amount" required min="0" readonly style="background:#eee;">
+            <div style="margin-bottom:14px;">
+                <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">TOTAL PENGELUARAN (RP):</label>
+                <input type="number" id="expense-amount" required min="0" readonly style="background:#f8fafc;text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;color:#e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
             </div>
-            <button type="submit" style="margin-top:8px;">Simpan Pengeluaran</button>
+            <button type="submit" style="margin-top:8px;background:#e67e22;color:#fff;font-weight:bold;padding:10px 24px;border-radius:8px;border:none;cursor:pointer;text-transform:uppercase;box-shadow:0 2px 12px 0 rgba(230,126,34,0.13);font-size:1.08em;letter-spacing:0.08em;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">SIMPAN PENGELUARAN</button>
         </form>
+        <style>
+          @import url('https://fonts.googleapis.com/css?family=Exo:400,700&display=swap');
+          #expense-items-table th, #expense-items-table td {
+            font-size:1em;
+            text-transform:uppercase;
+            padding:8px 6px;
+            border-bottom:1px solid #f3f3f3;
+            font-family:'Exo', 'Segoe UI', Arial, sans-serif;
+          }
+          #expense-items-table th {
+            background:#e67e22;
+            color:#fff;
+            font-weight:bold;
+            font-family:'Exo', 'Segoe UI', Arial, sans-serif;
+          }
+          #expense-items-table tr:last-child td {
+            border-bottom:none;
+          }
+          #expense-items-table input, #expense-items-table select {
+            text-transform:uppercase;
+            font-weight:bold;
+            padding:4px 8px;
+            border-radius:5px;
+            border:1px solid #e67e22;
+            font-family:'Exo', 'Segoe UI', Arial, sans-serif;
+          }
+        </style>
     `;
-  showModal("Pengeluaran Toko", html);
+  // Tambahkan judul dengan box dan rata tengah, huruf kapital semua
+  const titleBox = `
+    <div style="
+      text-align:center;
+      background:#e67e22;
+      color:#fff;
+      font-weight:bold;
+      font-size:1.25em;
+      letter-spacing:0.08em;
+      padding:14px 0 12px 0;
+      border-radius:8px;
+      margin-bottom:18px;
+      text-transform:uppercase;
+      box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
+    ">
+      PENGELUARAN TOKO
+    </div>
+  `;
+  showModal("", titleBox + html);
 
   // Show/hide manual input for "Lain-lain"
   const expenseType = document.getElementById("expense-type");
@@ -1202,33 +1252,43 @@ function showExpenseForm(expenseData = null, expenseKey = null) {
   function createExpenseItemRow(item = {}) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-            <td><input type="text" class="expense-item-name" value="${
-              item.name || ""
-            }" required></td>
-            <td><input type="number" class="expense-item-qty" value="${
-              item.qty || 1
-            }" min="0" step="any" required style="width:60px;"></td>
-            <td>
-                <select class="expense-item-unit" style="width:70px;">
-                    ${satuanList
-                      .map(
-                        (s) =>
-                          `<option value="${s}"${
-                            item.unit === s ? " selected" : ""
-                          }>${s}</option>`
-                      )
-                      .join("")}
-                </select>
-            </td>
-            <td><input type="number" class="expense-item-price" value="${
-              item.price || 0
-            }" min="0" step="any" required style="width:90px;"></td>
-            <td><input type="number" class="expense-item-discount" value="${
-              item.discount || 0
-            }" min="0" step="any" style="width:70px;" title="Diskon per barang"></td>
-            <td class="expense-item-total">0</td>
-            <td><button type="button" class="remove-expense-item">Hapus</button></td>
-        `;
+        <td><input type="text" class="expense-item-name" value="${
+          item.name || ""
+        }" required></td>
+        <td><input type="number" class="expense-item-qty" value="${
+          item.qty || 1
+        }" min="0" step="any" required style="width:60px;"></td>
+        <td>
+          <select class="expense-item-unit" style="width:70px;">
+            ${satuanList
+              .map(
+              (s) =>
+                `<option value="${s}"${
+                item.unit === s ? " selected" : ""
+                }>${s}</option>`
+              )
+              .join("")}
+          </select>
+        </td>
+        <td><input type="number" class="expense-item-price" value="${
+          item.price || 0
+        }" min="0" step="any" required style="width:90px;"></td>
+        <td><input type="number" class="expense-item-discount" value="${
+          item.discount || 0
+        }" min="0" step="any" style="width:70px;" title="Diskon per barang"></td>
+        <td class="expense-item-total">0</td>
+        <td>
+          <button type="button" class="remove-expense-item" title="Hapus" style="background:none;border:none;cursor:pointer;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
+            <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+            <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+            <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+            <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
+            <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+          </svg>
+          </button>
+        </td>
+      `;
     return tr;
   }
   const expenseItemsBody = document.getElementById("expense-items-body");
@@ -1440,7 +1500,17 @@ async function renderExpenseList() {
                           e.amount
                         )}</td>
                         <td>${e.type || "-"}</td>
-                        <td><button class="delete-expense" data-idx="${i}" style="background:#e74c3c;color:#fff;padding:2px 8px;font-size:0.9em;border-radius:3px;">Hapus</button></td>
+                        <td>
+                          <button class="delete-expense" data-idx="${i}" title="Hapus" style="background:none;border:none;cursor:pointer;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
+                              <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+                              <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+                              <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+                              <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
+                              <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+                            </svg>
+                          </button>
+                        </td>
                     </tr>
                 `
                   )
@@ -1588,9 +1658,25 @@ bookkeepingBtn.onclick = async function () {
       .map((t, idx) => {
         let deleteBtn = "";
         if (t.type === "INVOICE") {
-          deleteBtn = `<button class="delete-bk-invoice" data-ref="${t.ref}" title="Hapus Invoice" style="background:#e74c3c;color:#fff;padding:2px 8px;font-size:0.9em;border-radius:3px;">Hapus</button>`;
+            deleteBtn = `<button class="delete-bk-invoice" data-ref="${t.ref}" title="Hapus Invoice" style="background:none;border:none;cursor:pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
+              <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+              <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+              <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+              <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
+              <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+            </svg>
+            </button>`;
         } else if (t.type === "EXPENSE") {
-          deleteBtn = `<button class="delete-bk-expense" data-key="${t.ref}" title="Hapus Pengeluaran" style="background:#e74c3c;color:#fff;padding:2px 8px;font-size:0.9em;border-radius:3px;">Hapus</button>`;
+            deleteBtn = `<button class="delete-bk-expense" data-key="${t.ref}" title="Hapus Pengeluaran" style="background:none;border:none;cursor:pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
+              <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+              <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+              <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+              <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
+              <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+            </svg>
+            </button>`;
         }
         // Highlight baris jika ref/type sesuai
         let highlightClass = "";
@@ -1673,13 +1759,13 @@ bookkeepingBtn.onclick = async function () {
             <table style="width:100%;border-collapse:collapse;">
                 <thead>
                     <tr>
-                        <th style="border-bottom:1.5px solid #111;">Tanggal</th>
-                        <th style="border-bottom:1.5px solid #111;">Subjek</th>
-                        <th style="border-bottom:1.5px solid #111;">Keterangan</th>
-                        <th style="border-bottom:1.5px solid #111;">Masuk</th>
-                        <th style="border-bottom:1.5px solid #111;">Keluar</th>
-                        <th style="border-bottom:1.5px solid #111;">Saldo</th>
-                        <th style="border-bottom:1.5px solid #111;">Hapus</th>
+                        <th style="border-bottom:0.2px solid #111;">Tanggal</th>
+                        <th style="border-bottom:0.2px solid #111;">Subjek</th>
+                        <th style="border-bottom:0.2px solid #111;">Keterangan</th>
+                        <th style="border-bottom:0.2px solid #111;">Masuk</th>
+                        <th style="border-bottom:0.2px solid #111;">Keluar</th>
+                        <th style="border-bottom:0.2px solid #111;">Saldo</th>
+                        <th style="border-bottom:0.2px solid #111;">Hapus</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1718,7 +1804,25 @@ bookkeepingBtn.onclick = async function () {
                 <b>Saldo Akhir:</b> ${formatNumber(saldoAkhir)}
             </div>
         `;
-    showModal("Pembukuan", html);
+    // Tambahkan judul dengan box dan rata tengah, huruf kapital semua
+    const titleBox = `
+      <div style="
+      text-align:center;
+      background:#007bff;
+      color:#fff;
+      font-weight:bold;
+      font-size:1.25em;
+      letter-spacing:0.08em;
+      padding:14px 0 12px 0;
+      border-radius:8px;
+      margin-bottom:18px;
+      text-transform:uppercase;
+      box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
+      ">
+      PEMBUKUAN
+      </div>
+    `;
+    showModal("", titleBox + html);
 
     // Event filter bulan
     document.getElementById("bookkeeping-month").onchange = function () {
@@ -2014,86 +2118,100 @@ statisticBtn.onclick = async function () {
   let currentMonth = new Date().toISOString().slice(0, 7);
   if (!months.includes(currentMonth) && months.length) currentMonth = months[0];
 
-  // Tambahkan style simpel hitam putih
+  // Tambahkan style modern, clean, dan menarik
   (function addStatistikStyle() {
     if (document.getElementById("statistik-style")) return;
     const style = document.createElement("style");
     style.id = "statistik-style";
     style.innerHTML = `
       .statistic-modal {
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08);
-        padding: 28px 18px 18px 18px !important;
+        background: linear-gradient(135deg,#f8fafc 0%,#e3e8ee 100%);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px 0 rgba(0,0,0,0.10);
+        padding: 32px 24px 24px 24px !important;
         max-width: 900px;
         min-width: 320px;
+        font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
       }
       #statistic-chart {
         background: #fff;
-        border-radius: 10px;
-        margin-bottom: 18px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 12px 0 rgba(0,0,0,0.06);
+        border: 1px solid #e5e7eb;
       }
       #stat-summary {
-        background: #f7f7f7;
-        border-radius: 7px;
-        padding: 10px 14px;
-        font-size: 1.08em;
+        background: linear-gradient(90deg,#e0e7ff 0%,#f1f5f9 100%);
+        border-radius: 10px;
+        padding: 14px 18px;
+        font-size: 1.13em;
         color: #222;
-        margin-bottom: 18px;
+        margin-bottom: 22px;
         box-shadow: 0 1px 8px 0 rgba(0,0,0,0.03);
         letter-spacing: 0.01em;
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+        align-items: center;
       }
       .stat-top-summary-flex {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 47px;
-    justify-content: center;
-    align-items: stretch;
-    margin-top: 0;
-    margin-bottom: 0;
-    width: 100%;
-}
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+        justify-content: center;
+        align-items: stretch;
+        margin-top: 0;
+        margin-bottom: 0;
+        width: 100%;
+      }
       .stat-top-summary-col {
         flex: 1 1 220px;
         min-width: 220px;
-        max-width: 340px;
+        max-width: 510px;
         display: flex;
         flex-direction: column;
         margin-bottom: 0;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px 0 rgba(0,0,0,0.07);
+        padding: 16px 12px 12px 12px;
+        border: 1px solid #e5e7eb;
+        transition: box-shadow 0.2s;
+      }
+      .stat-top-summary-col:hover {
+        box-shadow: 0 4px 24px 0 rgba(0,0,0,0.13);
       }
       .stat-top-table {
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 0;
-        background: #fff;
-        border-radius: 8px;
+        background: transparent;
+        border-radius: 0.2px;
         overflow: hidden;
-        box-shadow: 0 1px 6px 0 rgba(0,0,0,0.03);
-        border: 1px solid #e5e5e5;
       }
       .stat-top-table th, .stat-top-table td {
-        padding: 7px 10px;
+        padding: 8px 10px;
         font-size: 1em;
         text-align: left;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid #f1f5f9;
       }
       .stat-top-table th {
-        background: #f7f7f7;
+        background: #f3f4f6;
         color: #222;
         font-weight: 600;
-        border-bottom: 2px solid #ddd;
+        border-bottom: 1px solid #e5e7eb;
       }
       .stat-top-table tr:last-child td {
         border-bottom: none;
       }
       .stat-top-table .stat-rank {
         font-weight: bold;
-        font-size: 1.05em;
+        font-size: 1.08em;
         color: #fff;
-        background: #222;
+        background: linear-gradient(135deg,#6366f1 0%,#2563eb 100%);
         border-radius: 50%;
-        width: 26px;
-        height: 26px;
+        width: 28px;
+        height: 28px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2112,48 +2230,48 @@ statisticBtn.onclick = async function () {
       .stat-top-table .stat-profit,
       .stat-top-table .stat-expense,
       .stat-top-table .stat-qty {
-        color: #111;
-        font-weight: 600;
+        color: #2563eb;
+        font-weight: 700;
         text-align: right;
       }
       .statistic-filter-bar {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 6px 0 rgba(0,0,0,0.03);
-    padding: 10px 10px 8px 10px;
-    justify-content: center;
-}
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 1px 8px 0 rgba(0,0,0,0.04);
+        padding: 14px 18px 12px 18px;
+        justify-content: center;
+      }
       .statistic-filter-group {
         display: flex;
         align-items: center;
-        gap: 7px;
+        gap: 8px;
         margin-right: 10px;
       }
       .statistic-filter-label {
         font-weight: 600;
-        color: #222;
-        font-size: 1em;
+        color: #2563eb;
+        font-size: 1.08em;
         letter-spacing: 0.01em;
       }
       .statistic-filter-select {
         font-size: 1em;
-        padding: 4px 10px;
-        border-radius: 5px;
-        border: 1px solid #bbb;
-        background: #fafafa;
+        padding: 6px 14px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background: #f3f4f6;
         color: #222;
         font-weight: 500;
         transition: border 0.2s;
         outline: none;
       }
       .statistic-filter-select:focus {
-        border: 1.5px solid #222;
-        background: #f0f0f0;
+        border: 1px solid #2563eb;
+        background: #e0e7ff;
       }
       @media (max-width: 900px) {
         .statistic-modal { padding: 10px 2vw 10px 2vw !important; }
@@ -2161,7 +2279,7 @@ statisticBtn.onclick = async function () {
         .statistic-filter-bar { flex-direction: column; gap: 8px; padding: 8px 2vw 6px 2vw; }
         .stat-top-summary-flex {
           flex-direction: column;
-          gap: 12px;
+          gap: 18px;
         }
         .stat-top-summary-col {
           min-width: 0;
@@ -2221,7 +2339,30 @@ statisticBtn.onclick = async function () {
     <div id="stat-summary" style="margin-top:14px;font-size:1.05em;"></div>
     <div id="stat-top-summary" style="margin-top:14px;font-size:1em;"></div>
   `;
-  showModal("Statistik Keuangan", html);
+  // Judul dengan gradient dan icon
+  const titleBox = `
+    <div style="
+      text-align:center;
+      background: linear-gradient(90deg,#6366f1 0%,#2563eb 100%);
+      color:#fff;
+      font-weight:bold;
+      font-size:1.35em;
+      letter-spacing:0.08em;
+      padding:18px 0 16px 0;
+      border-radius:16px;
+      margin-bottom:24px;
+      text-transform:uppercase;
+      box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+    ">
+      <span style="font-size:1.5em;">📊</span>
+      Statistik Keuangan
+    </div>
+  `;
+  showModal("", titleBox + html);
 
   setTimeout(() => {
     const modalContent = document.querySelector(".modal-content");
@@ -2274,21 +2415,6 @@ statisticBtn.onclick = async function () {
       .sort((a, b) => b.count - a.count)
       .slice(0, 3);
 
-    // Top 3 Pesanan Profit Terbesar
-    let avgExpensePerInvoice =
-      filteredInvoices.length > 0
-        ? (filteredExpenses.reduce((a, b) => a + (b.amount || 0), 0) /
-            filteredInvoices.length)
-        : 0;
-    let topProfit = filteredInvoices
-      .map((inv) => ({
-        customerName: inv.customerName || "-",
-        orderName: inv.orderName || "-",
-        profit: (inv.paidAmount || 0) - avgExpensePerInvoice,
-      }))
-      .sort((a, b) => b.profit - a.profit)
-      .slice(0, 3);
-
     // Top 3 Item Terlaris
     let itemQty = {};
     filteredInvoices.forEach((inv) => {
@@ -2312,11 +2438,13 @@ statisticBtn.onclick = async function () {
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 3);
 
-    // Render HTML tabel simpel hitam putih, layout lebih tertata
+    // Modern card style
     let html = `
       <div class="stat-top-summary-flex">
         <div class="stat-top-summary-col">
-          <div style="font-weight:700;font-size:1.08em;margin-bottom:4px;color:#111;">Top 3 Pembelian Terbanyak</div>
+          <div style="font-weight:700;font-size:1.13em;margin-bottom:8px;color:#2563eb;display:flex;align-items:center;gap:7px;">
+            <span style="font-size:1.2em;">💰</span> Top 3 Pembelian Terbanyak
+          </div>
           <table class="stat-top-table">
             <thead>
               <tr>
@@ -2346,7 +2474,9 @@ statisticBtn.onclick = async function () {
           </table>
         </div>
         <div class="stat-top-summary-col">
-          <div style="font-weight:700;font-size:1.08em;margin-bottom:4px;color:#111;">Top 3 Pelanggan Paling Sering Order</div>
+          <div style="font-weight:700;font-size:1.13em;margin-bottom:8px;color:#2563eb;display:flex;align-items:center;gap:7px;">
+            <span style="font-size:1.2em;">👤</span> Top 3 Pelanggan Paling Sering Order
+          </div>
           <table class="stat-top-table">
             <thead>
               <tr>
@@ -2374,39 +2504,11 @@ statisticBtn.onclick = async function () {
           </table>
         </div>
       </div>
-      <div class="stat-top-summary-flex" style="margin-top:12px;">
+      <div class="stat-top-summary-flex" style="margin-top:18px;">
         <div class="stat-top-summary-col">
-          <div style="font-weight:700;font-size:1.08em;margin-bottom:4px;color:#111;">Top 3 Pesanan Profit Terbesar</div>
-          <table class="stat-top-table">
-            <thead>
-              <tr>
-                <th style="width:32px;">#</th>
-                <th>Pelanggan</th>
-                <th>Pesanan</th>
-                <th class="stat-profit" style="text-align:right;">Profit</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${
-                topProfit.length
-                  ? topProfit
-                      .map(
-                        (p, i) =>
-                          `<tr>
-                            <td><span class="stat-rank">${i + 1}</span></td>
-                            <td class="stat-customer">${p.customerName}</td>
-                            <td class="stat-order">${p.orderName}</td>
-                            <td class="stat-profit" style="text-align:right;">Rp ${formatNumber(p.profit)}</td>
-                          </tr>`
-                      )
-                      .join("")
-                  : `<tr><td colspan="4"><i>Tidak ada data</i></td></tr>`
-              }
-            </tbody>
-          </table>
-        </div>
-        <div class="stat-top-summary-col">
-          <div style="font-weight:700;font-size:1.08em;margin-bottom:4px;color:#111;">Top 3 Item Terlaris</div>
+          <div style="font-weight:700;font-size:1.13em;margin-bottom:8px;color:#2563eb;display:flex;align-items:center;gap:7px;">
+            <span style="font-size:1.2em;">📦</span> Top 3 Item Terlaris
+          </div>
           <table class="stat-top-table">
             <thead>
               <tr>
@@ -2434,7 +2536,9 @@ statisticBtn.onclick = async function () {
           </table>
         </div>
         <div class="stat-top-summary-col">
-          <div style="font-weight:700;font-size:1.08em;margin-bottom:4px;color:#111;">Top 3 Pengeluaran Terbesar</div>
+          <div style="font-weight:700;font-size:1.13em;margin-bottom:8px;color:#2563eb;display:flex;align-items:center;gap:7px;">
+            <span style="font-size:1.2em;">🧾</span> Top 3 Pengeluaran Terbesar
+          </div>
           <table class="stat-top-table">
             <thead>
               <tr>
@@ -2573,35 +2677,35 @@ statisticBtn.onclick = async function () {
           {
             label: "Pemasukan",
             data: incomeData,
-            borderColor: "#111",
-            backgroundColor: "#e0e0e0",
-            fill: false,
-            tension: 0.25,
-            pointRadius: 3,
-            pointBackgroundColor: "#111",
-            borderWidth: 2,
+            borderColor: "#6366f1",
+            backgroundColor: "rgba(99,102,241,0.08)",
+            fill: true,
+            tension: 0.35,
+            pointRadius: 4,
+            pointBackgroundColor: "#6366f1",
+            borderWidth: 3,
           },
           {
             label: "Pengeluaran",
             data: expenseData,
-            borderColor: "#888",
-            backgroundColor: "#f0f0f0",
-            fill: false,
-            tension: 0.25,
-            pointRadius: 3,
-            pointBackgroundColor: "#888",
-            borderWidth: 2,
+            borderColor: "#f59e42",
+            backgroundColor: "rgba(245,158,66,0.08)",
+            fill: true,
+            tension: 0.35,
+            pointRadius: 4,
+            pointBackgroundColor: "#f59e42",
+            borderWidth: 3,
           },
           {
             label: "Profit",
             data: profitData,
-            borderColor: "#222",
-            backgroundColor: "#fafafa",
-            fill: false,
-            tension: 0.25,
-            pointRadius: 3,
-            pointBackgroundColor: "#222",
-            borderWidth: 2,
+            borderColor: "#10b981",
+            backgroundColor: "rgba(16,185,129,0.08)",
+            fill: true,
+            tension: 0.35,
+            pointRadius: 4,
+            pointBackgroundColor: "#10b981",
+            borderWidth: 3,
           },
         ],
       },
@@ -2614,10 +2718,15 @@ statisticBtn.onclick = async function () {
           title: {
             display: true,
             text: "Statistik Keuangan",
-            font: { size: 18 },
-            color: "#111"
+            font: { size: 20, weight: "bold" },
+            color: "#2563eb"
           },
           tooltip: {
+            backgroundColor: "#fff",
+            titleColor: "#2563eb",
+            bodyColor: "#222",
+            borderColor: "#6366f1",
+            borderWidth: 1,
             callbacks: {
               label: function (context) {
                 return (
@@ -2637,14 +2746,15 @@ statisticBtn.onclick = async function () {
                   : mode === "bulan"
                   ? "Bulan"
                   : "Tahun",
-              font: { size: 14 },
-              color: "#222"
+              font: { size: 15, weight: "bold" },
+              color: "#2563eb"
             },
             ticks: { font: { size: 13 }, color: "#222" },
+            grid: { color: "#e5e7eb" }
           },
           y: {
             beginAtZero: true,
-            title: { display: true, text: "Nominal (Rp)", font: { size: 14 }, color: "#222" },
+            title: { display: true, text: "Nominal (Rp)", font: { size: 15, weight: "bold" }, color: "#2563eb" },
             ticks: {
               font: { size: 13 },
               color: "#222",
@@ -2652,7 +2762,7 @@ statisticBtn.onclick = async function () {
                 return formatNumber(value);
               },
             },
-            grid: { color: "#eee" }
+            grid: { color: "#e5e7eb" }
           },
         },
       },
@@ -2662,12 +2772,10 @@ statisticBtn.onclick = async function () {
     let totalExpense = expenseData.reduce((a, b) => a + b, 0);
     let profit = totalIncome - totalExpense;
     document.getElementById("stat-summary").innerHTML = `
-            <b>Total Pemasukan:</b> ${formatNumber(totalIncome)} &nbsp; | &nbsp;
-            <b>Total Pengeluaran:</b> ${formatNumber(
-              totalExpense
-            )} &nbsp; | &nbsp;
-            <b>Profit:</b> ${formatNumber(profit)}
-        `;
+      <span><b style="color:#6366f1;">Total Pemasukan:</b> <span style="color:#222;">${formatNumber(totalIncome)}</span></span>
+      <span><b style="color:#f59e42;">Total Pengeluaran:</b> <span style="color:#222;">${formatNumber(totalExpense)}</span></span>
+      <span><b style="color:#10b981;">Profit:</b> <span style="color:#222;">${formatNumber(profit)}</span></span>
+    `;
 
     renderTopSummary(year, month);
   }
@@ -2708,7 +2816,7 @@ utangPiutangBtn.onclick = async function () {
   );
 
   let html = `
-        <h2>Daftar Piutang (Nota Belum Lunas)</h2>
+        
         <div style="margin-bottom:12px;">
             <b>Total Piutang:</b> <span style="color:#e74c3c;font-size:1.2em;">${formatNumber(
               totalUnpaid
@@ -2753,7 +2861,7 @@ utangPiutangBtn.onclick = async function () {
                             }" style="background:#27ae60;color:#fff;padding:2px 10px;border-radius:3px;">Bayar</button>
                             <button class="view-invoice-btn" data-no="${
                               inv.invoiceNumber
-                            }" style="background:#007bff;color:#fff;padding:2px 10px;border-radius:3px;margin-left:4px;">Lihat</button>
+                            }" style="background:#007bff;color:#fff;padding:2px 10px;border-radius:0.2px;margin-left:4px;">Lihat</button>
                         </td>
                     </tr>
                 `
@@ -2765,7 +2873,25 @@ utangPiutangBtn.onclick = async function () {
             <i>Hanya menampilkan nota yang belum lunas. Klik "Bayar" untuk mencatat pembayaran tambahan.</i>
         </div>
     `;
-  showModal("Utang Piutang", html);
+  // Tambahkan judul dengan box dan rata tengah, huruf kapital semua
+  const titleBox = `
+    <div style="
+      text-align:center;
+      background:#e74c3c;
+      color:#fff;
+      font-weight:bold;
+      font-size:1.25em;
+      letter-spacing:0.08em;
+      padding:14px 0 12px 0;
+      border-radius:8px;
+      margin-bottom:18px;
+      text-transform:uppercase;
+      box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
+    ">
+      UTANG PIUTANG
+    </div>
+  `;
+  showModal(titleBox, html);
 
   // Event tombol bayar
   document.querySelectorAll(".pay-utang-btn").forEach((btn) => {
@@ -2993,7 +3119,7 @@ searchBar.addEventListener("input", async function () {
   searchResults.innerHTML = results
     .map(
       (r) =>
-        `<div class="search-result-item" data-type="${r.type}" data-ref="${r.ref}" style="padding:8px 8px 8px 4px;cursor:pointer;border-bottom:1px solid #eee;background:#fff;">
+        `<div class="search-result-item" data-type="${r.type}" data-ref="${r.ref}" style="padding:8px 8px 8px 4px;cursor:pointer;border-bottom:0.2px solid #eee;background:#fff;">
           ${r.label}
         </div>`
     )
@@ -3056,34 +3182,44 @@ searchResults.addEventListener("click", async function (e) {
         expenseItemsBody.innerHTML = "";
         (exp.items || []).forEach((item) => {
           const tr = document.createElement("tr");
-          tr.innerHTML = `
-                        <td><input type="text" class="expense-item-name" value="${
-                          item.name || ""
-                        }" required></td>
-                        <td><input type="number" class="expense-item-qty" value="${
-                          item.qty || 1
-                        }" min="0" step="any" required style="width:60px;"></td>
-                        <td>
-                            <select class="expense-item-unit" style="width:70px;">
-                                ${satuanList
-                                  .map(
-                                    (s) =>
-                                      `<option value="${s}"${
-                                        item.unit === s ? " selected" : ""
-                                      }>${s}</option>`
-                                  )
-                                  .join("")}
-                </select>
-            </td>
-            <td><input type="number" class="expense-item-price" value="${
-              item.price || 0
-            }" min="0" step="any" required style="width:90px;"></td>
-            <td><input type="number" class="expense-item-discount" value="${
-              item.discount || 0
-            }" min="0" step="any" style="width:70px;" title="Diskon per barang"></td>
-            <td class="expense-item-total">0</td>
-            <td><button type="button" class="remove-expense-item">Hapus</button></td>
-                    `;
+            tr.innerHTML = `
+                  <td><input type="text" class="expense-item-name" value="${
+                    item.name || ""
+                  }" required></td>
+                  <td><input type="number" class="expense-item-qty" value="${
+                    item.qty || 1
+                  }" min="0" step="any" required style="width:60px;"></td>
+                  <td>
+                    <select class="expense-item-unit" style="width:70px;">
+                      ${satuanList
+                        .map(
+                        (s) =>
+                          `<option value="${s}"${
+                          item.unit === s ? " selected" : ""
+                          }>${s}</option>`
+                        )
+                        .join("")}
+                    </select>
+                  </td>
+                  <td><input type="number" class="expense-item-price" value="${
+                    item.price || 0
+                  }" min="0" step="any" required style="width:90px;"></td>
+                  <td><input type="number" class="expense-item-discount" value="${
+                    item.discount || 0
+                  }" min="0" step="any" style="width:70px;" title="Diskon per barang"></td>
+                  <td class="expense-item-total">0</td>
+                  <td>
+                    <button type="button" class="remove-expense-item" title="Hapus" style="background:none;border:none;cursor:pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
+                      <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+                      <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+                      <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+                      <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
+                      <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+                    </svg>
+                    </button>
+                  </td>
+                `;
           expenseItemsBody.appendChild(tr);
           tr.querySelectorAll("input, select").forEach((input) => {
             input.addEventListener("input", () => {
@@ -3288,8 +3424,8 @@ if (rekapBtn) {
     // Modal: tab Penjualan & Pengeluaran
     let html = `
       <div style="margin-bottom:16px;">
-        <button id="rekap-tab-penjualan" class="rekap-tab-btn" style="padding:6px 18px;border-radius:6px 6px 0 0;border:1.5px solid #007bff;background:#007bff;color:#fff;font-weight:bold;">Penjualan</button>
-        <button id="rekap-tab-pengeluaran" class="rekap-tab-btn" style="padding:6px 18px;border-radius:6px 6px 0 0;border:1.5px solid #e67e22;background:#e67e22;color:#fff;font-weight:bold;margin-left:2px;">Pengeluaran</button>
+        <button id="rekap-tab-penjualan" class="rekap-tab-btn" style="padding:6px 18px;border-radius:0.2px 0.2pxpx 0 0;border:0.2px solid #007bff;background:#007bff;color:#fff;font-weight:bold;">Penjualan</button>
+        <button id="rekap-tab-pengeluaran" class="rekap-tab-btn" style="padding:6px 18px;border-radius:0.2px 0.2pxpx 0 0;border:0.2px solid #e67e22;background:#e67e22;color:#fff;font-weight:bold;margin-left:2px;">Pengeluaran</button>
       </div>
       <div id="rekap-panel-penjualan">
         <div style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
@@ -3349,21 +3485,39 @@ if (rekapBtn) {
         .rekap-tab-btn.active {
           background: #fff !important;
           color: #007bff !important;
-          border-bottom: 2.5px solid #fff !important;
+          border-bottom: 0.2px solid #fff !important;
         }
         .rekap-tab-btn {
-          border-bottom: 2.5px solid #bbb !important;
+          border-bottom: 0.2px solid #bbb !important;
         }
         #rekap-panel-penjualan, #rekap-panel-pengeluaran {
           background: #fff;
-          border-radius: 0 0 8px 8px;
-          border: 1.5px solid #bbb;
+          border-radius: 0 0 0.2px 0.2px;
+          border: 0.2pxpx solid #bbb;
           border-top: none;
           padding: 18px 12px 12px 12px;
         }
       </style>
     `;
-    showModal("Rekap Penjualan & Pengeluaran", html);
+    // Tambahkan judul dengan box dan rata tengah, huruf kapital semua
+    const titleBox = `
+      <div style="
+      text-align:center;
+      background:#007bff;
+      color:#fff;
+      font-weight:bold;
+      font-size:1.25em;
+      letter-spacing:0.08em;
+      padding:14px 0 12px 0;
+      border-radius:8px;
+      margin-bottom:18px;
+      text-transform:uppercase;
+      box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
+      ">
+      REKAP PENJUALAN & PENGELUARAN
+      </div>
+    `;
+    showModal("", titleBox + html);
 
     // Tab switching
     document.getElementById("rekap-tab-penjualan").onclick = function () {
@@ -3704,7 +3858,25 @@ if (exportBtn) {
         <i>Data yang diexport berupa ringkasan transaksi penjualan (invoice) dan pengeluaran pada bulan terpilih, sesuai tampilan tabel pembukuan.</i>
       </div>
     `;
-    showModal("Export Laporan ke Excel", html);
+    // Tambahkan judul dengan box dan rata tengah, huruf kapital semua
+    const titleBox = `
+      <div style="
+      text-align:center;
+      background:#007bff;
+      color:#fff;
+      font-weight:bold;
+      font-size:1.25em;
+      letter-spacing:0.08em;
+      padding:14px 0 12px 0;
+      border-radius:8px;
+      margin-bottom:18px;
+      text-transform:uppercase;
+      box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
+      ">
+      EXPORT LAPORAN KE EXCEL
+      </div>
+    `;
+    showModal("", titleBox + html);
 
     document.getElementById("export-excel-btn").onclick = async function () {
       const month = document.getElementById("export-month").value;
