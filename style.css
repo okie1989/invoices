@@ -1169,38 +1169,5 @@ form,
   /* city: 0.9; */
 }
 
-.lunas-watermark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 100;
-  transform: translate(-50%, -50%) rotate(-18deg);
-  pointer-events: none;
-  user-select: none;
-  text-align: center;
-  width: 80%;
-  opacity: 0.33;
-}
 
-.lunas-watermark .lunas-text {
-  font-size: 5em;
-  font-weight: 900;
-  color: hsla(6, 78%, 57%, 0.411);
-  letter-spacing: 0.15em;
-  opacity: 0.33;
-  font-family: 'Exo 2', Arial, sans-serif;
-  line-height: 1;
-  margin-bottom: 0.2em;
-  filter: blur(0.2px);
-}
-
-.lunas-watermark .lunas-date {
-  font-size: 1.2em;
-  color:  hsla(6, 78%, 57%, 0.411);
-  font-weight: 700;
-  padding: 2px 18px;
-  display: inline-block;
-  margin-top: 0.2em;
-
-}
 
