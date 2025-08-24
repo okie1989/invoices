@@ -764,11 +764,67 @@ viewBtn.onclick = function () {
   const data = collectInvoiceData();
   // Tambahkan tombol share WhatsApp di atas invoice
   const controlsHtml = `
-        <div id="invoice-preview-controls" style="display:flex;gap:10px;justify-content:flex-end;margin-bottom:10px;">
-            <button id="download-invoice-jpg" style="background:#007bff;color:#fff;padding:6px 14px;border-radius:5px;border:none;cursor:pointer;font-size:1em;"><span>⬇️</span> Download JPG</button>
-            <button id="share-wa" style="background:#25D366;color:#fff;padding:6px 14px;border-radius:5px;border:none;cursor:pointer;font-size:1em;"><span>🟢</span> Share WhatsApp</button>
-        </div>
-    `;
+    <div id="invoice-preview-controls" style="
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 14px;
+      padding: 8px 0;
+      border-radius: 8px;
+      align-items: center;
+      transition: box-shadow 0.2s;
+    ">
+      <button id="download-invoice-jpg" style="
+        background: #007bff;
+        color: #fff;
+        padding: 8px 18px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 1.15em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        box-shadow: 0 1px 6px 0 rgba(0,123,255,0.10);
+        transition: background 0.2s, box-shadow 0.2s;
+      " onmouseover="this.style.background='#0056b3';this.style.boxShadow='0 2px 12px 0 rgba(0,123,255,0.18)';" onmouseout="this.style.background='#007bff';this.style.boxShadow='0 1px 6px 0 rgba(0,123,255,0.10)';">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><path fill="#fff" d="M12 16a1 1 0 0 1-1-1V5a1 1 0 1 1 2 0v10a1 1 0 0 1-1 1Zm-5.707-3.707a1 1 0 0 1 1.414 0L12 15.586l4.293-4.293a1 1 0 0 1 1.414 1.414l-5 5a1 1 0 0 1-1.414 0l-5-5a1 1 0 0 1 0-1.414Z"/><rect width="20" height="20" x="2" y="2" stroke="#fff" stroke-width="0" rx="4"/></svg>
+        <span>Download JPG</span>
+      </button>
+      <button id="share-wa" style="
+        background: #25D366;
+        color: #fff;
+        padding: 8px 18px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 1.15em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        box-shadow: 0 1px 6px 0 rgba(37,211,102,0.10);
+        transition: background 0.2s, box-shadow 0.2s;
+      " onmouseover="this.style.background='#128c7e';this.style.boxShadow='0 2px 12px 0 rgba(37,211,102,0.18)';" onmouseout="this.style.background='#25D366';this.style.boxShadow='0 1px 6px 0 rgba(37,211,102,0.10)';">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><path fill="#fff" d="M12 2a10 10 0 0 0-8.94 14.47l-1.05 3.85a1 1 0 0 0 1.23 1.23l3.85-1.05A10 10 0 1 0 12 2Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm4.07-5.75c-.22-.11-1.29-.64-1.49-.71-.2-.07-.34-.11-.48.11-.14.22-.55.71-.67.85-.12.14-.25.16-.47.05-.22-.11-.93-.34-1.77-1.09-.66-.59-1.11-1.31-1.24-1.53-.13-.22-.01-.34.1-.45.1-.1.22-.26.33-.39.11-.13.15-.22.22-.36.07-.14.04-.27-.02-.38-.06-.11-.48-1.16-.66-1.59-.17-.41-.34-.35-.47-.36-.12-.01-.27-.01-.42-.01a.81.81 0 0 0-.59.27c-.2.22-.77.75-.77 1.83 0 1.08.79 2.13.9 2.28.11.15 1.56 2.38 3.79 3.23.53.18.94.29 1.26.37.53.13 1.01.11 1.39.07.43-.05 1.29-.53 1.47-1.04.18-.51.18-.95.13-1.04-.05-.09-.2-.14-.42-.25Z"/></svg>
+        <span>Share WhatsApp</span>
+      </button>
+    </div>
+    <style>
+      #invoice-preview-controls button:active {
+        transform: scale(0.97);
+        box-shadow: 0 1px 12px 0 rgba(0,0,0,0.13);
+      }
+      #invoice-preview-controls button:focus {
+        outline: 2px solid #007bff;
+        outline-offset: 2px;
+      }
+      #invoice-preview-controls button:hover span {
+        text-decoration: underline;
+      }
+    </style>
+  `;
   showModal("", controlsHtml + renderInvoiceView(data));
   // Sembunyikan tombol "Hapus Nota Tersimpan" jika ada
   const deleteBtn = document.getElementById("delete-saved-invoice");
@@ -967,12 +1023,60 @@ function renderInvoiceView(data) {
   // --- Watermark LUNAS jika sudah lunas ---
   let watermarkHtml = "";
   if (unpaidAmount <= 0 && paidAmount > 0) {
-    // Tanggal pelunasan: gunakan invoiceDate jika tidak ada field khusus
     let pelunasanDate = data.invoiceDate || "";
     watermarkHtml = `
-      <div class="lunas-watermark">
-        <div class="lunas-text">LUNAS</div>
-        <div class="lunas-date">Tanggal: ${pelunasanDate}</div>
+      <div class="lunas-watermark" style="
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(-7deg);
+        z-index: 10;
+        pointer-events: none;
+        opacity: 0.13;
+        font-family: 'Arial Narrow', Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      ">
+        <div style="
+          width: 220px;
+          height: 220px;
+          border-radius: 50%;
+          border: 7px solid #e74c3c;
+          background: rgba(255,255,255,0.12);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 24px 0 rgba(231,76,60,0.09);
+        ">
+          <div style="
+            color: #e74c3c;
+            font-size: 2.7em;
+            font-weight: bold;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: none;
+            border: none;
+            border-radius: 50%;
+            padding: 0;
+            margin-bottom: 8px;
+            box-shadow: none;
+            text-align: center;
+          ">LUNAS</div>
+          <div style="
+            color: #e74c3c;
+            font-size: 1em;
+            font-weight: 600;
+            background: none;
+            border-radius: 8px;
+            padding: 2px 12px;
+            border: 1px solid #e74c3c;
+            opacity: 0.7;
+            margin-top: 2px;
+            text-align: center;
+          ">${pelunasanDate}</div>
+        </div>
       </div>
     `;
   }
