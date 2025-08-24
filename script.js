@@ -839,7 +839,7 @@ viewBtn.onclick = function () {
 printBtn.onclick = function () {
   const data = collectInvoiceData();
 
-  // Render struk HTML (50mm width, font kecil, layout sederhana)
+  // Render struk HTML sesuai format permintaan
   function renderStruk(data) {
     // Helper: format tanggal dd/mm/yyyy
     function formatDate(d) {
@@ -848,139 +848,89 @@ printBtn.onclick = function () {
       return `${day}/${m}/${y}`;
     }
     // Nama toko & alamat
-    const businessName = (data.businessName || "KANVAS MERCHANDISE").replace(
+    let businessName = (data.businessName || "KANVAS MERCHANDISE").replace(
       /\n/g,
       "<br>"
     );
-    const address =
-      "Jl.Riau Barat No.21 Kec. Sananwetan Kota Blitar<br><span style='font-size:9px;'>Telp. 082257423324</span>";
-    let showAddress = true;
-    if (
-      businessName.includes("Jl.Riau Barat No.21") ||
-      businessName.includes("082257423324")
-    ) {
-      showAddress = false;
+    // Hapus alamat jika sudah ada di businessName
+    const addressText = "Jl.Riau Barat No.21 Kec. Sananwetan Kota Blitar<br>Telp. 082257423324";
+    if (businessName.includes("Jl.Riau Barat") || businessName.includes("Sananwetan Kota Blitar")) {
+      businessName = businessName;
+    } else {
+      businessName += `<br>${addressText}`;
     }
-    // Group items by name, but keep order and allow same name with different price/qty
-    let groupedRows = [];
+    // Group items by name, keep order
+    let rows = "";
+    let totalQty = 0, total = 0;
     (data.items || []).forEach((item) => {
       if (!item.name) return;
       const qty = Number(item.qty) || 0;
       const price = Number(item.price) || 0;
       const subtotal = qty * price;
-      groupedRows.push({
-        name: item.name,
-        qty,
-        price,
-        subtotal,
-      });
-    });
-
-    // Font angka gepeng: gunakan 'Arial Narrow', 'Roboto Condensed', 'Oswald', monospace
-    const numberFont = "'Arial Narrow', 'Roboto Condensed', 'Oswald', Arial, monospace";
-    // CSS untuk angka lebih gepeng (font-stretch)
-    const numberFontStyle = "font-family:" + numberFont + ";font-stretch:condensed;font-variation-settings:'wdth' 75;letter-spacing:0.01em;";
-
-    // Font size besar untuk angka penting
-    const bigNumberFontStyle = numberFontStyle + "font-size:1.25em;";
-
-    // Prepare rows for printing: only show name if different from previous row
-    let htmlRows = "";
-    let prevName = null;
-    let total = 0,
-      totalQty = 0;
-    groupedRows.forEach((row) => {
-      total += row.subtotal;
-      totalQty += row.qty;
-      htmlRows += `
-        <tr>
-          <td style="text-align:left;word-break:break-word;padding:2px 0 2px 0;">${row.name !== prevName ? row.name : ""}</td>
-          <td style="text-align:right;padding:2px 0;${numberFontStyle}">${row.qty}</td>
-          <td style="text-align:right;padding:2px 0;${numberFontStyle}">${formatNumber(row.price)}</td>
-          <td style="text-align:right;padding:2px 0;${numberFontStyle}">${formatNumber(row.subtotal)}</td>
-        </tr>
+      totalQty += qty;
+      total += subtotal;
+      rows += `
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2px;">
+          <div style="flex:1;">
+            <span style="font-size:10px;white-space:normal;overflow:visible;text-overflow:unset;display:block;">
+              - ${item.name}${item.size ? " (" + item.size + ")" : ""}
+            </span>
+            <span>${qty} x <span style="font-weight:bold;">${formatNumber(price)}</span></span>
+          </div>
+          <div style="text-align:right;min-width:60px;">
+            <span style="font-weight:bold;">${formatNumber(subtotal)}</span>
+          </div>
+        </div>
+        <div style="border-top:1px dashed #bbb;margin:2px 0 2px 0;"></div>
       `;
-      prevName = row.name;
     });
 
+    // Semua font pakai Segoe UI, ukuran 12px
     let html = `
-      <div style="
-        width:45mm;
-        max-width:100vw;
-        font-family:'Segoe UI', Arial, sans-serif;
-        font-size:12px;
-        line-height:1.35;
-        background:#fff;
-        color:#222;
-        padding:0;
-        margin:0;
-        text-transform:uppercase;
-      ">
+      <div style="width:50mm;max-width:100vw;font-family:'Segoe UI',Arial,sans-serif;font-size:12px;line-height:1.35;background:#fff;color:#222;padding:0;margin:0;text-transform:uppercase;">
         <div style="text-align:center;margin-bottom:2px;">
-          <img src="https://i.imgur.com/75tlt7m.png" alt="Logo" style="width:32px;height:44px;display:block;margin:0 auto 2px auto;" crossOrigin="anonymous" />
+          <img src="https://i.imgur.com/75tlt7m.png" alt="Logo" style="width:32px;height:44px;display:block;margin:0 auto 2px auto;filter:grayscale(1);" crossOrigin="anonymous" />
         </div>
-        <div style="text-align:center;font-weight:700;font-size:10.5px;margin-bottom:1px;letter-spacing:0.5px;">${businessName}</div>
-        ${
-          showAddress
-            ? `<div style="text-align:center;margin-bottom:3px;font-size:8.5px;line-height:1.2;">${address}</div>`
-            : ""
-        }
-        <div style="border-top:1.2px dashed #222;margin:3px 0 5px 0;"></div>
-        <div style="display:flex;justify-content:space-between;font-size:9.5px;">
-          <span>Tgl: <span style="${numberFontStyle}">${formatDate(data.invoiceDate)}</span></span>
-          <span>No: <span style="${numberFontStyle}font-size:9.5px;">${data.invoiceNumber}</span></span>
+        <div style="text-align:center;font-weight:700;margin-bottom:1px;letter-spacing:0.5px;">${businessName}</div>
+        <div style="display:flex;justify-content:space-between;">
+          <span>Tgl: ${formatDate(data.invoiceDate)}</span>
+          <span>No: ${data.invoiceNumber}</span>
         </div>
-        <div style="font-size:9.5px;">Pelanggan: <b>${data.customerName || "-"}</b></div>
-        <div style="font-size:9.5px;">Pesanan: <b>${data.orderName || "-"}</b></div>
+        <div>Pelanggan: <b>${data.customerName || "-"}</b></div>
+        <div>Pesanan: <b>${data.orderName || "-"}</b></div>
         <div style="border-top:1.2px dashed #222;margin:4px 0 5px 0;"></div>
-        <table style="width:100%;border-collapse:collapse;font-size:10.5px;">
-          <thead>
-            <tr>
-              <th style="text-align:left;padding-bottom:1px;">Barang</th>
-              <th style="text-align:right;padding-bottom:1px;">Qty</th>
-              <th style="text-align:right;padding-bottom:1px;">Harga</th>
-              <th style="text-align:right;padding-bottom:1px;">Jml</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${htmlRows}
-          </tbody>
-        </table>
+        ${rows}
         <div style="border-top:1.2px dashed #222;margin:5px 0 5px 0;"></div>
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
           <span>Total Qty:</span>
-          <span style="${bigNumberFontStyle}"><b>${totalQty}</b></span>
+          <span style="font-weight:bold;">${totalQty}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
           <span>Total:</span>
-          <span style="${bigNumberFontStyle}"><b>${formatNumber(total)}</b></span>
+          <span style="font-weight:bold;">${formatNumber(total)}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
           <span>Diskon:</span>
-          <span style="${numberFontStyle}">${formatNumber(data.discount || 0)}</span>
+          <span style="font-weight:bold;">${formatNumber(data.discount || 0)}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
           <span>Terbayar:</span>
-          <span style="${bigNumberFontStyle}">${formatNumber(data.paidAmount || 0)}</span>
+          <span style="font-weight:bold;">${formatNumber(data.paidAmount || 0)}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
           <span>Belum Lunas:</span>
-          <span style="${bigNumberFontStyle}">${formatNumber(data.unpaidAmount || 0)}</span>
+          <span style="font-weight:bold;">${formatNumber(data.unpaidAmount || 0)}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
           <span>Kembalian:</span>
-          <span style="${numberFontStyle}">${formatNumber(data.changeAmount || 0)}</span>
+          <span style="font-weight:bold;">${formatNumber(data.changeAmount || 0)}</span>
         </div>
         <div style="border-top:1.2px dashed #222;margin:6px 0 0 0;"></div>
-        <div style="text-align:center;font-size:9.5px;margin-top:4px;line-height:1.2;font-weight:500;">
+        <div style="text-align:center;margin-top:4px;line-height:1.2;font-weight:500;">
           Terima kasih<br>
           Semoga Berkah dan Manfaat
         </div>
       </div>
-      <style>
-        @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700&display=swap');
-        @import url('https://fonts.googleapis.com/css?family=Oswald:400,700&display=swap');
-      </style>
     `;
     return html;
   }
@@ -995,8 +945,6 @@ printBtn.onclick = function () {
                     @media print {
                         body { margin:0; background:#fff; }
                         .struk-print { width:50mm !important; max-width:100vw; }
-                        table { font-size:10px; }  
-                        th, td { padding:0; }
                     }
                 </style>
             </head>
