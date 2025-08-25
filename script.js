@@ -770,7 +770,7 @@ viewBtn.onclick = function () {
       justify-content: center;
       margin-bottom: 14px;
       padding: 8px 0;
-      border-radius: 8px;
+
       align-items: center;
       transition: box-shadow 0.2s;
     ">
