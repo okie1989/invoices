@@ -84,9 +84,9 @@ body::before {
   gap: 10px;
 }
 .logo {
-    width: 1276px;
+    width: 1273px;
     height: 282px;
-    left: -4%;
+    left: -49px;
     position: relative;
 }
 
@@ -1203,6 +1203,7 @@ form,
   transform: scale(1.05);
   /* city: 0.9; */
 }
+
 
 
 
