@@ -446,7 +446,7 @@ input[type="file"] {
   color: #111;
 }
 .invoice-view .logo {
-    width: 977px;
+    width: 973px;
     height: 213px;
     position: relative;
     left: -55px;
@@ -1203,6 +1203,7 @@ form,
   transform: scale(1.05);
   /* city: 0.9; */
 }
+
 
 
 
