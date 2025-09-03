@@ -30,7 +30,7 @@ body::before {
   right: 0;
   bottom: 0;
   z-index: -2;
-  background: linear-gradient(120deg, #fff 0%, #c1fafa 100%);
+  
   filter: blur(4px) brightness(1);
   width: 100vw;
   height: 100vh;
@@ -1203,6 +1203,7 @@ form,
   transform: scale(1.05);
   /* city: 0.9; */
 }
+
 
 
 
