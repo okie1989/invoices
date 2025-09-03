@@ -343,7 +343,7 @@ input[type="file"] {
 }
 .modal-content {
   background: #fff;
-  margin: 40px auto;
+  margin: 1px auto;
   padding: 18px 12px 12px 12px;
   border-radius: 0.2px;
   width: 99%;
@@ -1203,6 +1203,7 @@ form,
   transform: scale(1.05);
   /* city: 0.9; */
 }
+
 
 
 
