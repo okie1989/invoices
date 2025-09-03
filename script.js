@@ -500,12 +500,11 @@ function fillInvoiceData(data) {
   document.getElementById("discount").value = data.discount || 0;
   document.getElementById("paid-amount").value =
     data.paidAmount || data.amountPaid || 0;
-  document.querySelector(".business-name").innerHTML = `KANVAS MERCHANDISE
+  document.querySelector(".business-name").innerHTML = `
         <div class="business-address">
-            Jl.Riau Barat No.21 Kec. Sananwetan Kota Blitar<br>
-            Telp. 082257423324
+            
         </div>`;
-  document.querySelector(".logo").src = "https://i.imgur.com/75tlt7m.png";
+  document.querySelector(".logo").src = "https://i.imgur.com/LSgpj2Y.png";
   setMockupPreview(data.mockup);
   updateTotals();
 }
@@ -887,11 +886,11 @@ printBtn.onclick = function () {
 
     // Semua font pakai Segoe UI, ukuran 12px
     let html = `
-      <div style="width:50mm;max-width:100vw;font-family:'Segoe UI',Arial,sans-serif;font-size:12px;line-height:1.35;background:#fff;color:#222;padding:0;margin:0;text-transform:uppercase;">
+      <div style="width:60mm;max-width:100vw;font-family:'Segoe UI',Arial,sans-serif;font-size:12px;line-height:1.35;background:#fff;color:#222;padding:0;margin:0;text-transform:uppercase;">
         <div style="text-align:center;margin-bottom:2px;">
-          <img src="https://i.imgur.com/75tlt7m.png" alt="Logo" style="width:32px;height:44px;display:block;margin:0 auto 2px auto;filter:grayscale(1);" crossOrigin="anonymous" />
+          <img src="https://i.imgur.com/NHLJoOH.png" alt="Logo" style="width:242px;height:133px;display:block;margin:0 auto 10px auto;filter:grayscale(1);" crossOrigin="anonymous" />
         </div>
-        <div style="text-align:center;font-weight:700;margin-bottom:1px;letter-spacing:0.5px;">${businessName}</div>
+        
         <div style="display:flex;justify-content:space-between;">
           <span>Tgl: ${formatDate(data.invoiceDate)}</span>
           <span>No: ${data.invoiceNumber}</span>
@@ -1109,7 +1108,7 @@ function renderInvoiceView(data) {
         ${watermarkHtml}
         <div class="header" style="flex-wrap:nowrap;align-items:flex-start;">
             <div class="logo-section">
-                <img src="https://i.imgur.com/75tlt7m.png" class="logo" style="border:none;box-shadow:none;" crossOrigin="anonymous" onerror="this.style.display='block';" />
+                <img src="https://i.imgur.com/LSgpj2Y.png" class="logo" style="border:none;box-shadow:none;" crossOrigin="anonymous" onerror="this.style.display='block';" />
                 <span class="business-name">
                     ${data.businessName}
                     
@@ -1122,7 +1121,7 @@ function renderInvoiceView(data) {
                 </div>
             </div>
         </div>
-        <h1 style="margin:0 0 0 0;font-size:1.35em;">INVOICE</h1>
+        <h1 style="margin:0 0 0 0;font-size:1.35em;"></h1>
         <div class="header2 invoice-view-header2-flex">
             <div class="invoice-view-header2-left">
                 <div><b>Pelanggan:</b> ${data.customerName || "-"}</div>
