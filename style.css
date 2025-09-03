@@ -43,7 +43,7 @@ body::before {
     max-width: 1200px;
     width: 99vw;
     margin: 48px auto 40px auto;
-    padding: 36px 36px 32px 36px;
+    padding: 23px 36px 32px 36px;
     border-radius: 0.2px;
     overflow: visible;
     animation: fadeInUp 0.7s cubic-bezier(0.23, 1.01, 0.32, 1) both;
@@ -1203,6 +1203,7 @@ form,
   transform: scale(1.05);
   /* city: 0.9; */
 }
+
 
 
 
