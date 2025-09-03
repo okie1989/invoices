@@ -39,19 +39,15 @@ body::before {
   /* transition: city 0.5s; */
 }
 .invoice-container {
-  background: #c1fafa; /* pastel lavender, minimalis */
-  max-width: 1200px;
-  width: 99vw;
-  margin: 48px auto 40px auto;
-  padding: 36px 36px 32px 36px;
-  border-radius: 0.2px;
-
-  box-shadow: 0 8px 40px rgba(34,34,34,0.13), 0 0 0 3px #d1c4e9;
-  position: relative;
-  overflow: visible;
-  margin-bottom: 48px;
-  animation: fadeInUp 0.7s cubic-bezier(0.23, 1.01, 0.32, 1) both;
-  transition: box-shadow 0.25s, border 0.25s;
+    background: #c1fafa;
+    max-width: 1200px;
+    width: 99vw;
+    margin: 48px auto 40px auto;
+    padding: 36px 36px 32px 36px;
+    border-radius: 0.2px;
+    overflow: visible;
+    animation: fadeInUp 0.7s cubic-bezier(0.23, 1.01, 0.32, 1) both;
+    transition: box-shadow 0.25s, border 0.25s;
 }
 .invoice-container:hover, .invoice-container:focus-within {
   background: linear-gradient(120deg, #ffffff 0%, #c1fafa 100%);
@@ -88,8 +84,10 @@ body::before {
   gap: 10px;
 }
 .logo {
-  width: 38px;
-  height: 48px;
+    width: 1276px;
+    height: 282px;
+    left: -4%;
+    position: relative;
 }
 
 .business-name {
@@ -111,12 +109,15 @@ body::before {
   line-height: 1.2;
 }
 .invoice-info {
-  background: none;
-  border-radius: 0;
-  padding: 0;
-  border: none;
-  margin-bottom: 0;
-  box-shadow: none;
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    border: none;
+    margin-bottom: 0;
+    box-shadow: none;
+    position: absolute;
+    right: 25px;
+    top: 77px;
 }
 .invoice-info > div {
   margin-bottom: 2px;
@@ -140,16 +141,42 @@ h1 {
 }
 table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   margin-bottom: 16px;
   background: #fff;
-  border-radius: 0.2px;
-  border: 0.2px solid #222;
-  box-shadow: 0 2px 10px rgba(34,34,34,0.06);
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(34,34,34,0.08);
   font-family: "Exo 2", Arial, sans-serif;
   overflow: hidden;
   animation: fadeInTable 0.7s cubic-bezier(0.23, 1.01, 0.32, 1) both;
+}
+th, td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  font-size: 1em;
+}
+th {
+  background: #f7f7f7;
+  color: #222;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #222;
+}
+tr:last-child td {
+  border-bottom: none;
+}
+tbody tr:hover {
+  background: #f0f8ff;
+  transition: background 0.2s;
+}
+tfoot td {
+  font-weight: bold;
+  background: #f7f7f7;
+  color: #222;
+  font-size: 1em;
+  border-top: 2px solid #222;
 }
 @keyframes fadeInTable {
   from {
@@ -394,20 +421,24 @@ input[type="file"] {
   justify-content: flex-start !important;
 }
 .invoice-view .logo-section {
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 12px;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 10px;
+    margin-bottom: -99px;
 }
 .invoice-view .invoice-info {
-  text-align: right;
-  margin-left: 32px;
-  margin-top: 0;
-  min-width: 220px;
-  font-size: 1.08em;
-  background: none !important;
-  border: none !important;
-  padding: 0 !important;
-  box-shadow: none !important;
+    text-align: right;
+    margin-left: 32px;
+    margin-top: 0;
+    min-width: 220px;
+    font-size: 1.08em;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    top: 4%;
+    right: 6%;
 }
 .invoice-view .invoice-info > div {
   margin-bottom: 4px;
@@ -415,8 +446,11 @@ input[type="file"] {
   color: #111;
 }
 .invoice-view .logo {
-  width: 60px;
-  height: 80px;
+    width: 977px;
+    height: 213px;
+    position: relative;
+    left: -55px;
+    bottom: 63px;
 }
 .invoice-view .business-address {
   font-size: 0.95em !important;
@@ -472,7 +506,7 @@ input[type="file"] {
   text-align: center;
 }
 .invoice-view tfoot td {
-  border-top: 0.2px solid #222 !important;
+    border-top: 4.2px solid #222 !important;
 }
 .invoice-view .mockup-large {
   max-width: 520px;
