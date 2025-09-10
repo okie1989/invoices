@@ -41,7 +41,7 @@ body::before {
 .invoice-container {
     background: #c1fafa;
     max-width: 1200px;
-    width: 99vw;
+    width: 1273px;
     margin: 48px auto 40px auto;
     padding: 23px 36px 32px 36px;
     border-radius: 0.2px;
@@ -1203,6 +1203,7 @@ form,
   transform: scale(1.05);
   /* city: 0.9; */
 }
+
 
 
 
