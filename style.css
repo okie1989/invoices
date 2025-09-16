@@ -509,8 +509,8 @@ input[type="file"] {
     border-top: 4.2px solid #222 !important;
 }
 .invoice-view .mockup-large {
-  max-width: 520px;
-  max-height: 320px;
+  max-width: 490px;
+  max-height: 310px;
 
   display: inline-block;
   vertical-align: middle;
@@ -1203,6 +1203,7 @@ form,
   transform: scale(1.05);
   /* city: 0.9; */
 }
+
 
 
 
