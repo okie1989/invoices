@@ -409,7 +409,7 @@ input[type="file"] {
 .invoice-view .header2,
 .invoice-view .header, .invoice-view .header2, .invoice-view .payment-section {
     margin-bottom: 10px !important;
-    padding: 10px 18px !important;
+    padding: 2px 2px !important;
     border-radius: 0.2px !important;
 
 
@@ -1203,6 +1203,7 @@ form,
   transform: scale(1.05);
   /* city: 0.9; */
 }
+
 
 
 
