@@ -835,6 +835,8 @@ viewBtn.onclick = function () {
   document.getElementById("share-wa").onclick = shareToWhatsApp;
 };
 
+
+
 printBtn.onclick = function () {
   const data = collectInvoiceData();
 
@@ -1079,7 +1081,7 @@ function renderInvoiceView(data) {
     font-size: 60%;
     max-width: 100%;
     display: flex;
-    gap: 34px;
+    gap: 3px;
     flex-wrap: wrap;
     justify-content: space-between;
     text-transform: math-auto;
@@ -1233,7 +1235,7 @@ function showExpenseForm(expenseData = null, expenseKey = null) {
             </div>
             <div style="margin-bottom:14px;">
                 <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">TOTAL PENGELUARAN (RP):</label>
-                <input type="number" id="expense-amount" required min="0" readonly style="background:#f8fafc;text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;color:#e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
+                <input type="number" id="expense-amount" required min="0" readonly style="background:#fff;text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;color:#e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
             </div>
             <button type="submit" style="margin-top:8px;background:#e67e22;color:#fff;font-weight:bold;padding:10px 24px;border-radius:8px;border:none;cursor:pointer;text-transform:uppercase;box-shadow:0 2px 12px 0 rgba(230,126,34,0.13);font-size:1.08em;letter-spacing:0.08em;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">SIMPAN PENGELUARAN</button>
         </form>
@@ -1508,7 +1510,7 @@ async function renderExpenseList() {
                         <td>${e.type || "-"}</td>
                         <td>${e.supplier || "-"}</td>
                         <td>
-                            <table style="width:100%;background:#f8fafc;border-radius:4px;">
+                            <table style="width:100%;background:#fff;border-radius:4px;">
                                 <thead>
                                     <tr>
                                         <th style="font-size:0.95em;">Nama Barang</th>
@@ -2176,7 +2178,7 @@ statisticBtn.onclick = async function () {
     style.id = "statistik-style";
     style.innerHTML = `
       .statistic-modal {
-        background: linear-gradient(135deg,#f8fafc 0%,#e3e8ee 100%);
+        background: linear-gradient(135deg,#fff 0%,#e3e8ee 100%);
         border-radius: 16px;
         box-shadow: 0 8px 32px 0 rgba(0,0,0,0.10);
         padding: 32px 24px 24px 24px !important;
@@ -2208,7 +2210,7 @@ statisticBtn.onclick = async function () {
       .stat-top-summary-flex {
         display: flex;
         flex-wrap: wrap;
-        gap: 32px;
+        gap: 3px;
         justify-content: center;
         align-items: stretch;
         margin-top: 0;
@@ -2259,7 +2261,7 @@ statisticBtn.onclick = async function () {
         font-weight: bold;
         font-size: 1.08em;
         color: #fff;
-        background: linear-gradient(135deg,#6366f1 0%,#2563eb 100%);
+        background: linear-gradient(135deg,#121212 0%,#2563eb 100%);
         border-radius: 50%;
         width: 28px;
         height: 28px;
@@ -2394,7 +2396,7 @@ statisticBtn.onclick = async function () {
   const titleBox = `
     <div style="
       text-align:center;
-      background: linear-gradient(90deg,#6366f1 0%,#2563eb 100%);
+      background: linear-gradient(90deg,#121212 0%,#2563eb 100%);
       color:#fff;
       font-weight:bold;
       font-size:1.35em;
@@ -2728,12 +2730,12 @@ statisticBtn.onclick = async function () {
           {
             label: "Pemasukan",
             data: incomeData,
-            borderColor: "#6366f1",
+            borderColor: "#121212",
             backgroundColor: "rgba(99,102,241,0.08)",
             fill: true,
             tension: 0.35,
             pointRadius: 4,
-            pointBackgroundColor: "#6366f1",
+            pointBackgroundColor: "#121212",
             borderWidth: 3,
           },
           {
@@ -2750,12 +2752,12 @@ statisticBtn.onclick = async function () {
           {
             label: "Profit",
             data: profitData,
-            borderColor: "#10b981",
+            borderColor: "#121212",
             backgroundColor: "rgba(16,185,129,0.08)",
             fill: true,
             tension: 0.35,
             pointRadius: 4,
-            pointBackgroundColor: "#10b981",
+            pointBackgroundColor: "#121212",
             borderWidth: 3,
           },
         ],
@@ -2776,7 +2778,7 @@ statisticBtn.onclick = async function () {
             backgroundColor: "#fff",
             titleColor: "#2563eb",
             bodyColor: "#222",
-            borderColor: "#6366f1",
+            borderColor: "#121212",
             borderWidth: 1,
             callbacks: {
               label: function (context) {
@@ -2823,9 +2825,9 @@ statisticBtn.onclick = async function () {
     let totalExpense = expenseData.reduce((a, b) => a + b, 0);
     let profit = totalIncome - totalExpense;
     document.getElementById("stat-summary").innerHTML = `
-      <span><b style="color:#6366f1;">Total Pemasukan:</b> <span style="color:#222;">${formatNumber(totalIncome)}</span></span>
+      <span><b style="color:#121212;">Total Pemasukan:</b> <span style="color:#222;">${formatNumber(totalIncome)}</span></span>
       <span><b style="color:#f59e42;">Total Pengeluaran:</b> <span style="color:#222;">${formatNumber(totalExpense)}</span></span>
-      <span><b style="color:#10b981;">Profit:</b> <span style="color:#222;">${formatNumber(profit)}</span></span>
+      <span><b style="color:#121212;">Profit:</b> <span style="color:#222;">${formatNumber(profit)}</span></span>
     `;
 
     renderTopSummary(year, month);
@@ -4040,6 +4042,441 @@ if (exportBtn) {
       closeModalFunc();
     };
   };
+}
+
+// Tambahkan tombol Print Job Order di modal preview (sejajar dengan tombol share WhatsApp)
+document.addEventListener("click", function (e) {
+  // Pastikan modal preview invoice sedang tampil
+  const controls = document.getElementById("invoice-preview-controls");
+  if (
+    controls &&
+    !controls.querySelector("#print-joborder-btn") &&
+    controls.querySelector("#share-wa")
+  ) {
+    // Buat tombol Print Job Order
+    const printJobOrderBtn = document.createElement("button");
+    printJobOrderBtn.id = "print-joborder-btn";
+    printJobOrderBtn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><path fill="#fff" d="M6 2a2 2 0 0 0-2 2v4h16V4a2 2 0 0 0-2-2H6Zm12 6H6V4h12v4ZM4 10a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2h2a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H4Zm14 10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2h12v2Zm4-4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6Z"/></svg>
+      <span>Print Job Order</span>
+    `;
+    printJobOrderBtn.style.background = "#6c63ff";
+    printJobOrderBtn.style.color = "#fff";
+    printJobOrderBtn.style.padding = "8px 18px";
+    printJobOrderBtn.style.borderRadius = "6px";
+    printJobOrderBtn.style.border = "none";
+    printJobOrderBtn.style.cursor = "pointer";
+    printJobOrderBtn.style.fontSize = "1.15em";
+    printJobOrderBtn.style.fontWeight = "600";
+    printJobOrderBtn.style.display = "flex";
+    printJobOrderBtn.style.alignItems = "center";
+    printJobOrderBtn.style.gap = "7px";
+    printJobOrderBtn.style.boxShadow = "0 1px 6px 0 rgba(108,99,255,0.10)";
+    printJobOrderBtn.style.transition = "background 0.2s, box-shadow 0.2s";
+    printJobOrderBtn.onmouseover = function () {
+      this.style.background = "#4834d4";
+      this.style.boxShadow = "0 2px 12px 0 rgba(108,99,255,0.18)";
+    };
+    printJobOrderBtn.onmouseout = function () {
+      this.style.background = "#6c63ff";
+      this.style.boxShadow = "0 1px 6px 0 rgba(108,99,255,0.10)";
+    };
+    // Sisipkan sebelum tombol share WhatsApp
+    controls.insertBefore(printJobOrderBtn, controls.querySelector("#share-wa"));
+  }
+});
+
+// Handler tombol Print Job Order
+document.addEventListener("click", function (e) {
+  if (e.target.closest && e.target.closest("#print-joborder-btn")) {
+    const data = collectInvoiceData();
+
+    // Group items by name
+    let grouped = {};
+    (data.items || []).forEach((item) => {
+      if (!item.name) return;
+      if (!grouped[item.name]) grouped[item.name] = [];
+      grouped[item.name].push(item);
+    });
+
+    let rows = "";
+    let totalQty = 0;
+    Object.keys(grouped).forEach((name) => {
+      const items = grouped[name];
+      items.forEach((item, idx) => {
+        const qty = Number(item.qty) || 0;
+        totalQty += qty;
+        rows += `<tr>`;
+        if (idx === 0) {
+          rows += `<td rowspan="${items.length}" style="text-align:center;vertical-align:middle;font-weight:600;color:#222;background:#e0e7ff;border-right:2.5px solid #121212;">${name}</td>`;
+        }
+        rows += `
+          <td style="text-align:center;font-weight:500;color:#121212;">${item.size || "-"}</td>
+          <td style="text-align:center;font-weight:600;color:#121212;">${qty}</td>
+        </tr>`;
+      });
+    });
+
+    // Mockup image (if any)
+    let mockupHtml = "";
+    if (data.mockup) {
+      mockupHtml = `
+        <div class="joborder-mockup-col" style="flex:0 0 60%;max-width:60%;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;box-shadow:0 2px 12px 0 rgba(99,102,241,0.08);padding:14px;">
+          <img src="${data.mockup}" alt="Mockup" style="width:100%;max-width:100%;border-radius:10px;border:2.5px solid #121212;box-shadow:0 2px 12px 0 rgba(99,102,241,0.10);object-fit:contain;background:#fff;" />
+        </div>
+      `;
+    }
+
+    // Border hanya untuk tabel, tidak untuk area cetak
+    let borderWidth = "2.5px";
+    let baris = 0;
+    Object.values(grouped).forEach(items => baris += items.length);
+    if (baris > 15) borderWidth = "1.5px";
+    else if (baris > 8) borderWidth = "2px";
+
+    // Keterangan dateline
+    let datelineHtml = "";
+    if (data.dateline) {
+      datelineHtml = `
+        <div style="font-size:1.08em;line-height:1.5;margin-top:8px;">
+          <b style="color:#121212;">DEADLINE:</b> <span style="color:#e74c3c;">${data.dateline}</span>
+        </div>
+      `;
+    }
+
+    // HEADER LOGO (imgur, sesuai permintaan)
+    const headerLogoHtml = `
+      <div style="text-align:center;margin-bottom:18px;">
+        <img src="https://i.imgur.com/ZQ0hGYH.png" alt="Header" style="width:100%;max-width:890px;display:block;margin:0 auto 10px auto;" crossOrigin="anonymous" />
+      </div>
+    `;
+
+    // Modal content: Job Order Table only (tanpa judul/tanpa "JOB ORDER")
+    const jobOrderHtml = `
+      <link href="https://fonts.googleapis.com/css?family=Exo:700,400&display=swap" rel="stylesheet">
+      <div class="joborder-modal-content" style="max-width:900px;width:97vw;margin:24px auto 0 auto;font-family:'Exo','Segoe UI',Arial,sans-serif;text-transform:uppercase;border-radius:18px;padding:18px 10px 10px 10px;">
+        ${headerLogoHtml}
+        <div style="display:flex;justify-content:space-between;margin-bottom:18px;gap:18px;padding:10px;">
+          <div style="font-size:1.08em;line-height:1.5;">
+            <b style="color:#121212;">PELANGGAN:</b> <span style="color:#222;">${data.customerName || "-"}</span><br>
+            <b style="color:#121212;">PESANAN:</b> <span style="color:#222;">${data.orderName || "-"}</span>
+            ${datelineHtml}
+          </div>
+          <div style="font-size:1.08em;line-height:1.5;text-align:right;">
+            <b style="color:#121212;">TANGGAL:</b> <span style="color:#222;">${data.invoiceDate || "-"}</span><br>
+            <b style="color:#121212;">NO. NOTA:</b> <span style="color:#222;">${data.invoiceNumber || "-"}</span>
+          </div>
+        </div>
+        <div class="joborder-flex-row" style="display:flex;gap:2px;align-items:flex-start;justify-content:space-between;">
+          ${mockupHtml}
+          <div class="joborder-table-col" style="flex:1;max-width:340px;background:#fff;border-radius:12px;box-shadow:0 2px 12px 0 rgba(99,102,241,0.07);padding:14px 8px;margin-bottom:24px;">
+            <table style="width:100%;border-collapse:collapse;margin-bottom:12px;border:${borderWidth} solid #121212;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px 0 rgba(99,102,241,0.10);background:#fff;">
+              <thead>
+                <tr>
+                  <th style="width:40%;background:#121212;color:#fff;font-weight:700;font-size:1.07em;letter-spacing:0.04em;border-right:${borderWidth} solid #e0e7ff;text-align:center;">NAMA BARANG</th>
+                  <th style="width:25%;background:#121212;color:#fff;font-weight:700;font-size:1.07em;letter-spacing:0.04em;text-align:center;">SIZE</th>
+                  <th style="width:15%;background:#121212;color:#fff;font-weight:700;font-size:1.07em;letter-spacing:0.04em;text-align:center;">QTY</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" style="text-align:center;font-weight:700;color:#121212;background:#e0e7ff;">TOTAL QTY</td>
+                  <td style="text-align:center;font-weight:700;color:#121212;background:#e0e7ff;">${formatNumber(totalQty)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <div class="joborder-print-btn-row" style="text-align:center;margin-top:22px;">
+          <button id="joborder-print-btn" style="
+            background:#121212;
+            color:#fff;
+            padding:12px 32px;
+            border-radius:10px;
+            border:none;
+            cursor:pointer;
+            font-size:1.18em;
+            font-weight:700;
+            display:inline-flex;
+            align-items:center;
+            gap:9px;
+            box-shadow:0 2px 12px 0 rgba(99,102,241,0.13);
+            transition:background 0.2s,box-shadow 0.2s;
+            font-family:'Exo','Segoe UI',Arial,sans-serif;
+            text-transform:uppercase;
+            letter-spacing:0.04em;
+          ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><path fill="#fff" d="M6 2a2 2 0 0 0-2 2v4h16V4a2 2 0 0 0-2-2H6Zm12 6H6V4h12v4ZM4 10a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2h2a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H4Zm14 10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2h12v2Zm4-4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6Z"/></svg>
+            PRINT
+          </button>
+        </div>
+      </div>
+      <style>
+        @import url('https://fonts.googleapis.com/css?family=Exo:700,400&display=swap');
+        .joborder-modal-content table, .joborder-modal-content th, .joborder-modal-content td {
+          border: ${borderWidth} solid #121212;
+        }
+        .joborder-modal-content th, .joborder-modal-content td {
+          padding: 10px 12px;
+          font-size: 1.07em;
+          font-family:'Exo','Segoe UI',Arial,sans-serif;
+          text-transform:uppercase;
+          text-align: center;
+        }
+        .joborder-modal-content th {
+          background: #121212;
+          color: #fff;
+          font-weight: bold;
+          font-family:'Exo','Segoe UI',Arial,sans-serif;
+          text-transform:uppercase;
+          text-align: center;
+        }
+        .joborder-modal-content td {
+          background: #fff;
+          text-align: center;
+        }
+        .joborder-modal-content tr:nth-child(even) td {
+          background: #fff;
+        }
+        @media (max-width: 900px) {
+          .joborder-modal-content { padding: 10px 2vw 10px 2vw !important; }
+          .joborder-flex-row { flex-direction: column; gap: 18px; }
+          .joborder-mockup-col, .joborder-table-col { max-width: 100% !important; width: 100% !important; }
+        }
+        @media (max-width: 600px) {
+          .joborder-modal-content { padding: 2px 0 2px 0 !important; }
+          .joborder-flex-row { gap: 7px; }
+        }
+      </style>
+    `;
+
+    showModal("Print Job Order", jobOrderHtml);
+
+    // Print handler
+    setTimeout(() => {
+      const btn = document.getElementById("joborder-print-btn");
+      if (btn) {
+        btn.onclick = function () {
+          // Hide print button in print preview
+          const printContentDiv = document.querySelector(".joborder-modal-content").cloneNode(true);
+          const printBtnRow = printContentDiv.querySelector(".joborder-print-btn-row");
+          if (printBtnRow) printBtnRow.style.display = "none";
+          const printContent = printContentDiv.innerHTML;
+          const win = window.open("", "", "width=900,height=1200");
+          win.document.write(`
+            <html>
+              <head>
+              <title>Print Job Order</title>
+              <link href="https://fonts.googleapis.com/css?family=Exo:700,400&display=swap" rel="stylesheet">
+              <style>
+              @media print {
+                @page { size: A4 portrait; margin: 0; }
+                body { margin:0; background:#fff; }
+                .joborder-print {
+                  width:100vw;
+                  max-width:100vw;
+                  min-height:100vh;
+                  box-sizing:border-box;
+                  border-radius:0;
+                  padding:18mm 12mm 18mm 12mm;
+                }
+                table, th, td { border:${borderWidth} solid #121212; border-collapse:collapse; }
+                th, td { padding:10px 12px; font-size:1.07em; font-family:'Exo','Segoe UI',Arial,sans-serif; text-transform:uppercase; text-align:center; }
+                th { background:#121212; color:#fff; font-weight:bold; text-align:center; }
+                .joborder-print-btn-row { display:none !important; }
+              }
+              body { font-family:'Exo','Segoe UI',Arial,sans-serif; text-transform:uppercase; background:#fff; }
+              .joborder-print {
+                border-radius:18px;
+                padding:18px 10px 10px 10px;
+                box-sizing:border-box;
+              }
+              .joborder-flex-row { display:flex;gap:2px;align-items:flex-start;justify-content:space-between; }
+              .joborder-mockup-col { flex:0 0 60%;max-width:60%;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px; }
+              .joborder-table-col { flex:1;max-width:340px;background:#fff;border-radius:12px; }
+              @media (max-width: 900px) {
+                .joborder-flex-row { flex-direction: column; gap: 18px; }
+                .joborder-mockup-col, .joborder-table-col { max-width: 100% !important; width: 100% !important; }
+              }
+              </style>
+              </head>
+              <body>
+              <div class="joborder-print">
+                ${printContent}
+              </div>
+              </body>
+            </html>
+          `);
+          win.document.close();
+          setTimeout(() => win.print(), 400);
+        };
+      }
+    }, 100);
+  }
+});
+
+/* === LOADING GIMMICK WITH PROGRESS === */
+function showLoading(message = "Memuat...", percent = null) {
+  // Cek jika sudah ada
+  let overlay = document.getElementById("global-loading-overlay");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "global-loading-overlay";
+    overlay.style = `
+      position: fixed;
+      z-index: 99999;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(255,255,255,0.85);
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.2s;
+    `;
+    overlay.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+        <div class="loading-spinner" style="width:54px;height:54px;border:7px solid #007bff;border-top:7px solid #e0e7ff;border-radius:50%;animation:spin 1s linear infinite;"></div>
+        <div id="loading-message" style="font-size:1.18em;font-weight:600;color:#007bff;letter-spacing:0.04em;">${message}</div>
+        <div id="loading-progress-bar" style="width:220px;height:16px;background:#e0e7ff;border-radius:8px;overflow:hidden;display:none;">
+          <div id="loading-progress-inner" style="height:100%;width:0%;background:#007bff;transition:width 0.2s;"></div>
+        </div>
+        <div id="loading-percent-text" style="font-size:1.05em;color:#007bff;font-weight:500;display:none;">0%</div>
+      </div>
+      <style>
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .loading-spinner { box-shadow:0 2px 12px 0 rgba(0,123,255,0.13);}
+      </style>
+    `;
+    document.body.appendChild(overlay);
+  }
+  // Update message
+  const msg = overlay.querySelector("#loading-message");
+  if (msg) msg.textContent = message;
+  // Update progress bar
+  const bar = overlay.querySelector("#loading-progress-bar");
+  const inner = overlay.querySelector("#loading-progress-inner");
+  const percentText = overlay.querySelector("#loading-percent-text");
+  if (percent !== null && !isNaN(percent)) {
+    bar.style.display = "block";
+    percentText.style.display = "block";
+    let pct = Math.max(0, Math.min(100, Math.round(percent)));
+    inner.style.width = pct + "%";
+    percentText.textContent = pct + "%";
+  } else {
+    bar.style.display = "none";
+    percentText.style.display = "none";
+  }
+}
+function setLoadingProgress(percent, message = null) {
+  const overlay = document.getElementById("global-loading-overlay");
+  if (!overlay) return;
+  const bar = overlay.querySelector("#loading-progress-bar");
+  const inner = overlay.querySelector("#loading-progress-inner");
+  const percentText = overlay.querySelector("#loading-percent-text");
+  if (bar && inner && percentText) {
+    bar.style.display = "block";
+    percentText.style.display = "block";
+    let pct = Math.max(0, Math.min(100, Math.round(percent)));
+    inner.style.width = pct + "%";
+    percentText.textContent = pct + "%";
+  }
+  if (message) {
+    const msg = overlay.querySelector("#loading-message");
+    if (msg) msg.textContent = message;
+  }
+}
+function hideLoading() {
+  const overlay = document.getElementById("global-loading-overlay");
+  if (overlay) overlay.remove();
+}
+
+// --- PATCH: Show loading on heavy async operations ---
+// Pembukuan
+if (bookkeepingBtn) {
+  const origBookkeeping = bookkeepingBtn.onclick;
+  bookkeepingBtn.onclick = async function () {
+    showLoading("Memuat pembukuan...");
+    try {
+      await origBookkeeping();
+    } finally {
+      hideLoading();
+    }
+  };
+}
+
+// Statistik
+if (statisticBtn) {
+  const origStatistic = statisticBtn.onclick;
+  statisticBtn.onclick = async function () {
+    showLoading("Memuat statistik...");
+    try {
+      await origStatistic();
+    } finally {
+      hideLoading();
+    }
+  };
+}
+
+// Utang Piutang
+if (utangPiutangBtn) {
+  const origUtang = utangPiutangBtn.onclick;
+  utangPiutangBtn.onclick = async function () {
+    showLoading("Memuat data piutang...");
+    try {
+      await origUtang();
+    } finally {
+      hideLoading();
+    }
+  };
+}
+
+// Rekap
+if (typeof rekapBtn !== "undefined" && rekapBtn) {
+  const origRekap = rekapBtn.onclick;
+  rekapBtn.onclick = async function () {
+    showLoading("Memuat rekap...");
+    try {
+      await origRekap();
+    } finally {
+      hideLoading();
+    }
+  };
+}
+
+// Export Excel
+if (typeof exportBtn !== "undefined" && exportBtn) {
+  const origExport = exportBtn.onclick;
+  exportBtn.onclick = async function () {
+    showLoading("Menyiapkan data export...");
+    try {
+      await origExport();
+    } finally {
+      hideLoading();
+    }
+  };
+}
+
+// Search bar (show loading while searching)
+if (typeof searchBar !== "undefined" && searchBar) {
+  const origSearchInput = searchBar.oninput;
+  searchBar.addEventListener("input", async function (e) {
+    if (!this.value.trim()) return;
+    showLoading("Mencari data...");
+    try {
+      // Call the original search logic (from code above)
+      if (typeof origSearchInput === "function") {
+        await origSearchInput.call(this, e);
+      } else {
+        // fallback: trigger the original event handler (from code above)
+        // (the search logic is async, so we need to wait for it)
+        // But since the code above uses addEventListener, we can't call it directly.
+        // So, just wait a bit for the search to finish.
+        await new Promise((r) => setTimeout(r, 600));
+      }
+    } finally {
+      hideLoading();
+    }
+  }, { capture: true });
 }
 
 updateTotals();
