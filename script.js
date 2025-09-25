@@ -4840,5 +4840,43 @@ if (typeof searchBar !== "undefined" && searchBar) {
   }, { capture: true });
 }
 
+
+
+/* === TOMBOL HOME DI POJOK KANAN ATAS === */
+(function addHomeButton() {
+  if (document.getElementById("home-btn")) return;
+  const btn = document.createElement("button");
+  btn.id = "home-btn";
+  btn.innerHTML = `
+    <img src="https://images.icon-icons.com/1523/PNG/512/homeregular_106344.png" alt="Home" style="width:48px;height:40px;display:inline-block;vertical-align:middle;">
+  `;
+  btn.style.position = "fixed";
+  btn.style.top = "18px";
+  btn.style.right = "88px";
+  btn.style.zIndex = "9999";
+  btn.style.background = "#fff";
+  btn.style.border = "2px solid #007bff";
+  btn.style.borderRadius = "8px";
+  btn.style.padding = "8px 18px";
+  btn.style.boxShadow = "0 2px 12px 0 rgba(0,123,255,0.09)";
+  btn.style.cursor = "pointer";
+  btn.style.display = "flex";
+  btn.style.alignItems = "center";
+  btn.style.gap = "7px";
+  btn.style.fontFamily = "'Segoe UI', Arial, sans-serif";
+  btn.onmouseover = function () {
+    btn.style.background = "#e0e7ff";
+  };
+  btn.onmouseout = function () {
+    btn.style.background = "#fff";
+  };
+  btn.onclick = function () {
+    window.location.reload();
+  };
+  document.body.appendChild(btn);
+})();
+
+updateTotals();
+setMockupPreview();
 updateTotals();
 setMockupPreview();
