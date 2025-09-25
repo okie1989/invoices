@@ -1621,6 +1621,7 @@ bookkeepingBtn.onclick = async function () {
   let defaultMonth = new Date().toISOString().slice(0, 7);
   if (!uniqueMonths.includes(defaultMonth) && uniqueMonths.length)
     defaultMonth = uniqueMonths[0];
+  
 
   // Fungsi untuk menghitung saldo akhir bulan sebelumnya
   function getPreviousMonthSaldo(selectedMonth) {
@@ -1860,27 +1861,381 @@ bookkeepingBtn.onclick = async function () {
     // Tambahkan judul dengan box dan rata tengah, huruf kapital semua
     const titleBox = `
       <div style="
-      text-align:center;
-      background:#007bff;
-      color:#fff;
-      font-weight:bold;
-      font-size:1.25em;
-      letter-spacing:0.08em;
-      padding:14px 0 12px 0;
-      border-radius:8px;
-      margin-bottom:18px;
-      text-transform:uppercase;
-      box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
+    text-align: center;
+    background: #007bff;
+    color: #fff;
+    font-weight: bold;
+    font-size: 3.25em;
+    letter-spacing: 0.08em;
+    padding: 11px 0 11px 0;
+    border-radius: 8px;
+    margin-bottom: -17px;
+    text-transform: uppercase;
+    box-shadow: 2 3px 12px 0 rgba(0,0,0,0.07);
+    POSITION: RELATIVE;
+    BOTTOM: 33PX;
+    HEIGHT: 61PX;
       ">
       PEMBUKUAN
       </div>
     `;
     showModal("", titleBox + html);
 
+    
+    // === FITUR PENCARIAN NAMA PELANGGAN/SUPPLIER DI MODAL PEMBUKUAN ===
+    // Tambahkan input dan tombol cari di atas tabel
+    let searchBoxHtml = `
+      <div id="bk-search-bar-row" 
+      
+      style="
+    margin-bottom: 2px;
+    display: flex;
+    gap: 8px;
+    position: relative;
+    left: 496px;
+    top: 106px;">
+      
+    <input type="text" id="bk-search-bar" placeholder="Cari Nama Pelanggan/Supplier..." 
+      
+      style="
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #f3f4f6;
+    color: #222;
+    font-size: 1em;
+    font-weight: 500;
+    min-width: 440px;">
+      <button id="bk-search-btn" style="background:#007bff;color:#fff;padding:6px 18px;border-radius:8px;border:none;cursor:pointer;font-size:1em;font-weight:600;">Cari</button>
+      <button id="bk-search-reset-btn" style="background:#e0e7ff;color:#007bff;padding:6px 18px;border-radius:8px;border:none;cursor:pointer;font-size:1em;font-weight:600;display:none;">Reset</button>
+      </div>
+    `;
+    // Sisipkan searchBoxHtml sebelum navHtml
+    let modalContent = document.getElementById("modal-body");
+    if (modalContent) {
+      // Only insert once
+      if (!document.getElementById("bk-search-bar-row")) {
+      modalContent.innerHTML = searchBoxHtml + modalContent.innerHTML;
+      }
+    }
+
+    // Handler pencarian
+    document.getElementById("bk-search-btn").onclick = function () {
+      const keyword = document.getElementById("bk-search-bar").value.trim().toLowerCase();
+      if (!keyword) return;
+      // Filter transaksi: cari di subjek (pelanggan/supplier)
+      let filteredTransactions = transactions.filter(t =>
+      (t.subjek || "").toLowerCase().includes(keyword)
+      );
+      // Urutkan terbaru paling atas
+      filteredTransactions = filteredTransactions.sort((a, b) => (b.date > a.date ? 1 : -1));
+      // Hitung saldo awal dari bulan sebelumnya
+      let saldoAwal = getPreviousMonthSaldo(selectedMonth);
+      let saldo = saldoAwal;
+      let saldoArr = [];
+      filteredTransactions.forEach((t, idx) => {
+      saldo += (Number(t.income) || 0) - (Number(t.expense) || 0);
+      saldoArr[idx] = saldo;
+      });
+      let rows = filteredTransactions
+      .map((t, idx) => {
+        let deleteBtn = "";
+        if (t.type === "INVOICE") {
+          deleteBtn = `<button class="delete-bk-invoice" data-ref="${t.ref}" title="Hapus Invoice" style="background:none;border:none;cursor:pointer;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
+          <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+          <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+          <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+          <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
+          <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+          </svg>
+          </button>`;
+        } else if (t.type === "EXPENSE") {
+          deleteBtn = `<button class="delete-bk-expense" data-key="${t.ref}" title="Hapus Pengeluaran" style="background:none;border:none;cursor:pointer;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
+          <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+          <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+          <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
+          <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
+          <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+          </svg>
+          </button>`;
+        }
+        return `<tr class="bk-row" data-type="${t.type}" data-idx="${idx}" data-ref="${t.ref}" style="cursor:pointer;">
+            <td>${t.date}</td>
+            <td>${t.subjek}</td>
+            <td>${t.type === "EXPENSE" ? t.keterangan : t.keterangan}</td>
+            <td style="text-align:right;">${t.income ? formatNumber(t.income) : ""}</td>
+            <td style="text-align:right;">${t.expense ? formatNumber(t.expense) : ""}</td>
+            <td style="text-align:right;">${formatNumber(saldoArr[idx])}</td>
+            <td>${deleteBtn}</td>
+          </tr>`;
+      })
+      .join("");
+      let totalIncome = filteredTransactions.reduce((sum, t) => sum + (Number(t.income) || 0), 0);
+      let totalExpense = filteredTransactions.reduce((sum, t) => sum + (Number(t.expense) || 0), 0);
+      let saldoAkhir = saldoArr.length ? saldoArr[saldoArr.length - 1] : saldoAwal;
+      // Render hasil pencarian
+      let html = `
+      ${navHtml}
+      ${filterHtml}
+      <div id="bk-search-bar-row" style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+        <input type="text" id="bk-search-bar" placeholder="Cari Nama Pelanggan/Supplier..." style="padding:6px 14px;border-radius:8px;border:1px solid #cbd5e1;background:#f3f4f6;color:#222;font-size:1em;font-weight:500;min-width:180px;" value="${keyword}">
+        <button id="bk-search-btn" style="background:#007bff;color:#fff;padding:6px 18px;border-radius:8px;border:none;cursor:pointer;font-size:1em;font-weight:600;">Cari</button>
+        <button id="bk-search-reset-btn" style="background:#e0e7ff;color:#007bff;padding:6px 18px;border-radius:8px;border:none;cursor:pointer;font-size:1em;font-weight:600;">Reset</button>
+      </div>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th style="border-bottom:0.2px solid #111;">Tanggal</th>
+            <th style="border-bottom:0.2px solid #111;">Subjek</th>
+            <th style="border-bottom:0.2px solid #111;">Keterangan</th>
+            <th style="border-bottom:0.2px solid #111;">Masuk</th>
+            <th style="border-bottom:0.2px solid #111;">Keluar</th>
+            <th style="border-bottom:0.2px solid #111;">Saldo</th>
+            <th style="border-bottom:0.2px solid #111;">Hapus</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${selectedMonth
+            ? `<tr style="background:#f7f7f7;font-weight:bold;">
+              <td colspan="5" style="text-align:right;">Saldo Awal</td>
+              <td style="text-align:right;">${formatNumber(saldoAwal)}</td>
+              <td></td>
+            </tr>`
+            : ""}
+          ${rows}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="font-weight:bold;">Total</td>
+            <td style="font-weight:bold;text-align:right;">${formatNumber(totalIncome)}</td>
+            <td style="font-weight:bold;text-align:right;">${formatNumber(totalExpense)}</td>
+            <td style="font-weight:bold;text-align:right;">${formatNumber(saldoAkhir)}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+      <div style="margin-top:10px;padding:10px 0 0 0;border-top:1px solid #bbb;">
+        <b>Omset:</b> ${formatNumber(totalIncome)} &nbsp; | &nbsp;
+        <b>Profit:</b> ${formatNumber(totalIncome - totalExpense)} &nbsp; | &nbsp;
+        <b>Saldo Akhir:</b> ${formatNumber(saldoAkhir)}
+      </div>
+      `;
+      showModal("", titleBox + html);
+      // Reset handler
+      document.getElementById("bk-search-reset-btn").onclick = function () {
+      renderBookkeepingTable(selectedMonth);
+      };
+      // Re-attach filter, prev/next, delete, edit events
+      document.getElementById("bookkeeping-month").onchange = function () {
+      renderBookkeepingTable(this.value);
+      };
+      document.getElementById("bk-prev-month").onclick = function () {
+      if (prevMonth) renderBookkeepingTable(prevMonth);
+      };
+      document.getElementById("bk-next-month").onclick = function () {
+      if (nextMonth) renderBookkeepingTable(nextMonth);
+      };
+      document.querySelectorAll(".delete-bk-invoice").forEach((btn) => {
+      btn.onclick = async function () {
+        if (confirm("Hapus invoice ini?")) {
+        await deleteInvoiceFromFirebase(btn.dataset.ref);
+        invoices = (await getAllInvoices()).map(normalizeInvoice);
+        renderBookkeepingTable(document.getElementById("bookkeeping-month").value);
+        }
+      };
+      });
+      document.querySelectorAll(".delete-bk-expense").forEach((btn) => {
+      btn.onclick = async function () {
+        if (confirm("Hapus pengeluaran ini?")) {
+        await deleteExpenseFromFirebase(btn.dataset.key);
+        let snap = await db.ref("expenses").once("value");
+        let val = snap.val();
+        let expenseKeys = [];
+        let newExpenses = [];
+        if (val) {
+          expenseKeys = Object.keys(val);
+          newExpenses = Object.values(val).map((e, i) => ({
+          ...e,
+          _key: expenseKeys[i],
+          }));
+        }
+        expenses = newExpenses.map(normalizeExpense);
+        renderBookkeepingTable(document.getElementById("bookkeeping-month").value);
+        }
+      };
+      });
+      document.querySelectorAll(".bk-row").forEach((tr) => {
+      tr.addEventListener("click", async function (e) {
+        if (e.target.closest("button")) return;
+        const idx = Number(tr.dataset.idx);
+        const t = filteredTransactions[idx];
+        closeModalFunc();
+        let currentMonth = document.getElementById("bookkeeping-month")
+        ? document.getElementById("bookkeeping-month").value
+        : selectedMonth;
+        let lastEditedRef = t.ref;
+        let lastEditedType = t.type;
+        if (t.type === "INVOICE") {
+        const inv = await getInvoiceByNumber(t.ref);
+        if (inv) {
+          fillInvoiceData(inv);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          const container = document.querySelector(".invoice-container");
+          if (container) {
+          container.style.boxShadow = "0 0 0 4px #007bff";
+          setTimeout(() => {
+            container.style.boxShadow = "";
+          }, 1200);
+          }
+          const origSave = saveBtn.onclick;
+          saveBtn.onclick = async function () {
+          const data = collectInvoiceData();
+          if (!data.invoiceNumber) {
+            alert("Nomor nota harus diisi!");
+            return;
+          }
+          if (data.invoiceNumber !== inv.invoiceNumber) {
+            await deleteInvoiceFromFirebase(inv.invoiceNumber);
+          }
+          await saveInvoiceToFirebase(data);
+          saveBtn.onclick = origSave;
+          invoices = (await getAllInvoices()).map(normalizeInvoice);
+          let snap = await db.ref("expenses").once("value");
+          let val = snap.val();
+          let expenseKeys = [];
+          let newExpenses = [];
+          if (val) {
+            expenseKeys = Object.keys(val);
+            newExpenses = Object.values(val).map((e, i) => ({
+            ...e,
+            _key: expenseKeys[i],
+            }));
+          }
+          expenses = newExpenses.map(normalizeExpense);
+          bookkeepingBtn.click();
+          setTimeout(() => {
+            renderBookkeepingTable(
+            currentMonth,
+            data.invoiceNumber,
+            "INVOICE"
+            );
+            setTimeout(() => {
+            const row = document.querySelector(".bk-row-highlight");
+            if (row) {
+              row.scrollIntoView({ behavior: "smooth", block: "center" });
+              row.style.transition = "background 0.8s";
+              row.style.background = "#ffe066";
+              setTimeout(() => {
+              row.style.background = "";
+              }, 1200);
+            }
+            }, 400);
+          }, 400);
+          };
+        }
+        } else if (t.type === "EXPENSE") {
+        showExpenseForm(t.raw, t.ref);
+        setTimeout(() => {
+          const form = document.getElementById("expense-form");
+          if (form) {
+          const origSubmit = form.onsubmit;
+          form.onsubmit = async function (e2) {
+            e2.preventDefault();
+            const date = document.getElementById("expense-date").value;
+            let type = document.getElementById("expense-type").value;
+            const typeManual = document
+            .getElementById("expense-type-manual")
+            .value.trim();
+            if (type === "Lain-lain" && typeManual) type = typeManual;
+            const supplier = document
+            .getElementById("expense-supplier")
+            .value.trim();
+            const items = Array.from(
+            document.querySelectorAll("#expense-items-body tr")
+            )
+            .map((tr2) => ({
+              name: tr2.querySelector(".expense-item-name").value,
+              qty: Number(tr2.querySelector(".expense-item-qty").value),
+              unit: tr2.querySelector(".expense-item-unit").value,
+              price: Number(tr2.querySelector(".expense-item-price").value),
+              discount: Number(tr2.querySelector(".expense-item-discount")?.value) || 0,
+            }))
+            .filter((i) => i.name && i.qty && i.price >= 0);
+            if (!date || !type || !supplier || !items.length)
+            return alert("Lengkapi semua data dan minimal 1 barang!");
+            const amount = items.reduce(
+            (sum, i) => sum + Math.max(i.qty * i.price - (i.discount || 0), 0),
+            0
+            );
+            const expenseKey =
+            form.getAttribute("data-expense-key") || null;
+            await saveExpenseToFirebase(
+            { date, type, supplier, items, amount },
+            expenseKey
+            );
+            closeModalFunc();
+            form.onsubmit = origSubmit;
+            invoices = (await getAllInvoices()).map(normalizeInvoice);
+            let snap = await db.ref("expenses").once("value");
+            let val = snap.val();
+            let expenseKeys = [];
+            let newExpenses = [];
+            if (val) {
+            expenseKeys = Object.keys(val);
+            newExpenses = Object.values(val).map((e, i) => ({
+              ...e,
+              _key: expenseKeys[i],
+            }));
+            }
+            expenses = newExpenses.map(normalizeExpense);
+            bookkeepingBtn.click();
+            setTimeout(() => {
+            renderBookkeepingTable(currentMonth, expenseKey, "EXPENSE");
+            setTimeout(() => {
+              const row = document.querySelector(".bk-row-highlight");
+              if (row) {
+              row.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+              row.style.transition = "background 0.8s";
+              row.style.background = "#ffe066";
+              setTimeout(() => {
+                row.style.background = "";
+              }, 1200);
+              }
+            }, 400);
+            }, 400);
+          };
+          }
+          const modal = document.getElementById("modal");
+          if (modal) {
+          modal.querySelector(".modal-content").style.boxShadow =
+            "0 0 0 4px #007bff";
+          setTimeout(() => {
+            modal.querySelector(".modal-content").style.boxShadow = "";
+          }, 1200);
+          }
+        }, 200);
+        }
+      });
+      });
+    };
+
+    // Reset handler
+    document.getElementById("bk-search-reset-btn").onclick = function () {
+      renderBookkeepingTable(selectedMonth);
+    };
+    
+
     // Event filter bulan
     document.getElementById("bookkeeping-month").onchange = function () {
       renderBookkeepingTable(this.value);
     };
+
+
 
     // Event tombol prev/next
     document.getElementById("bk-prev-month").onclick = function () {
@@ -1889,6 +2244,9 @@ bookkeepingBtn.onclick = async function () {
     document.getElementById("bk-next-month").onclick = function () {
       if (nextMonth) renderBookkeepingTable(nextMonth);
     };
+
+    
+    
 
     // Event hapus invoice
     document.querySelectorAll(".delete-bk-invoice").forEach((btn) => {
@@ -2113,7 +2471,7 @@ bookkeepingBtn.onclick = async function () {
 
   renderBookkeepingTable(defaultMonth);
 
-  // Tambahkan style highlight
+   // Tambahkan style highlight
   (function addBkRowHighlightStyle() {
     if (document.getElementById("bk-row-highlight-style")) return;
     const style = document.createElement("style");
@@ -2127,6 +2485,9 @@ bookkeepingBtn.onclick = async function () {
     document.head.appendChild(style);
   })();
 };
+
+
+
 
 // === STATISTIK KEUANGAN ===
 statisticBtn.onclick = async function () {
