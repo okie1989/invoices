@@ -1919,6 +1919,8 @@ bookkeepingBtn.onclick = async function () {
       }
     }
 
+    
+
     // Handler pencarian
     document.getElementById("bk-search-btn").onclick = function () {
       const keyword = document.getElementById("bk-search-bar").value.trim().toLowerCase();
@@ -4848,12 +4850,14 @@ if (typeof searchBar !== "undefined" && searchBar) {
   const btn = document.createElement("button");
   btn.id = "home-btn";
   btn.innerHTML = `
-    <img src="https://images.icon-icons.com/1523/PNG/512/homeregular_106344.png" alt="Home" style="width:48px;height:40px;display:inline-block;vertical-align:middle;">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="#007bff" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
+      <path d="M3 11.5L12 4l9 7.5V20a2 2 0 0 1-2 2h-4v-6h-6v6H5a2 2 0 0 1-2-2V11.5z"/>
+    </svg>
   `;
   btn.style.position = "fixed";
   btn.style.top = "18px";
-  btn.style.right = "88px";
-  btn.style.zIndex = "9999";
+  btn.style.right = "58px";
+  btn.style.zIndex = "700";
   btn.style.background = "#fff";
   btn.style.border = "2px solid #007bff";
   btn.style.borderRadius = "8px";
