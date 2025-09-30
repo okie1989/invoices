@@ -4844,19 +4844,19 @@ if (typeof searchBar !== "undefined" && searchBar) {
 
 
 
-/* === TOMBOL HOME DI POJOK KANAN ATAS === */
-(function addHomeButton() {
+/* === TOMBOL REFRESH DI POJOK KANAN ATAS === */
+(function addRefreshButton() {
   if (document.getElementById("home-btn")) return;
   const btn = document.createElement("button");
   btn.id = "home-btn";
   btn.innerHTML = `
     <svg width="32" height="32" viewBox="0 0 24 24" fill="#007bff" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
-      <path d="M3 11.5L12 4l9 7.5V20a2 2 0 0 1-2 2h-4v-6h-6v6H5a2 2 0 0 1-2-2V11.5z"/>
+      <path d="M17.65 6.35A8 8 0 1 0 20 12h-2a6 6 0 1 1-1.76-4.24l-2.89 2.89H20V4.93l-2.35 2.35z"/>
     </svg>
   `;
   btn.style.position = "fixed";
   btn.style.top = "18px";
-  btn.style.right = "58px";
+  btn.style.right = "98px";
   btn.style.zIndex = "700";
   btn.style.background = "#fff";
   btn.style.border = "2px solid #007bff";
