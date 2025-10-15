@@ -1,3 +1,232 @@
+/* === MODAL LOGIN FIREBASE AUTH === */
+const firebaseLoginConfig = {
+  apiKey: "AIzaSyDkUgsmEytdSix4d5lvT7bUrhr9sVQlqyY",
+  authDomain: "invoices-kanvasmerch.firebaseapp.com",
+  databaseURL: "https://invoices-kanvasmerch-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "invoices-kanvasmerch",
+  storageBucket: "invoices-kanvasmerch.firebasestorage.app",
+  messagingSenderId: "439292206643",
+  appId: "1:439292206643:web:8458a829217583c546cd46"
+};
+
+// Inisialisasi Firebase App & Auth
+if (!window._firebaseLoginApp) {
+  window._firebaseLoginApp = firebase.initializeApp(firebaseLoginConfig, "loginApp");
+}
+const loginApp = window._firebaseLoginApp;
+const loginAuth = loginApp.auth();
+
+// Modal login HTML
+function showLoginModal() {
+  let html = `
+    <div style="max-width:320px;width:100%;margin:60px auto;padding:22px 16px;background:#fff;border-radius: 2px;box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);font-family:'Segoe UI',Arial,sans-serif;">
+      <form id="login-form" autocomplete="on" style="display:flex;flex-direction:column;gap:12px;">
+        <h2 style="text-align:center;color:slategray;margin-bottom:10px;font-size:1.15em;font-weight:600;">Login</h2>
+        <div style="text-align:center;color:#555;font-size:0.98em;margin-bottom:8px;">
+          Silakan masukkan email dan password untuk mengakses halaman ini.
+        </div>
+        <input type="email" id="login-email" required placeholder="Email" style="padding:8px 10px;border-radius:5px;border:1px solid #e0e7ff;font-size:1em;">
+        <input type="password" id="login-password" required placeholder="Password" style="padding:8px 10px;border-radius:5px;border:1px solid #e0e7ff;font-size:1em;">
+        <button type="submit" style="background:slategray;color:#fff;padding:9px 0;border-radius:5px;border:none;font-size:1em;font-weight:500;cursor:pointer;transition:background 0.2s;">Login</button>
+        <button type="button" id="show-change-password" style="background:#e0e7ff;color:slategray;padding:7px 0;border-radius:5px;border:none;font-size:0.97em;font-weight:500;cursor:pointer;transition:background 0.2s;">Ganti Password</button>
+        <div id="login-error" style="color:slategray;margin-top:6px;text-align:center;display:none;font-size:0.97em;"></div>
+      </form>
+    </div>
+    <style>
+      #login-form input:focus { border-color:slategray; outline:none; }
+      #login-form button:active { background:#0056b3; }
+      #login-form input { background:#f7f8fa; }
+      #login-form input::placeholder { color:#bbb; }
+      body { background: rgba(0,0,0,0.32); }
+    </style>
+  `;
+  document.body.innerHTML = html;
+  document.body.style.background = "rgba(0,0,0,0.32)";
+  window._loginModalActive = true;
+  document.getElementById("login-form").onsubmit = async function (e) {
+    e.preventDefault();
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+    const errorDiv = document.getElementById("login-error");
+    errorDiv.style.display = "none";
+    try {
+      showLoading("Memeriksa login...");
+      await loginAuth.signInWithEmailAndPassword(email, password);
+      hideLoading();
+      window._loginModalActive = false;
+      sessionStorage.setItem("isLoggedIn", "1");
+      sessionStorage.setItem("userEmail", email);
+      location.reload();
+    } catch (err) {
+      hideLoading();
+      // Tambahan: peringatan jika email/password salah
+      let msg = "Login gagal: " + (err.message || "Cek email/password.");
+      if (
+        err.code === "auth/wrong-password" ||
+        err.code === "auth/user-not-found" ||
+        err.code === "auth/invalid-credential" ||
+        (err.message && err.message.includes("auth/invalid-credential"))
+      ) {
+        msg = "Terjadi kesalahan, email dan password tidak sesuai.";
+      }
+      errorDiv.textContent = msg;
+      errorDiv.style.display = "block";
+    }
+  };
+
+  // Show change password modal
+  document.getElementById("show-change-password").onclick = function () {
+    showChangePasswordModal();
+  };
+}
+
+// Modal ganti password
+function showChangePasswordModal() {
+  let html = `
+    <div style="max-width:340px;width:100%;margin:60px auto;padding:22px 16px;background:#fff;border-radius: 2px;box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);font-family:'Segoe UI',Arial,sans-serif;">
+      <form id="change-password-form" autocomplete="on" style="display:flex;flex-direction:column;gap:12px;">
+        <h2 style="text-align:center;color:slategray;margin-bottom:10px;font-size:1.15em;font-weight:600;">Ganti Password</h2>
+        <input type="email" id="change-email" required placeholder="Email" style="padding:8px 10px;border-radius:5px;border:1px solid #e0e7ff;font-size:1em;">
+        <input type="password" id="change-old-password" required placeholder="Password Lama" style="padding:8px 10px;border-radius:5px;border:1px solid #e0e7ff;font-size:1em;">
+        <input type="password" id="change-new-password" required placeholder="Password Baru" style="padding:8px 10px;border-radius:5px;border:1px solid #e0e7ff;font-size:1em;">
+        <button type="submit" style="background:slategray;color:#fff;padding:9px 0;border-radius:5px;border:none;font-size:1em;font-weight:500;cursor:pointer;transition:background 0.2s;">Ganti Password</button>
+        <button type="button" id="back-to-login" style="background:#e0e7ff;color:slategray;padding:7px 0;border-radius:5px;border:none;font-size:0.97em;font-weight:500;cursor:pointer;transition:background 0.2s;">Kembali ke Login</button>
+        <div id="change-password-error" style="color:slategray;margin-top:6px;text-align:center;display:none;font-size:0.97em;"></div>
+        <div id="change-password-success" style="color:#27ae60;margin-top:6px;text-align:center;display:none;font-size:0.97em;"></div>
+      </form>
+    </div>
+    <style>
+      #change-password-form input:focus { border-color:slategray; outline:none; }
+      #change-password-form button:active { background:#0056b3; }
+      #change-password-form input { background:#f7f8fa; }
+      #change-password-form input::placeholder { color:#bbb; }
+      body { background: rgba(0,0,0,0.32); }
+    </style>
+  `;
+  document.body.innerHTML = html;
+  document.body.style.background = "rgba(0,0,0,0.32)";
+  window._loginModalActive = true;
+
+  document.getElementById("change-password-form").onsubmit = async function (e) {
+    e.preventDefault();
+    const email = document.getElementById("change-email").value.trim();
+    const oldPassword = document.getElementById("change-old-password").value;
+    const newPassword = document.getElementById("change-new-password").value;
+    const errorDiv = document.getElementById("change-password-error");
+    const successDiv = document.getElementById("change-password-success");
+    errorDiv.style.display = "none";
+    successDiv.style.display = "none";
+    if (!email || !oldPassword || !newPassword) {
+      errorDiv.textContent = "Semua field harus diisi.";
+      errorDiv.style.display = "block";
+      return;
+    }
+    if (newPassword.length < 6) {
+      errorDiv.textContent = "Password baru minimal 6 karakter.";
+      errorDiv.style.display = "block";
+      return;
+    }
+    try {
+      showLoading("Memproses ganti password...");
+      // Re-authenticate user
+      const userCredential = await loginAuth.signInWithEmailAndPassword(email, oldPassword);
+      const user = userCredential.user;
+      await user.updatePassword(newPassword);
+      hideLoading();
+      successDiv.textContent = "Password berhasil diganti. Silakan login dengan password baru.";
+      successDiv.style.display = "block";
+      setTimeout(() => {
+        showLoginModal();
+      }, 1800);
+    } catch (err) {
+      hideLoading();
+      let msg = "Gagal ganti password: " + (err.message || "Cek email/password.");
+      if (
+        err.code === "auth/wrong-password" ||
+        err.code === "auth/user-not-found" ||
+        err.code === "auth/invalid-credential" ||
+        (err.message && err.message.includes("auth/invalid-credential"))
+      ) {
+        msg = "Terjadi kesalahan, email dan password tidak sesuai.";
+      }
+      errorDiv.textContent = msg;
+      errorDiv.style.display = "block";
+    }
+  };
+
+  document.getElementById("back-to-login").onclick = function () {
+    showLoginModal();
+  };
+}
+
+// Cek login sebelum akses web
+async function checkLogin() {
+  if (sessionStorage.getItem("isLoggedIn") === "1") return;
+  return new Promise((resolve) => {
+    loginAuth.onAuthStateChanged((user) => {
+      if (user) {
+        sessionStorage.setItem("isLoggedIn", "1");
+        sessionStorage.setItem("userEmail", user.email || "");
+        resolve(true);
+      } else {
+        showLoginModal();
+        resolve(false);
+      }
+    });
+  });
+}
+
+// Patch: blok akses sebelum login
+document.addEventListener("DOMContentLoaded", async function () {
+  await checkLogin();
+});
+
+// Optional: tombol logout (ikon saja)
+// Tombol logout modern, hanya ikon saja
+(function addLogoutIconButton() {
+  if (document.getElementById("logout-btn")) return;
+  const btn = document.createElement("button");
+  btn.id = "logout-btn";
+  btn.title = "Logout";
+  btn.innerHTML = `
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <rect x="8" y="6" width="12" height="20" rx="3" fill="#fff" stroke="slategray" stroke-width="2"/>
+      <path d="M20 16h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      <path d="M24 13l3 3-3 3" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `;
+  btn.style.position = "fixed";
+  btn.style.top = "18px";
+  btn.style.right = "38px";
+  btn.style.zIndex = "700";
+  btn.style.background = "none";
+  btn.style.border = "none";
+  btn.style.borderRadius = "50%";
+  btn.style.padding = "0";
+  btn.style.cursor = "pointer";
+  btn.style.display = "flex";
+  btn.style.alignItems = "center";
+  btn.style.justifyContent = "center";
+  btn.onmouseover = function () {
+    btn.querySelector("rect").setAttribute("stroke", "#2563eb");
+    btn.querySelectorAll("path").forEach(el => el.setAttribute("stroke", "#2563eb"));
+  };
+  btn.onmouseout = function () {
+    btn.querySelector("rect").setAttribute("stroke", "slategray");
+    btn.querySelectorAll("path").forEach(el => el.setAttribute("stroke", "#fff"));
+  };
+  btn.onclick = async function () {
+    await loginAuth.signOut();
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("userEmail");
+    showLoginModal();
+  };
+  document.body.appendChild(btn);
+  // Hapus tombol logout lama jika ada
+  const oldBtn = document.querySelectorAll("button#logout-btn:not(:last-child)");
+  oldBtn.forEach(b => b.remove());
+})();
+
 // Helper functions
 function formatNumber(num) {
   return Number(num).toLocaleString("id-ID");
@@ -48,11 +277,11 @@ function createItemRow(item = {}) {
         <td>
           <button class="remove-item" title="Hapus" style="background:none;border:none;cursor:pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
-              <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+              <rect x="5" y="8" width="10" height="8" rx="2" fill="slategray"/>
               <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
               <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
-              <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
-              <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+              <rect x="3" y="6" width="14" height="2" rx="1" fill="slategray"/>
+              <rect x="7" y="3" width="6" height="2" rx="1" fill="slategray"/>
             </svg>
           </button>
         </td>
@@ -274,7 +503,7 @@ let removeMockupBtn = document.createElement("button");
 removeMockupBtn.type = "button";
 removeMockupBtn.id = "remove-mockup-btn";
 removeMockupBtn.textContent = "Hapus Gambar";
-removeMockupBtn.style = "margin-left:8px;display:none;background:#e74c3c;color:#fff;padding:4px 10px;border-radius:5px;border:none;cursor:pointer;font-size:0.95em;";
+removeMockupBtn.style = "margin-left:8px;display:none;background:slategray;color:#fff;padding:4px 10px;border-radius:5px;border:none;cursor:pointer;font-size:0.95em;";
 
 // Sisipkan tombol setelah mockupPreview
 if (mockupPreview && mockupPreview.parentNode) {
@@ -774,7 +1003,7 @@ viewBtn.onclick = function () {
       transition: box-shadow 0.2s;
     ">
       <button id="download-invoice-jpg" style="
-        background: #007bff;
+        background: slategray;
         color: #fff;
         padding: 8px 18px;
         border-radius: 6px;
@@ -787,7 +1016,7 @@ viewBtn.onclick = function () {
         gap: 7px;
         box-shadow: 0 1px 6px 0 rgba(0,123,255,0.10);
         transition: background 0.2s, box-shadow 0.2s;
-      " onmouseover="this.style.background='#0056b3';this.style.boxShadow='0 2px 12px 0 rgba(0,123,255,0.18)';" onmouseout="this.style.background='#007bff';this.style.boxShadow='0 1px 6px 0 rgba(0,123,255,0.10)';">
+      " onmouseover="this.style.background='#0056b3';this.style.boxShadow='0 2px 12px 0 rgba(0,123,255,0.18)';" onmouseout="this.style.background='slategray';this.style.boxShadow='0 1px 6px 0 rgba(0,123,255,0.10)';">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><path fill="#fff" d="M12 16a1 1 0 0 1-1-1V5a1 1 0 1 1 2 0v10a1 1 0 0 1-1 1Zm-5.707-3.707a1 1 0 0 1 1.414 0L12 15.586l4.293-4.293a1 1 0 0 1 1.414 1.414l-5 5a1 1 0 0 1-1.414 0l-5-5a1 1 0 0 1 0-1.414Z"/><rect width="20" height="20" x="2" y="2" stroke="#fff" stroke-width="0" rx="4"/></svg>
         <span>Download JPG</span>
       </button>
@@ -816,7 +1045,7 @@ viewBtn.onclick = function () {
         box-shadow: 0 1px 12px 0 rgba(0,0,0,0.13);
       }
       #invoice-preview-controls button:focus {
-        outline: 2px solid #007bff;
+        outline: 2px solid slategray;
         outline-offset: 2px;
       }
       #invoice-preview-controls button:hover span {
@@ -991,7 +1220,7 @@ function renderInvoiceView(data) {
           width: 220px;
           height: 220px;
           border-radius: 50%;
-          border: 7px solid #e74c3c;
+          border: 7px solid slategray;
           background: rgba(255,255,255,0.12);
           display: flex;
           flex-direction: column;
@@ -1000,7 +1229,7 @@ function renderInvoiceView(data) {
           box-shadow: 0 2px 24px 0 rgba(231,76,60,0.09);
         ">
           <div style="
-            color: #e74c3c;
+            color: slategray;
             font-size: 2.7em;
             font-weight: bold;
             letter-spacing: 0.12em;
@@ -1014,13 +1243,13 @@ function renderInvoiceView(data) {
             text-align: center;
           ">LUNAS</div>
           <div style="
-            color: #e74c3c;
+            color: slategray;
             font-size: 1em;
             font-weight: 600;
             background: none;
-            border-radius: 8px;
+            border-radius: 2px;
             padding: 2px 12px;
-            border: 1px solid #e74c3c;
+            border: 1px solid slategray;
             opacity: 0.7;
             margin-top: 2px;
             text-align: center;
@@ -1183,14 +1412,14 @@ function showExpenseForm(expenseData = null, expenseKey = null) {
           expenseKey ? `data-expense-key="${expenseKey}"` : ""
         } style="font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
             <div style="margin-bottom:14px;">
-                <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">TANGGAL:</label>
+                <label style="font-weight:bold;letter-spacing:0.08em;color:slategray;">TANGGAL:</label>
                 <input type="date" id="expense-date" required value="${new Date()
                   .toISOString()
-                  .slice(0, 10)}" style="text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
+                  .slice(0, 10)}" style="text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid slategray;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
             </div>
             <div style="margin-bottom:14px;">
-                <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">JENIS PENGELUARAN:</label>
-                <select id="expense-type" required style="text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
+                <label style="font-weight:bold;letter-spacing:0.08em;color:slategray;">JENIS PENGELUARAN:</label>
+                <select id="expense-type" required style="text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid slategray;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
                     <option value="">--PILIH--</option>
                     <option value="Bahan Kain">BAHAN KAIN</option>
                     <option value="Bahan Sablon">BAHAN SABLON</option>
@@ -1201,16 +1430,16 @@ function showExpenseForm(expenseData = null, expenseKey = null) {
                     <option value="Iuran Wajib">IURAN WAJIB</option>
                     <option value="Lain-lain">LAIN-LAIN (ISI MANUAL)</option>
                 </select>
-                <input type="text" id="expense-type-manual" placeholder="ISI JENIS LAIN-LAIN" style="display:none;margin-top:4px;text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
+                <input type="text" id="expense-type-manual" placeholder="ISI JENIS LAIN-LAIN" style="display:none;margin-top:4px;text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid slategray;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
             </div>
             <div style="margin-bottom:14px;">
-                <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">NAMA SUPPLIER:</label>
-                <input type="text" id="expense-supplier" required style="text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
+                <label style="font-weight:bold;letter-spacing:0.08em;color:slategray;">NAMA SUPPLIER:</label>
+                <input type="text" id="expense-supplier" required style="text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid slategray;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
             </div>
             <div style="margin-bottom:14px;">
-                <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">RINCIAN PEMBELIAN:</label>
-                <table id="expense-items-table" style="width:100%;margin-bottom:8px;border-radius:8px;box-shadow:0 2px 12px 0 rgba(230,126,34,0.08);overflow:hidden;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
-                    <thead style="background:#e67e22;">
+                <label style="font-weight:bold;letter-spacing:0.08em;color:slategray;">RINCIAN PEMBELIAN:</label>
+                <table id="expense-items-table" style="width:100%;margin-bottom:8px;border-radius: 2px;box-shadow:0 2px 12px 0 rgba(230,126,34,0.08);overflow:hidden;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
+                    <thead style="background:slategray;">
                         <tr style="color:#fff;text-transform:uppercase;font-weight:bold;letter-spacing:0.07em;">
                             <th>NAMA BARANG</th>
                             <th>QTY</th>
@@ -1227,17 +1456,17 @@ function showExpenseForm(expenseData = null, expenseKey = null) {
                     <tfoot>
                         <tr>
                             <td colspan="7" style="text-align:center;">
-                              <button type="button" id="add-expense-item" style="background:#e67e22;color:#fff;font-weight:bold;padding:7px 18px;border-radius:6px;border:none;cursor:pointer;text-transform:uppercase;box-shadow:0 1px 6px 0 rgba(230,126,34,0.10);font-family:'Exo', 'Segoe UI', Arial, sans-serif;">TAMBAH BARANG</button>
+                              <button type="button" id="add-expense-item" style="background:slategray;color:#fff;font-weight:bold;padding:7px 18px;border-radius:6px;border:none;cursor:pointer;text-transform:uppercase;box-shadow:0 1px 6px 0 rgba(230,126,34,0.10);font-family:'Exo', 'Segoe UI', Arial, sans-serif;">TAMBAH BARANG</button>
                             </td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
             <div style="margin-bottom:14px;">
-                <label style="font-weight:bold;letter-spacing:0.08em;color:#e67e22;">TOTAL PENGELUARAN (RP):</label>
-                <input type="number" id="expense-amount" required min="0" readonly style="background:#fff;text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid #e67e22;color:#e67e22;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
+                <label style="font-weight:bold;letter-spacing:0.08em;color:slategray;">TOTAL PENGELUARAN (RP):</label>
+                <input type="number" id="expense-amount" required min="0" readonly style="background:#fff;text-transform:uppercase;font-weight:bold;padding:6px 12px;border-radius:6px;border:1px solid slategray;color:slategray;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">
             </div>
-            <button type="submit" style="margin-top:8px;background:#e67e22;color:#fff;font-weight:bold;padding:10px 24px;border-radius:8px;border:none;cursor:pointer;text-transform:uppercase;box-shadow:0 2px 12px 0 rgba(230,126,34,0.13);font-size:1.08em;letter-spacing:0.08em;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">SIMPAN PENGELUARAN</button>
+            <button type="submit" style="margin-top:8px;background:slategray;color:#fff;font-weight:bold;padding:10px 24px;border-radius: 2px;border:none;cursor:pointer;text-transform:uppercase;box-shadow:0 2px 12px 0 rgba(230,126,34,0.13);font-size:1.08em;letter-spacing:0.08em;font-family:'Exo', 'Segoe UI', Arial, sans-serif;">SIMPAN PENGELUARAN</button>
         </form>
         <style>
           @import url('https://fonts.googleapis.com/css?family=Exo:400,700&display=swap');
@@ -1249,7 +1478,7 @@ function showExpenseForm(expenseData = null, expenseKey = null) {
             font-family:'Exo', 'Segoe UI', Arial, sans-serif;
           }
           #expense-items-table th {
-            background:#e67e22;
+            background:slategray;
             color:#fff;
             font-weight:bold;
             font-family:'Exo', 'Segoe UI', Arial, sans-serif;
@@ -1262,7 +1491,7 @@ function showExpenseForm(expenseData = null, expenseKey = null) {
             font-weight:bold;
             padding:4px 8px;
             border-radius:5px;
-            border:1px solid #e67e22;
+            border:1px solid slategray;
             font-family:'Exo', 'Segoe UI', Arial, sans-serif;
           }
         </style>
@@ -1271,13 +1500,13 @@ function showExpenseForm(expenseData = null, expenseKey = null) {
   const titleBox = `
     <div style="
       text-align:center;
-      background:#e67e22;
+      background:slategray;
       color:#fff;
       font-weight:bold;
       font-size:1.25em;
       letter-spacing:0.08em;
       padding:14px 0 12px 0;
-      border-radius:8px;
+      border-radius: 2px;
       margin-bottom:18px;
       text-transform:uppercase;
       box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
@@ -1333,11 +1562,11 @@ function showExpenseForm(expenseData = null, expenseKey = null) {
         <td>
           <button type="button" class="remove-expense-item" title="Hapus" style="background:none;border:none;cursor:pointer;">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
-            <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+            <rect x="5" y="8" width="10" height="8" rx="2" fill="slategray"/>
             <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
             <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
-            <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
-            <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+            <rect x="3" y="6" width="14" height="2" rx="1" fill="slategray"/>
+            <rect x="7" y="3" width="6" height="2" rx="1" fill="slategray"/>
           </svg>
           </button>
         </td>
@@ -1556,11 +1785,11 @@ async function renderExpenseList() {
                         <td>
                           <button class="delete-expense" data-idx="${i}" title="Hapus" style="background:none;border:none;cursor:pointer;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
-                              <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+                              <rect x="5" y="8" width="10" height="8" rx="2" fill="slategray"/>
                               <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
                               <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
-                              <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
-                              <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+                              <rect x="3" y="6" width="14" height="2" rx="1" fill="slategray"/>
+                              <rect x="7" y="3" width="6" height="2" rx="1" fill="slategray"/>
                             </svg>
                           </button>
                         </td>
@@ -1714,21 +1943,21 @@ bookkeepingBtn.onclick = async function () {
         if (t.type === "INVOICE") {
             deleteBtn = `<button class="delete-bk-invoice" data-ref="${t.ref}" title="Hapus Invoice" style="background:none;border:none;cursor:pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
-              <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+              <rect x="5" y="8" width="10" height="8" rx="2" fill="slategray"/>
               <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
               <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
-              <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
-              <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+              <rect x="3" y="6" width="14" height="2" rx="1" fill="slategray"/>
+              <rect x="7" y="3" width="6" height="2" rx="1" fill="slategray"/>
             </svg>
             </button>`;
         } else if (t.type === "EXPENSE") {
             deleteBtn = `<button class="delete-bk-expense" data-key="${t.ref}" title="Hapus Pengeluaran" style="background:none;border:none;cursor:pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
-              <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+              <rect x="5" y="8" width="10" height="8" rx="2" fill="slategray"/>
               <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
               <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
-              <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
-              <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+              <rect x="3" y="6" width="14" height="2" rx="1" fill="slategray"/>
+              <rect x="7" y="3" width="6" height="2" rx="1" fill="slategray"/>
             </svg>
             </button>`;
         }
@@ -1862,13 +2091,13 @@ bookkeepingBtn.onclick = async function () {
     const titleBox = `
       <div style="
     text-align: center;
-    background: #007bff;
+    background: slategray;
     color: #fff;
     font-weight: bold;
     font-size: 3.25em;
     letter-spacing: 0.08em;
     padding: 11px 0 11px 0;
-    border-radius: 8px;
+    border-radius: 2px;
     margin-bottom: -17px;
     text-transform: uppercase;
     box-shadow: 2 3px 12px 0 rgba(0,0,0,0.07);
@@ -1899,15 +2128,15 @@ bookkeepingBtn.onclick = async function () {
       
       style="
     padding: 6px 14px;
-    border-radius: 8px;
+    border-radius: 2px;
     border: 1px solid #cbd5e1;
     background: #f3f4f6;
     color: #222;
     font-size: 1em;
     font-weight: 500;
     min-width: 440px;">
-      <button id="bk-search-btn" style="background:#007bff;color:#fff;padding:6px 18px;border-radius:8px;border:none;cursor:pointer;font-size:1em;font-weight:600;">Cari</button>
-      <button id="bk-search-reset-btn" style="background:#e0e7ff;color:#007bff;padding:6px 18px;border-radius:8px;border:none;cursor:pointer;font-size:1em;font-weight:600;display:none;">Reset</button>
+      <button id="bk-search-btn" style="background:slategray;color:#fff;padding:6px 18px;border-radius: 2px;border:none;cursor:pointer;font-size:1em;font-weight:600;">Cari</button>
+      <button id="bk-search-reset-btn" style="background:#e0e7ff;color:slategray;padding:6px 18px;border-radius: 2px;border:none;cursor:pointer;font-size:1em;font-weight:600;display:none;">Reset</button>
       </div>
     `;
     // Sisipkan searchBoxHtml sebelum navHtml
@@ -1945,21 +2174,21 @@ bookkeepingBtn.onclick = async function () {
         if (t.type === "INVOICE") {
           deleteBtn = `<button class="delete-bk-invoice" data-ref="${t.ref}" title="Hapus Invoice" style="background:none;border:none;cursor:pointer;">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
-          <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+          <rect x="5" y="8" width="10" height="8" rx="2" fill="slategray"/>
           <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
           <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
-          <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
-          <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+          <rect x="3" y="6" width="14" height="2" rx="1" fill="slategray"/>
+          <rect x="7" y="3" width="6" height="2" rx="1" fill="slategray"/>
           </svg>
           </button>`;
         } else if (t.type === "EXPENSE") {
           deleteBtn = `<button class="delete-bk-expense" data-key="${t.ref}" title="Hapus Pengeluaran" style="background:none;border:none;cursor:pointer;">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
-          <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+          <rect x="5" y="8" width="10" height="8" rx="2" fill="slategray"/>
           <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
           <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
-          <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
-          <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+          <rect x="3" y="6" width="14" height="2" rx="1" fill="slategray"/>
+          <rect x="7" y="3" width="6" height="2" rx="1" fill="slategray"/>
           </svg>
           </button>`;
         }
@@ -1982,9 +2211,9 @@ bookkeepingBtn.onclick = async function () {
       ${navHtml}
       ${filterHtml}
       <div id="bk-search-bar-row" style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
-        <input type="text" id="bk-search-bar" placeholder="Cari Nama Pelanggan/Supplier..." style="padding:6px 14px;border-radius:8px;border:1px solid #cbd5e1;background:#f3f4f6;color:#222;font-size:1em;font-weight:500;min-width:180px;" value="${keyword}">
-        <button id="bk-search-btn" style="background:#007bff;color:#fff;padding:6px 18px;border-radius:8px;border:none;cursor:pointer;font-size:1em;font-weight:600;">Cari</button>
-        <button id="bk-search-reset-btn" style="background:#e0e7ff;color:#007bff;padding:6px 18px;border-radius:8px;border:none;cursor:pointer;font-size:1em;font-weight:600;">Reset</button>
+        <input type="text" id="bk-search-bar" placeholder="Cari Nama Pelanggan/Supplier..." style="padding:6px 14px;border-radius: 2px;border:1px solid #cbd5e1;background:#f3f4f6;color:#222;font-size:1em;font-weight:500;min-width:180px;" value="${keyword}">
+        <button id="bk-search-btn" style="background:slategray;color:#fff;padding:6px 18px;border-radius: 2px;border:none;cursor:pointer;font-size:1em;font-weight:600;">Cari</button>
+        <button id="bk-search-reset-btn" style="background:#e0e7ff;color:slategray;padding:6px 18px;border-radius: 2px;border:none;cursor:pointer;font-size:1em;font-weight:600;">Reset</button>
       </div>
       <table style="width:100%;border-collapse:collapse;">
         <thead>
@@ -2086,7 +2315,7 @@ bookkeepingBtn.onclick = async function () {
           window.scrollTo({ top: 0, behavior: "smooth" });
           const container = document.querySelector(".invoice-container");
           if (container) {
-          container.style.boxShadow = "0 0 0 4px #007bff";
+          container.style.boxShadow = "0 0 0 4px slategray";
           setTimeout(() => {
             container.style.boxShadow = "";
           }, 1200);
@@ -2215,7 +2444,7 @@ bookkeepingBtn.onclick = async function () {
           const modal = document.getElementById("modal");
           if (modal) {
           modal.querySelector(".modal-content").style.boxShadow =
-            "0 0 0 4px #007bff";
+            "0 0 0 4px slategray";
           setTimeout(() => {
             modal.querySelector(".modal-content").style.boxShadow = "";
           }, 1200);
@@ -2310,7 +2539,7 @@ bookkeepingBtn.onclick = async function () {
             window.scrollTo({ top: 0, behavior: "smooth" });
             const container = document.querySelector(".invoice-container");
             if (container) {
-              container.style.boxShadow = "0 0 0 4px #007bff";
+              container.style.boxShadow = "0 0 0 4px slategray";
               setTimeout(() => {
                 container.style.boxShadow = "";
               }, 1200);
@@ -2446,7 +2675,7 @@ bookkeepingBtn.onclick = async function () {
             const modal = document.getElementById("modal");
             if (modal) {
               modal.querySelector(".modal-content").style.boxShadow =
-                "0 0 0 4px #007bff";
+                "0 0 0 4px slategray";
               setTimeout(() => {
                 modal.querySelector(".modal-content").style.boxShadow = "";
               }, 1200);
@@ -2542,7 +2771,7 @@ statisticBtn.onclick = async function () {
     style.innerHTML = `
       .statistic-modal {
         background: linear-gradient(135deg,#fff 0%,#e3e8ee 100%);
-        border-radius: 16px;
+        border-radius: 2px;
         box-shadow: 0 8px 32px 0 rgba(0,0,0,0.10);
         padding: 32px 24px 24px 24px !important;
         max-width: 900px;
@@ -2677,7 +2906,7 @@ statisticBtn.onclick = async function () {
       .statistic-filter-select {
         font-size: 1em;
         padding: 6px 14px;
-        border-radius: 8px;
+        border-radius: 2px;
         border: 1px solid #cbd5e1;
         background: #f3f4f6;
         color: #222;
@@ -2759,13 +2988,13 @@ statisticBtn.onclick = async function () {
   const titleBox = `
     <div style="
       text-align:center;
-      background: linear-gradient(90deg,#121212 0%,#2563eb 100%);
+      background: slategray;
       color:#fff;
       font-weight:bold;
       font-size:1.35em;
       letter-spacing:0.08em;
       padding:18px 0 16px 0;
-      border-radius:16px;
+      border-radius: 2px;
       margin-bottom:24px;
       text-transform:uppercase;
       box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
@@ -3234,7 +3463,7 @@ utangPiutangBtn.onclick = async function () {
   let html = `
         
         <div style="margin-bottom:12px;">
-            <b>Total Piutang:</b> <span style="color:#e74c3c;font-size:1.2em;">${formatNumber(
+            <b>Total Piutang:</b> <span style="color:slategray;font-size:1.2em;">${formatNumber(
               totalUnpaid
             )}</span>
         </div>
@@ -3267,7 +3496,7 @@ utangPiutangBtn.onclick = async function () {
                         <td style="text-align:right;">${formatNumber(
                           inv.paidAmount
                         )}</td>
-                        <td style="text-align:right;color:#e74c3c;font-weight:bold;">${formatNumber(
+                        <td style="text-align:right;color:slategray;font-weight:bold;">${formatNumber(
                           inv.unpaidAmount
                         )}</td>
                         <td>${inv.dateline || "-"}</td>
@@ -3277,7 +3506,7 @@ utangPiutangBtn.onclick = async function () {
                             }" style="background:#27ae60;color:#fff;padding:2px 10px;border-radius:3px;">Bayar</button>
                             <button class="view-invoice-btn" data-no="${
                               inv.invoiceNumber
-                            }" style="background:#007bff;color:#fff;padding:2px 10px;border-radius:0.2px;margin-left:4px;">Lihat</button>
+                            }" style="background:slategray;color:#fff;padding:2px 10px;border-radius:0.2px;margin-left:4px;">Lihat</button>
                         </td>
                     </tr>
                 `
@@ -3293,13 +3522,13 @@ utangPiutangBtn.onclick = async function () {
   const titleBox = `
     <div style="
       text-align:center;
-      background:#e74c3c;
+      background:slategray;
       color:#fff;
       font-weight:bold;
       font-size:1.25em;
       letter-spacing:0.08em;
       padding:14px 0 12px 0;
-      border-radius:8px;
+      border-radius: 2px;
       margin-bottom:18px;
       text-transform:uppercase;
       box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
@@ -3325,7 +3554,7 @@ utangPiutangBtn.onclick = async function () {
                 <div><b>Pesanan:</b> ${inv.orderName || "-"}</div>
                 <div><b>Total:</b> ${formatNumber(total)}</div>
                 <div><b>Terbayar:</b> ${formatNumber(paid)}</div>
-                <div><b>Belum Terbayar:</b> <span style="color:#e74c3c;">${formatNumber(
+                <div><b>Belum Terbayar:</b> <span style="color:slategray;">${formatNumber(
                   unpaid
                 )}</span></div>
                 <form id="pay-utang-form" style="margin-top:10px;">
@@ -3456,7 +3685,7 @@ searchBar.addEventListener("input", async function () {
       // Tampilkan info invoice utama SAJA, tanpa tabel item
       let invInfo = `
         <div style="font-size:1em;">
-          <b>Invoice:</b> <span style="color:#007bff">${highlightKeyword(inv.invoiceNumber || "-", q)}</span>
+          <b>Invoice:</b> <span style="color:slategray">${highlightKeyword(inv.invoiceNumber || "-", q)}</span>
           <span style="color:#888;">|</span>
           <b>Pelanggan:</b> ${highlightKeyword(inv.customerName || "-", q)}
           <span style="color:#888;">|</span>
@@ -3501,7 +3730,7 @@ searchBar.addEventListener("input", async function () {
       // Tampilkan info expense utama SAJA, tanpa tabel item
       let expInfo = `
         <div style="font-size:1em;">
-          <b>Pengeluaran:</b> <span style="color:#e67e22">${highlightKeyword(exp.date || "-", q)}</span>
+          <b>Pengeluaran:</b> <span style="color:slategray">${highlightKeyword(exp.date || "-", q)}</span>
           <span style="color:#888;">|</span>
           <b>Jenis:</b> ${highlightKeyword(exp.type || "-", q)}
           <span style="color:#888;">|</span>
@@ -3557,7 +3786,7 @@ searchResults.addEventListener("click", async function (e) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       const container = document.querySelector(".invoice-container");
       if (container) {
-        container.style.boxShadow = "0 0 0 4px #007bff";
+        container.style.boxShadow = "0 0 0 4px slategray";
         setTimeout(() => {
           container.style.boxShadow = "";
         }, 1200);
@@ -3627,11 +3856,11 @@ searchResults.addEventListener("click", async function (e) {
                   <td>
                     <button type="button" class="remove-expense-item" title="Hapus" style="background:none;border:none;cursor:pointer;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="none">
-                      <rect x="5" y="8" width="10" height="8" rx="2" fill="#e74c3c"/>
+                      <rect x="5" y="8" width="10" height="8" rx="2" fill="slategray"/>
                       <rect x="8" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
                       <rect x="10.5" y="10" width="1.5" height="5" rx="0.7" fill="#fff"/>
-                      <rect x="3" y="6" width="14" height="2" rx="1" fill="#e74c3c"/>
-                      <rect x="7" y="3" width="6" height="2" rx="1" fill="#e74c3c"/>
+                      <rect x="3" y="6" width="14" height="2" rx="1" fill="slategray"/>
+                      <rect x="7" y="3" width="6" height="2" rx="1" fill="slategray"/>
                     </svg>
                     </button>
                   </td>
@@ -3685,7 +3914,7 @@ searchResults.addEventListener("click", async function (e) {
         const modal = document.getElementById("modal");
         if (modal) {
           modal.querySelector(".modal-content").style.boxShadow =
-            "0 0 0 4px #007bff";
+            "0 0 0 4px slategray";
           setTimeout(() => {
             modal.querySelector(".modal-content").style.boxShadow = "";
           }, 1200);
@@ -3840,8 +4069,8 @@ if (rekapBtn) {
     // Modal: tab Penjualan & Pengeluaran
     let html = `
       <div style="margin-bottom:16px;">
-        <button id="rekap-tab-penjualan" class="rekap-tab-btn" style="padding:6px 18px;border-radius:0.2px 0.2pxpx 0 0;border:0.2px solid #007bff;background:#007bff;color:#fff;font-weight:bold;">Penjualan</button>
-        <button id="rekap-tab-pengeluaran" class="rekap-tab-btn" style="padding:6px 18px;border-radius:0.2px 0.2pxpx 0 0;border:0.2px solid #e67e22;background:#e67e22;color:#fff;font-weight:bold;margin-left:2px;">Pengeluaran</button>
+        <button id="rekap-tab-penjualan" class="rekap-tab-btn" style="padding:6px 18px;border-radius:0.2px 0.2pxpx 0 0;border:0.2px solid slategray;background:slategray;color:#fff;font-weight:bold;">Penjualan</button>
+        <button id="rekap-tab-pengeluaran" class="rekap-tab-btn" style="padding:6px 18px;border-radius:0.2px 0.2pxpx 0 0;border:0.2px solid slategray;background:slategray;color:#fff;font-weight:bold;margin-left:2px;">Pengeluaran</button>
       </div>
       <div id="rekap-panel-penjualan">
         <div style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
@@ -3900,7 +4129,7 @@ if (rekapBtn) {
       <style>
         .rekap-tab-btn.active {
           background: #fff !important;
-          color: #007bff !important;
+          color: slategray !important;
           border-bottom: 0.2px solid #fff !important;
         }
         .rekap-tab-btn {
@@ -3919,13 +4148,13 @@ if (rekapBtn) {
     const titleBox = `
       <div style="
       text-align:center;
-      background:#007bff;
+      background:slategray;
       color:#fff;
       font-weight:bold;
       font-size:1.25em;
       letter-spacing:0.08em;
       padding:14px 0 12px 0;
-      border-radius:8px;
+      border-radius: 2px;
       margin-bottom:18px;
       text-transform:uppercase;
       box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
@@ -4049,11 +4278,11 @@ if (rekapBtn) {
 
       document.getElementById("rekap-item-result").innerHTML = `
         <div style="margin-bottom:10px;">
-          <b>Hasil untuk keyword:</b> <span style="color:#007bff">${keyword}</span>
-          <b style="margin-left:10px;">Berdasarkan:</b> <span style="color:#007bff">${type === "item" ? "Nama Item" : type === "customer" ? "Nama Pelanggan" : "Nama Pesanan"}</span>
+          <b>Hasil untuk keyword:</b> <span style="color:slategray">${keyword}</span>
+          <b style="margin-left:10px;">Berdasarkan:</b> <span style="color:slategray">${type === "item" ? "Nama Item" : type === "customer" ? "Nama Pelanggan" : "Nama Pesanan"}</span>
           ${
             month
-              ? `&nbsp;|&nbsp;<b>Bulan:</b> <span style="color:#007bff">${month.replace(
+              ? `&nbsp;|&nbsp;<b>Bulan:</b> <span style="color:slategray">${month.replace(
                   /(\d{4})-(\d{2})/,
                   "$2-$1"
                 )}</span>`
@@ -4188,8 +4417,8 @@ if (rekapBtn) {
 
       document.getElementById("rekap-expense-result").innerHTML = `
         <div style="margin-bottom:10px;">
-          <b>Hasil untuk keyword:</b> <span style="color:#e67e22">${keyword}</span>
-          <b style="margin-left:10px;">Berdasarkan:</b> <span style="color:#e67e22">${
+          <b>Hasil untuk keyword:</b> <span style="color:slategray">${keyword}</span>
+          <b style="margin-left:10px;">Berdasarkan:</b> <span style="color:slategray">${
             type === "jenis"
               ? "Jenis Pengeluaran"
               : type === "supplier"
@@ -4198,7 +4427,7 @@ if (rekapBtn) {
           }</span>
           ${
             month
-              ? `&nbsp;|&nbsp;<b>Bulan:</b> <span style="color:#e67e22">${month.replace(
+              ? `&nbsp;|&nbsp;<b>Bulan:</b> <span style="color:slategray">${month.replace(
                   /(\d{4})-(\d{2})/,
                   "$2-$1"
                 )}</span>`
@@ -4278,13 +4507,13 @@ if (exportBtn) {
     const titleBox = `
       <div style="
       text-align:center;
-      background:#007bff;
+      background:slategray;
       color:#fff;
       font-weight:bold;
       font-size:1.25em;
       letter-spacing:0.08em;
       padding:14px 0 12px 0;
-      border-radius:8px;
+      border-radius: 2px;
       margin-bottom:18px;
       text-transform:uppercase;
       box-shadow:0 2px 12px 0 rgba(0,0,0,0.07);
@@ -4502,7 +4731,7 @@ document.addEventListener("click", function (e) {
     if (data.dateline) {
       datelineHtml = `
         <div style="font-size:1.08em;line-height:1.5;margin-top:8px;">
-          <b style="color:#121212;">DEADLINE:</b> <span style="color:#e74c3c;">${data.dateline}</span>
+          <b style="color:#121212;">DEADLINE:</b> <span style="color:slategray;">${data.dateline}</span>
         </div>
       `;
     }
@@ -4698,12 +4927,12 @@ function showLoading(message = "Memuat...", percent = null) {
     `;
     overlay.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
-        <div class="loading-spinner" style="width:54px;height:54px;border:7px solid #007bff;border-top:7px solid #e0e7ff;border-radius:50%;animation:spin 1s linear infinite;"></div>
-        <div id="loading-message" style="font-size:1.18em;font-weight:600;color:#007bff;letter-spacing:0.04em;">${message}</div>
-        <div id="loading-progress-bar" style="width:220px;height:16px;background:#e0e7ff;border-radius:8px;overflow:hidden;display:none;">
-          <div id="loading-progress-inner" style="height:100%;width:0%;background:#007bff;transition:width 0.2s;"></div>
+        <div class="loading-spinner" style="width:54px;height:54px;border:7px solid slategray;border-top:7px solid #e0e7ff;border-radius:50%;animation:spin 1s linear infinite;"></div>
+        <div id="loading-message" style="font-size:1.18em;font-weight:600;color:slategray;letter-spacing:0.04em;">${message}</div>
+        <div id="loading-progress-bar" style="width:220px;height:16px;background:#e0e7ff;border-radius: 2px;overflow:hidden;display:none;">
+          <div id="loading-progress-inner" style="height:100%;width:0%;background:slategray;transition:width 0.2s;"></div>
         </div>
-        <div id="loading-percent-text" style="font-size:1.05em;color:#007bff;font-weight:500;display:none;">0%</div>
+        <div id="loading-percent-text" style="font-size:1.05em;color:slategray;font-weight:500;display:none;">0%</div>
       </div>
       <style>
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -4849,8 +5078,9 @@ if (typeof searchBar !== "undefined" && searchBar) {
   if (document.getElementById("home-btn")) return;
   const btn = document.createElement("button");
   btn.id = "home-btn";
+  btn.title = "Refresh";
   btn.innerHTML = `
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="#007bff" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
       <path d="M17.65 6.35A8 8 0 1 0 20 12h-2a6 6 0 1 1-1.76-4.24l-2.89 2.89H20V4.93l-2.35 2.35z"/>
     </svg>
   `;
@@ -4858,21 +5088,18 @@ if (typeof searchBar !== "undefined" && searchBar) {
   btn.style.top = "18px";
   btn.style.right = "98px";
   btn.style.zIndex = "700";
-  btn.style.background = "#fff";
-  btn.style.border = "2px solid #007bff";
-  btn.style.borderRadius = "8px";
-  btn.style.padding = "8px 18px";
-  btn.style.boxShadow = "0 2px 12px 0 rgba(0,123,255,0.09)";
+  btn.style.background = "none";
+  btn.style.border = "none";
+  btn.style.borderRadius = "50%";
+  btn.style.padding = "0";
   btn.style.cursor = "pointer";
   btn.style.display = "flex";
   btn.style.alignItems = "center";
-  btn.style.gap = "7px";
-  btn.style.fontFamily = "'Segoe UI', Arial, sans-serif";
   btn.onmouseover = function () {
-    btn.style.background = "#e0e7ff";
+    btn.querySelector("svg").style.filter = "brightness(0.7)";
   };
   btn.onmouseout = function () {
-    btn.style.background = "#fff";
+    btn.querySelector("svg").style.filter = "";
   };
   btn.onclick = function () {
     window.location.reload();
