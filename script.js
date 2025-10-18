@@ -856,17 +856,16 @@ async function downloadInvoiceAsJPG() {
   }
 }
 
-// Fungsi untuk share invoice ke WhatsApp
+// Fungsi untuk share invoice ke WhatsApp (lebih andal, pakai Web Share API, Clipboard, fallback download)
 async function shareToWhatsApp() {
   try {
-    // Ambil elemen invoice preview (readonly) di modal
     const invoiceView = document.querySelector(".invoice-view");
     if (!invoiceView) {
       alert("Invoice tidak ditemukan!");
       return;
     }
 
-    // Clone node agar tidak mengganggu tampilan asli
+    // Clone & style for rendering
     const clone = invoiceView.cloneNode(true);
     clone.style.background = "#fff";
     clone.style.color = "#111";
@@ -874,25 +873,18 @@ async function shareToWhatsApp() {
     clone.style.margin = "0 auto";
     clone.style.position = "static";
 
-    // Copy computed styles (opsional, jika ingin hasil lebih konsisten)
     function copyAllStyles(src, dest) {
       const srcStyle = getComputedStyle(src);
-      for (let prop of srcStyle) {
-        dest.style[prop] = srcStyle.getPropertyValue(prop);
-      }
-      Array.from(src.children).forEach((srcChild, i) => {
-        if (dest.children[i]) copyAllStyles(srcChild, dest.children[i]);
+      for (let prop of srcStyle) dest.style[prop] = srcStyle.getPropertyValue(prop);
+      Array.from(src.children).forEach((c, i) => {
+        if (dest.children[i]) copyAllStyles(c, dest.children[i]);
       });
     }
     copyAllStyles(invoiceView, clone);
 
-    // Pastikan semua gambar crossOrigin
     const imgs = clone.querySelectorAll("img");
-    imgs.forEach((img) => {
-      img.crossOrigin = "anonymous";
-    });
+    imgs.forEach((img) => (img.crossOrigin = "anonymous"));
 
-    // Render di container off-screen
     const container = document.createElement("div");
     container.style.position = "fixed";
     container.style.left = "-9999px";
@@ -901,18 +893,16 @@ async function shareToWhatsApp() {
     container.appendChild(clone);
     document.body.appendChild(container);
 
-    // Tunggu gambar selesai load
     await Promise.all(
-      Array.from(imgs).map((img) => {
-        if (img.complete) return Promise.resolve();
-        return new Promise((res) => {
-          img.onload = img.onerror = () => res();
-        });
-      })
+      Array.from(imgs).map((img) => (img.complete ? Promise.resolve() : new Promise((r) => { img.onload = img.onerror = () => r(); })))
     );
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 120));
 
-    // Ambil gambar dengan html2canvas
+    // Render canvas
+    if (typeof html2canvas === "undefined") {
+      document.body.removeChild(container);
+      return alert("html2canvas belum dimuat.");
+    }
     const canvas = await html2canvas(clone, {
       scale: 2,
       useCORS: true,
@@ -920,70 +910,79 @@ async function shareToWhatsApp() {
       logging: false,
       windowWidth: clone.offsetWidth,
       windowHeight: clone.offsetHeight,
-      ignoreElements: (el) =>
-        el.classList && el.classList.contains("no-capture"),
+      ignoreElements: (el) => el.classList && el.classList.contains("no-capture"),
     });
 
     document.body.removeChild(container);
 
-    // Konversi ke blob
-    canvas.toBlob(
-      async function (blob) {
-        try {
-          const file = new File([blob], "invoice.jpg", { type: "image/jpeg" });
-          // Info invoice
-          const invNo = document.querySelector(".invoice-view .invoice-info b")
-            ? document
-                .querySelector(".invoice-view .invoice-info b")
-                .parentElement.textContent.replace("Nomor Nota:", "")
-                .trim()
-            : "";
-          const customer = document.querySelector(
-            ".invoice-view .invoice-view-header2-left"
-          )
-            ? document
-                .querySelector(".invoice-view .invoice-view-header2-left")
-                .textContent.replace(/Pelanggan:/, "")
-                .trim()
-                .split("\n")[0]
-            : "";
-          const total = document.querySelector(
-            ".invoice-view tfoot tr td:last-child"
-          )
-            ? document.querySelector(".invoice-view tfoot tr td:last-child")
-                .textContent
-            : "";
+    // Ambil info invoice untuk teks
+    const invNoEl = invoiceView.querySelector(".invoice-info");
+    const invNo = invNoEl ? (invNoEl.textContent || "").replace(/\s+/g, " ").trim() : "";
+    const customerEl = invoiceView.querySelector(".invoice-view-header2-left");
+    const customer = customerEl ? (customerEl.textContent || "").replace(/\s+/g, " ").trim() : "";
+    const totalEl = invoiceView.querySelector("tfoot tr td:last-child");
+    const total = totalEl ? (totalEl.textContent || "").trim() : "";
 
-          // Web Share API (mobile)
-          if (
-            navigator.share &&
-            navigator.canShare &&
-            navigator.canShare({ files: [file] })
-          ) {
-            await navigator.share({
-              files: [file],
-              title: "Invoice Pembayaran",
-              text: `Invoice: ${invNo}\nPelanggan: ${customer}\nTotal: Rp ${total}`,
-            });
-          } else {
-            // Fallback: WhatsApp Web dengan link gambar (base64)
-            const url = canvas.toDataURL("image/jpeg");
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
-              `Invoice Pembayaran\nNo. Invoice: ${invNo}\nPelanggan: ${customer}\nTotal: Rp ${total}\nLihat Invoice: ${url}`
-            )}`;
-            window.open(whatsappUrl, "_blank");
-          }
-        } catch (error) {
-          alert(
-            "Gagal membuka WhatsApp. Pastikan aplikasi WhatsApp terinstall."
-          );
-        }
-      },
-      "image/jpeg",
-      0.9
-    );
-  } catch (error) {
-    alert("Gagal membuat gambar invoice. Silakan coba lagi.");
+    // Konversi canvas ke blob
+    const blob = await new Promise((res) => canvas.toBlob(res, "image/jpeg", 0.92));
+    if (!blob) throw new Error("Gagal membuat gambar.");
+
+    const file = new File([blob], "invoice.jpg", { type: "image/jpeg" });
+
+    // Helper to detect mobile
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
+
+    // 1) Coba Web Share API dengan file (paling seamless di mobile & beberapa desktop)
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "Invoice Pembayaran",
+          text: `${invNo}\n${customer}\nTotal: ${total}`,
+        });
+        return;
+      } catch (e) {
+        // lanjut ke metode berikutnya
+      }
+    }
+
+    // 2) Coba copy image ke clipboard (Chrome/Edge modern) -> pengguna tinggal paste di chat WA Web
+    if (navigator.clipboard && window.ClipboardItem) {
+      try {
+        const item = new ClipboardItem({ [blob.type]: blob });
+        await navigator.clipboard.write([item]);
+        // Buka WhatsApp Web / WA mobile dan beri instruksi paste
+        const waUrl = isMobile ? `https://wa.me/?text=${encodeURIComponent(`${invNo}\n${customer}\nTotal: ${total}`)}` : `https://web.whatsapp.com/send?text=${encodeURIComponent(`${invNo}\n${customer}\nTotal: ${total}\n\n(Gambar sudah disalin ke clipboard. Tekan Ctrl+V atau Paste di chat untuk melampirkan gambar.)`)}`;
+        window.open(waUrl, "_blank");
+        alert("Gambar invoice telah disalin ke clipboard. Buka chat WhatsApp lalu tekan Ctrl+V / Paste untuk melampirkan gambar dan kirim.");
+        return;
+      } catch (e) {
+        // clipboard gagal -> lanjut
+      }
+    }
+
+    // 3) Fallback: sediakan unduhan otomatis + buka WhatsApp Web dengan teks agar user attach file manual
+    // Trigger download
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `Invoice_${(new Date()).toISOString().slice(0,10)}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      URL.revokeObjectURL(link.href);
+      link.remove();
+    }, 1500);
+
+    // Buka WA (mobile wa.me, desktop web.whatsapp.com)
+    const waFallbackUrl = isMobile
+      ? `https://wa.me/?text=${encodeURIComponent(`${invNo}\n${customer}\nTotal: ${total}\n\nGambar invoice telah diunduh. Silakan buka chat dan lampirkan file tersebut secara manual.`)}`
+      : `https://web.whatsapp.com/send?text=${encodeURIComponent(`${invNo}\n${customer}\nTotal: ${total}\n\nGambar invoice telah diunduh. Lampirkan file JPG yang baru saja terunduh dan kirim.`)}`;
+    window.open(waFallbackUrl, "_blank");
+    alert("Gambar invoice diunduh. Buka WhatsApp dan lampirkan file JPG secara manual jika perlu.");
+
+  } catch (err) {
+    console.error(err);
+    alert("Gagal membagikan invoice. Silakan coba unduh lalu kirim secara manual.");
   }
 }
 
