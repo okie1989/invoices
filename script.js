@@ -755,106 +755,86 @@ saveBtn.onclick = async function () {
 // Tambahkan fungsi untuk mengunduh invoice sebagai JPG menggunakan html2canvas
 async function downloadInvoiceAsJPG() {
   if (typeof html2canvas === "undefined") {
-    return alert(
-      "html2canvas library is not loaded. Please include it in your project."
-    );
+    return alert("html2canvas library is not loaded. Please include it in your project.");
   }
   const invoiceView = document.querySelector(".invoice-view");
   if (!invoiceView) return alert("Invoice tidak ditemukan!");
-
-  // Tambahkan class 'no-capture' pada tombol download
   const controls = document.getElementById("invoice-preview-controls");
   let downloadBtn;
   if (controls) {
     downloadBtn = controls.querySelector("#download-invoice-jpg");
     if (downloadBtn) downloadBtn.classList.add("no-capture");
   }
-
-  // Clone the invoiceView for rendering
-  const clone = invoiceView.cloneNode(true);
-  clone.id = "";
-  // Copy computed styles from modal preview
-  const modalContent = document.querySelector("#modal .modal-content");
-  if (modalContent) {
-    const modalStyle = getComputedStyle(modalContent);
-    clone.style.background = modalStyle.background;
-    clone.style.backgroundColor = modalStyle.backgroundColor;
-    clone.style.color = modalStyle.color;
-    clone.style.fontFamily = modalStyle.fontFamily;
-    clone.style.fontSize = modalStyle.fontSize;
-    clone.style.borderRadius = modalStyle.borderRadius;
-    clone.style.boxShadow = modalStyle.boxShadow;
-    clone.style.padding = modalStyle.padding;
-  }
-  clone.style.width = `${invoiceView.offsetWidth}px`;
-  clone.style.margin = "0 auto";
-  clone.style.position = "static";
-
-  // Copy all computed styles recursively for all children
-  function copyAllStyles(src, dest) {
-    const srcStyle = getComputedStyle(src);
-    for (let prop of srcStyle) {
-      dest.style[prop] = srcStyle.getPropertyValue(prop);
-    }
-    Array.from(src.children).forEach((srcChild, i) => {
-      if (dest.children[i]) copyAllStyles(srcChild, dest.children[i]);
-    });
-  }
-  copyAllStyles(invoiceView, clone);
-
-  // Ensure all images in the clone have crossOrigin set to 'anonymous'
-  const imgs = clone.querySelectorAll("img");
-  imgs.forEach((img) => {
-    img.crossOrigin = "anonymous";
-  });
-
-  // Create a container off-screen for rendering
-  const container = document.createElement("div");
-  container.style.position = "fixed";
-  container.style.left = "-9999px";
-  container.style.top = "0";
-  container.style.zIndex = "-1";
-  container.appendChild(clone);
-  document.body.appendChild(container);
-
-  // Wait for images to load in the clone
-  await Promise.all(
-    Array.from(imgs).map((img) => {
-      if (img.complete) return Promise.resolve();
-      return new Promise((res) => {
-        img.onload = img.onerror = () => res();
-      });
-    })
-  );
-
-  // Wait briefly to stabilize layout
-  await new Promise((r) => setTimeout(r, 100));
-
   try {
-    const canvas = await html2canvas(clone, {
+    const canvas = await html2canvas(invoiceView, {
       scale: 2,
       useCORS: true,
-      backgroundColor: getComputedStyle(clone).backgroundColor || "#fff",
-      logging: false,
-      windowWidth: clone.offsetWidth,
-      windowHeight: clone.offsetHeight,
-      ignoreElements: (el) =>
-        el.classList && el.classList.contains("no-capture"),
+      ignoreElements: (el) => el.classList.contains("no-capture"),
     });
 
-    if (controls && downloadBtn) downloadBtn.classList.remove("no-capture");
-    document.body.removeChild(container);
+    const dataUrl = canvas.toDataURL("image/jpeg", 1.0);
+    const base64Data = dataUrl.replace(/^data:image\/jpeg;base64,/, "");
 
-    const link = document.createElement("a");
-    link.download = "Invoice.jpg";
-    link.href = canvas.toDataURL("image/jpeg", 1.0);
-    link.click();
+    if (window.cordova && window.resolveLocalFileSystemURL) {
+      const fileName = `invoice_${Date.now()}.jpg`;
+
+      window.resolveLocalFileSystemURL(
+        cordova.file.externalDataDirectory,
+        function (dirEntry) {
+          dirEntry.getFile(
+            fileName,
+            { create: true, exclusive: false },
+            function (fileEntry) {
+              fileEntry.createWriter(function (fileWriter) {
+                const blob = b64toBlob(base64Data, "image/jpeg");
+                fileWriter.write(blob);
+                alert(`✅ Invoice disimpan sebagai ${fileName} di folder aplikasi.`);
+              });
+            },
+            function (err) {
+              console.error("Gagal membuat file:", err);
+              alert("❌ Gagal menyimpan file.");
+            }
+          );
+        },
+        function (err) {
+          console.error("Gagal mengakses direktori:", err);
+          alert("❌ Tidak dapat mengakses penyimpanan.");
+        }
+      );
+    } else {
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = `invoice_${Date.now()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   } catch (error) {
-    if (controls && downloadBtn) downloadBtn.classList.remove("no-capture");
-    document.body.removeChild(container);
-    alert("Gagal mengunduh gambar invoice: " + error.message);
+    console.error("Gagal menangkap invoice:", error);
+    alert("❌ Terjadi kesalahan saat membuat gambar invoice.");
+  } finally {
+    if (downloadBtn) downloadBtn.classList.remove("no-capture");
   }
 }
+
+function b64toBlob(b64Data, contentType = "", sliceSize = 512) {
+  const byteCharacters = atob(b64Data);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  return new Blob(byteArrays, { type: contentType });
+}
+
 
 // Fungsi untuk share invoice ke WhatsApp (lebih andal, pakai Web Share API, Clipboard, fallback download)
 async function shareToWhatsApp() {
