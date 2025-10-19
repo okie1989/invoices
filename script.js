@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   `;
   btn.style.position = "fixed";
   btn.style.top = "32px";
-  btn.style.right = "128px";
+  btn.style.right = "109px";
   btn.style.zIndex = "700";
   btn.style.background = "none";
   btn.style.border = "none";
@@ -5065,7 +5065,7 @@ if (typeof searchBar !== "undefined" && searchBar) {
   `;
   btn.style.position = "fixed";
   btn.style.top = "32px";
-  btn.style.right = "193px";
+  btn.style.right = "152px";
   btn.style.zIndex = "700";
   btn.style.background = "none";
   btn.style.border = "none";
