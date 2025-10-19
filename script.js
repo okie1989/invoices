@@ -428,7 +428,7 @@ async function getInvoiceByNumber(invoiceNumber) {
 async function saveInvoiceToFirebase(data) {
   try {
     await db.ref("invoices/" + data.invoiceNumber).set(data);
-    alert("Invoice berhasil disimpan ke Firebase Realtime Database!");
+    alert("Invoice berhasil disimpan!");
   } catch (e) {
     alert("Gagal simpan ke Firebase: " + e.message);
   }
