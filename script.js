@@ -196,8 +196,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     </svg>
   `;
   btn.style.position = "fixed";
-  btn.style.top = "18px";
-  btn.style.right = "38px";
+  btn.style.top = "32px";
+  btn.style.right = "128px";
   btn.style.zIndex = "700";
   btn.style.background = "none";
   btn.style.border = "none";
@@ -5064,8 +5064,8 @@ if (typeof searchBar !== "undefined" && searchBar) {
     </svg>
   `;
   btn.style.position = "fixed";
-  btn.style.top = "18px";
-  btn.style.right = "98px";
+  btn.style.top = "32px";
+  btn.style.right = "193px";
   btn.style.zIndex = "700";
   btn.style.background = "none";
   btn.style.border = "none";
