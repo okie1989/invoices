@@ -446,7 +446,7 @@ input[type="file"] {
     border: none !important;
     padding: 0 !important;
     box-shadow: none !important;
-    top: 4%;
+    top: 0%;
     right: 6%;
 }
 .invoice-view .invoice-info > div {
